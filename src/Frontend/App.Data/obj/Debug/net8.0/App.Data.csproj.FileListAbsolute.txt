@@ -1,0 +1,15 @@
+E:\IT\VSCode\Github\Demo-Microservice-Based-.NET-Applications\src\Frontend\App.Data\bin\Debug\net8.0\App.Data.deps.json
+E:\IT\VSCode\Github\Demo-Microservice-Based-.NET-Applications\src\Frontend\App.Data\bin\Debug\net8.0\App.Data.runtimeconfig.json
+E:\IT\VSCode\Github\Demo-Microservice-Based-.NET-Applications\src\Frontend\App.Data\bin\Debug\net8.0\App.Data.dll
+E:\IT\VSCode\Github\Demo-Microservice-Based-.NET-Applications\src\Frontend\App.Data\bin\Debug\net8.0\App.Data.pdb
+E:\IT\VSCode\Github\Demo-Microservice-Based-.NET-Applications\src\Frontend\App.Data\obj\Debug\net8.0\App.Data.csproj.AssemblyReference.cache
+E:\IT\VSCode\Github\Demo-Microservice-Based-.NET-Applications\src\Frontend\App.Data\obj\Debug\net8.0\App.Data.GeneratedMSBuildEditorConfig.editorconfig
+E:\IT\VSCode\Github\Demo-Microservice-Based-.NET-Applications\src\Frontend\App.Data\obj\Debug\net8.0\App.Data.AssemblyInfoInputs.cache
+E:\IT\VSCode\Github\Demo-Microservice-Based-.NET-Applications\src\Frontend\App.Data\obj\Debug\net8.0\App.Data.AssemblyInfo.cs
+E:\IT\VSCode\Github\Demo-Microservice-Based-.NET-Applications\src\Frontend\App.Data\obj\Debug\net8.0\App.Data.csproj.CoreCompileInputs.cache
+E:\IT\VSCode\Github\Demo-Microservice-Based-.NET-Applications\src\Frontend\App.Data\obj\Debug\net8.0\App.Data.sourcelink.json
+E:\IT\VSCode\Github\Demo-Microservice-Based-.NET-Applications\src\Frontend\App.Data\obj\Debug\net8.0\App.Data.dll
+E:\IT\VSCode\Github\Demo-Microservice-Based-.NET-Applications\src\Frontend\App.Data\obj\Debug\net8.0\refint\App.Data.dll
+E:\IT\VSCode\Github\Demo-Microservice-Based-.NET-Applications\src\Frontend\App.Data\obj\Debug\net8.0\App.Data.pdb
+E:\IT\VSCode\Github\Demo-Microservice-Based-.NET-Applications\src\Frontend\App.Data\obj\Debug\net8.0\App.Data.genruntimeconfig.cache
+E:\IT\VSCode\Github\Demo-Microservice-Based-.NET-Applications\src\Frontend\App.Data\obj\Debug\net8.0\ref\App.Data.dll
