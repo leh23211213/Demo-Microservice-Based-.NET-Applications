@@ -1,7 +1,7 @@
 using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
-namespace App.UI.Service;
+namespace App.UI.Services.mail;
 
 public interface IEmailSender
 {

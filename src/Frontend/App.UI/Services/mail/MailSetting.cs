@@ -1,4 +1,4 @@
-namespace App.UI.Service;
+namespace App.UI.Services.mail;
 public class MailSettings
 {
     public string Mail { get; set; }

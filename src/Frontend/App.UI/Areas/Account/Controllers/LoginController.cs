@@ -1,6 +1,6 @@
 using App.Data.Models;
 using App.UI.Areas.Account.Models;
-using App.UI.Service;
+using App.UI.Services.mail;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
