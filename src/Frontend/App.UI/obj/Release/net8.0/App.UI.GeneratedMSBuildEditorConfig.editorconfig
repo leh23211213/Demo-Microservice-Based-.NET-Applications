@@ -1,11 +1,19 @@
 is_global = true
 build_property.TargetFramework = net8.0
+build_property.TargetFramework = net8.0
+build_property.TargetPlatformMinVersion = 
 build_property.TargetPlatformMinVersion = 
 build_property.UsingMicrosoftNETSdkWeb = true
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
 build_property.ProjectTypeGuids = 
 build_property.InvariantGlobalization = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
 build_property.PlatformNeutralAssembly = 
 build_property.EnforceExtendedAnalyzerRules = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = App.UI
 build_property.RootNamespace = App.UI
@@ -18,30 +26,174 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = E:\IT\VSCode\Github\Demo-Microservice-Based-.NET-Applications\src\Frontend\App.UI
 build_property._RazorSourceGeneratorDebug = 
 
-[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Views/Home/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Account/Views/Shared/ChangePassword.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWNjb3VudFxWaWV3c1xTaGFyZWRcQ2hhbmdlUGFzc3dvcmQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Views/Home/Privacy.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Account/Views/Shared/ConfirmEmail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWNjb3VudFxWaWV3c1xTaGFyZWRcQ29uZmlybUVtYWlsLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Views/Shared/Error.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Account/Views/Shared/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWNjb3VudFxWaWV3c1xTaGFyZWRcRXJyb3IuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Views/Shared/_ValidationScriptsPartial.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Account/Views/Shared/ExternalLoginConfirmation.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWNjb3VudFxWaWV3c1xTaGFyZWRcRXh0ZXJuYWxMb2dpbkNvbmZpcm1hdGlvbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Views/_ViewImports.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Account/Views/Shared/ForgotPassword.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWNjb3VudFxWaWV3c1xTaGFyZWRcRm9yZ290UGFzc3dvcmQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Views/_ViewStart.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Account/Views/Shared/ForgotPasswordConfirmation.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWNjb3VudFxWaWV3c1xTaGFyZWRcRm9yZ290UGFzc3dvcmRDb25maXJtYXRpb24uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Views/Shared/_Layout.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = b-ait98r2u8w
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Account/Views/Shared/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWNjb3VudFxWaWV3c1xTaGFyZWRcTG9naW4uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Account/Views/Shared/Register.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWNjb3VudFxWaWV3c1xTaGFyZWRcUmVnaXN0ZXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Account/Views/Shared/RegisterConfirmation.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWNjb3VudFxWaWV3c1xTaGFyZWRcUmVnaXN0ZXJDb25maXJtYXRpb24uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Account/Views/Shared/ResendEmailConfirmation.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWNjb3VudFxWaWV3c1xTaGFyZWRcUmVzZW5kRW1haWxDb25maXJtYXRpb24uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Account/Views/Shared/ResetPassword.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWNjb3VudFxWaWV3c1xTaGFyZWRcUmVzZXRQYXNzd29yZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Account/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWNjb3VudFxWaWV3c1xTaGFyZWRcX0xheW91dC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Account/Views/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWNjb3VudFxWaWV3c1xTaGFyZWRcX1ZhbGlkYXRpb25TY3JpcHRzUGFydGlhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Account/Views/_StatusMessage.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWNjb3VudFxWaWV3c1xfU3RhdHVzTWVzc2FnZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Account/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWNjb3VudFxWaWV3c1xfVmlld0ltcG9ydHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Account/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWNjb3VudFxWaWV3c1xfVmlld1N0YXJ0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Admin/Views/Category/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQ2F0ZWdvcnlcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Admin/Views/Category/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQ2F0ZWdvcnlcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Admin/Views/Category/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQ2F0ZWdvcnlcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Admin/Views/Category/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQ2F0ZWdvcnlcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Admin/Views/Company/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQ29tcGFueVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Admin/Views/Company/Upsert.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQ29tcGFueVxVcHNlcnQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Admin/Views/Order/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcT3JkZXJcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Admin/Views/Order/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcT3JkZXJcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Admin/Views/Order/PaymentConfirmation.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcT3JkZXJcUGF5bWVudENvbmZpcm1hdGlvbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Admin/Views/Product/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcUHJvZHVjdFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Admin/Views/Product/Upsert.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcUHJvZHVjdFxVcHNlcnQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Admin/Views/User/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcVXNlclxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Admin/Views/User/RoleManagment.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcVXNlclxSb2xlTWFuYWdtZW50LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Admin/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Admin/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Customer/Views/Cart/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQ3VzdG9tZXJcVmlld3NcQ2FydFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Customer/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQ3VzdG9tZXJcVmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Customer/Views/Order/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQ3VzdG9tZXJcVmlld3NcT3JkZXJcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Customer/Views/Order/OrderDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQ3VzdG9tZXJcVmlld3NcT3JkZXJcT3JkZXJEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Customer/Views/Product/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQ3VzdG9tZXJcVmlld3NcUHJvZHVjdFxEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Customer/Views/Product/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQ3VzdG9tZXJcVmlld3NcUHJvZHVjdFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Customer/Views/Shared/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQ3VzdG9tZXJcVmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Customer/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQ3VzdG9tZXJcVmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Customer/Views/Shared/_LoginPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQ3VzdG9tZXJcVmlld3NcU2hhcmVkXF9Mb2dpblBhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Customer/Views/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQ3VzdG9tZXJcVmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Customer/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQ3VzdG9tZXJcVmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/Frontend/App.UI/Areas/Customer/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQ3VzdG9tZXJcVmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 

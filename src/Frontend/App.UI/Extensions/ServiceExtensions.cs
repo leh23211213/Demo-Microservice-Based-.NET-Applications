@@ -5,7 +5,8 @@ using App.Data.Models;
 using App.Data;
 using App.UI.Services.mail;
 using App.UI.Controllers;
-using App.UI.Services;
+using App.Data.Repository.IRepository;
+using App.Data.Repository;
 
 namespace App.UI.Extensions
 {
@@ -80,12 +81,14 @@ namespace App.UI.Extensions
             services.AddOptions();
             var mailSettings = configuration.GetSection("MailSettings");
             services.Configure<MailSettings>(mailSettings);
+            // Register Email
             services.AddSingleton<IEmailSender, SendMailService>();
 
-            // add service to container
-            services.AddSingleton<ISingletonGuidService, SingletonGuidService>();
-            services.AddTransient<ITransientGuidService, TransientGuidService>();
-            services.AddScoped<IScopedGuidService, ScopedGuidService>();
+            // Register ProductRepository
+            services.AddScoped<IProductRepository, ProductRepository>();
+
+            // Register UnitOfWork
+            services.AddScoped<UnitOfWork>();
 
             // Register CartService and HttpContextAccessor
             services.AddScoped<CartService>();
