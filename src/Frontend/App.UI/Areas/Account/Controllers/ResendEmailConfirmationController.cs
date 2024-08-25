@@ -2,7 +2,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using App.Data.Models;
 using App.UI.Areas.Account.Models;
-using App.UI.Service;
+using App.UI.Services.mail;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

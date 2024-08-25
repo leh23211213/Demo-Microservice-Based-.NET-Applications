@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using App.Data.Models;
 using App.Data;
-using Microsoft.AspNetCore.Cors.Infrastructure;
-using App.UI.Service;
+using App.UI.Services.mail;
+using App.UI.Controllers;
+using App.Data.Repository.IRepository;
+using App.Data.Repository;
 
 namespace App.UI.Extensions
 {
@@ -79,10 +81,17 @@ namespace App.UI.Extensions
             services.AddOptions();
             var mailSettings = configuration.GetSection("MailSettings");
             services.Configure<MailSettings>(mailSettings);
+            // Register Email
             services.AddSingleton<IEmailSender, SendMailService>();
 
+            // Register ProductRepository
+            services.AddScoped<IProductRepository, ProductRepository>();
+
+            // Register UnitOfWork
+            services.AddScoped<UnitOfWork>();
+
             // Register CartService and HttpContextAccessor
-            services.AddScoped<CorsService>();
+            services.AddScoped<CartService>();
             services.AddHttpContextAccessor();
 
             // Configure Cookie

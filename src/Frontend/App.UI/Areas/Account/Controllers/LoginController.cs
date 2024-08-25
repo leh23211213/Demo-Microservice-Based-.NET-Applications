@@ -1,6 +1,6 @@
 using App.Data.Models;
 using App.UI.Areas.Account.Models;
-using App.UI.Service;
+using App.UI.Services.mail;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -54,7 +54,7 @@ namespace App.UI.Areas.Account.Controllers
                 return RedirectToAction("Login");
             }
 
-            string returnUrl = Url.Content("~/Product");
+            string returnUrl = Url.Content("~/Customer/Index");
             model.ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
             // Require the user to have a confirmed email before they can log on.

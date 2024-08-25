@@ -1,0 +1,91 @@
+﻿@model App.Data.Models.ViewModels.Product.ProductViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<head>
+    <link rel="stylesheet" href="~/css/Product/Detail.css" asp-append-version="true">
+</head>
+
+@if (User.Identity.IsAuthenticated)
+{
+    <div class="page-content">
+
+        <section class="landing-page-section">
+            <div class="top">
+                <h2 class="Product-Name">
+                    @Model.ProductName
+                </h2>
+            </div>
+            <div class="divider"></div>
+            <div></div>
+            <div class="detail-content">
+                <div class="pricing-card">
+                    <img src="@Url.Content(@Model.ImageUrl)" alt="">
+                    <div class="divider"></div>
+                    <ul>
+                        <li>
+                            content
+                        </li>
+                        <li>
+                            @Model.Description
+                        </li>
+                    </ul>
+                </div>
+                <div class="pricing-card pricing-card--primary">
+                    <div class="pricing-card__price">
+                        @Model.Price
+                    </div>
+                    <div class="divider"></div>
+                    <div class="group-button">
+                        <ul>
+                            <li>
+                                <a class="enroll" title="Buy Now" href="">
+                                    Buy
+                                </a>
+                            </li>
+                            <li>
+                                <a id="addToCartLink" method="post" class="enroll" title="Add to Cart" asp-action="Add"
+                                    asp-controller="Cart" data-product-id="@Model.ProductId">
+                                    @Html.AntiForgeryToken()
+                                    Add to Cart</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <a asp-action="Index">Back to List</a>
+            </div>
+        </section>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#addToCartLink").click(function (e) {
+                e.preventDefault();
+                var productId = $(this).data("product-id");
+                $.ajax({
+                    type: "POST",
+                    url: "/Cart/Add",
+                    data: {
+                        productId: productId,
+                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function (response) {
+                        alert("Product added successfully"); // Show a success message
+                    },
+                    error: function (xhr, status, error) {
+                        var response = JSON.parse(xhr.responseText);
+                        alert(response.message); // Show an error message
+                    }
+                });
+            });
+        });
+    </script>
+}
+else
+{
+    <p>Please log in.</p>
+}

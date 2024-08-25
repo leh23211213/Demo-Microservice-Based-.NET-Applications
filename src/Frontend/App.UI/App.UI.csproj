@@ -20,7 +20,23 @@
    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.8" />
    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.8" />
    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
+   <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8">
+     <PrivateAssets>all</PrivateAssets>
+     <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+   </PackageReference>
+   <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.4" />
    <PackageReference Include="MimeKit" Version="4.7.1" />
+ </ItemGroup>
+
+ <ItemGroup>
+   <Folder Include="Areas\Admin\Controllers\" />
+   <Folder Include="Areas\Admin\Data\" />
+   <Folder Include="Areas\Admin\Models\" />
+   <Folder Include="Areas\Admin\Views\" />
+   <Folder Include="Areas\Customer\Controllers\" />
+   <Folder Include="Areas\Customer\Data\" />
+   <Folder Include="Areas\Customer\Models\" />
+   <Folder Include="Areas\Customer\Views\" />
  </ItemGroup>
 
 

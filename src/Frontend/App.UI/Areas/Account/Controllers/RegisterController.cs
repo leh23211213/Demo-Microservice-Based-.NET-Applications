@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
 using App.Data.Models;
-using App.UI.Service;
+using App.UI.Services.mail;
 using App.Data;
 using App.UI.Areas.Account.Models;
 

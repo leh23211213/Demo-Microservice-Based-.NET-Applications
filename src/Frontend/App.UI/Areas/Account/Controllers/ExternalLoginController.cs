@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using App.Data.Models;
-using App.UI.Service;
+using App.UI.Services.mail;
 using App.UI.Areas.Account.Models;
 
 namespace App.UI.Areas.Account.Controllers
