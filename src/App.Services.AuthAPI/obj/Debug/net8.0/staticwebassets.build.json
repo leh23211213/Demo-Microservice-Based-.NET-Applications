@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "Js4YjlpH+Bf/LAuRA6f0pkk2MaLKTDylT7AVKCYqzok=",
+  "Source": "App.Services.AuthAPI",
+  "BasePath": "_content/App.Services.AuthAPI",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
