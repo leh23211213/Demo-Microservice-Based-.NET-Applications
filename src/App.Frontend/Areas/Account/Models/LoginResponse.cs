@@ -1,5 +1,5 @@
 
-namespace App.Frontend.Models;
+namespace App.Frontend.Areas.Account.Models;
 public class LoginResponse
 {
     public User User { get; set; }

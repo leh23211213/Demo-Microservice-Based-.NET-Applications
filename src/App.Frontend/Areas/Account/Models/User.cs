@@ -1,5 +1,5 @@
 
-namespace App.Frontend.Models;
+namespace App.Frontend.Areas.Account.Models;
 public class User
 {
     public string Id { get; set; }

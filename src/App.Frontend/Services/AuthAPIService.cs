@@ -1,3 +1,4 @@
+using App.Frontend.Areas.Account.Models;
 using App.Frontend.Models;
 using App.Frontend.Services.IServices;
 using App.Frontend.Utility;

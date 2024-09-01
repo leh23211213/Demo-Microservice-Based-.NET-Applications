@@ -3,7 +3,6 @@ using System.Net;
 using System.Text;
 using App.Frontend.Models;
 using App.Frontend.Services.IServices;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Newtonsoft.Json;
 using static App.Frontend.Utility.StaticDetail;
 
@@ -23,7 +22,7 @@ namespace App.Frontend.Services
             {
                 HttpClient client = _httpClientFactory.CreateClient("AppAPI");
                 HttpRequestMessage message = new();
-                
+
                 message.Headers.Add("Accept", "application/json");
                 message.RequestUri = new Uri(request.Url);
 
@@ -31,7 +30,7 @@ namespace App.Frontend.Services
                 {
                     message.Content = new StringContent(JsonConvert.SerializeObject(request.Data), Encoding.UTF8, "application/json");
                 }
-                
+
                 HttpResponseMessage? apiResponse = null;
 
                 switch (request.ApiType)

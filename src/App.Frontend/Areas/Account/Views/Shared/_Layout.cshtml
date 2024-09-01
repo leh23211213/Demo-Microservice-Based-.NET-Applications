@@ -1,0 +1,41 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/Account/Login.css" asp-append-version="true">
+    <!-- Load jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- Load jQuery Validation Plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+</head>
+
+<body>
+    <main role="main" class="pb-3">
+
+        <div class="left-content">
+            @RenderBody()
+        </div>
+
+        <div class="right-content">
+            <div class="blockquote-wrappe">
+                <img src="~/lib/image/Login/megamenu-img.png" alt="" style="width: 700px; height: 700px;">
+            </div>
+            <h4 class="mt-5">
+                Get's
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="btn btn-primary">OverView</a>
+            </h4>
+            <p class="text-muted">A central workspace for building, testing Website.</p>
+        </div>
+        </div>
+
+    </main>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            <small>&copy;2024 Ecommerce-MVC-ASP.NET-C# - Email: leh23211213@gmail.com</small>
+        </div>
+    </footer>
+
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
