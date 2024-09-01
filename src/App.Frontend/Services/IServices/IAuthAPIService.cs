@@ -1,4 +1,5 @@
 
+using App.Frontend.Areas.Account.Models;
 using App.Frontend.Models;
 
 namespace App.Frontend.Services.IServices
