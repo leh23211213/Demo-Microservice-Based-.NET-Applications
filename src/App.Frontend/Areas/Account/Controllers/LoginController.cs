@@ -1,9 +1,15 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using App.Frontend.Areas.Account.Models;
+using App.Frontend.Models;
 using App.Frontend.Services.IServices;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
-namespace App.UI.Areas.Account.Controllers
+namespace App.Frontend.Areas.Account.Controllers
 {
     [Area("Account")]
     [Route("[Area]/[action]")]
@@ -12,70 +18,67 @@ namespace App.UI.Areas.Account.Controllers
     public class LoginController : Controller
     {
         private readonly IAuthAPIService _authAPIService;
-
-        public LoginController(IAuthAPIService authAPIService)
+        private readonly ITokenProvider _tokenProvider;
+        public LoginController(IAuthAPIService authAPIService, ITokenProvider tokenProvider)
         {
             _authAPIService = authAPIService;
+            _tokenProvider = tokenProvider;
         }
 
         // GET: /Account/Login
         [HttpGet]
         public async Task<ActionResult> Login()
         {
-            // Clear the existing external cookie to ensure a clean login process
-            // await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
-            // var model = new LoginViewModel
-            // {
-            //     ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
-            // };
-            return View();
+            var model = new LoginRequest()
+            {
+
+            };
+
+            return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginRequest obj)
+        public async Task<IActionResult> Login(LoginRequest model)
         {
-            //     if (!ModelState.IsValid)
-            //     {
-            //         return RedirectToAction("Login");
-            //     }
+            Response response = await _authAPIService.LoginAsync(model);
 
-            //     string returnUrl = Url.Content("~/Customer/Index");
-            // model.ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            if (response.IsSuccess && response != null)
+            {
+                LoginResponse loginResponse = JsonConvert.DeserializeObject<LoginResponse>(Convert.ToString(response.Result));
+                await SignInUser(loginResponse);
+                _tokenProvider.SetToken(loginResponse.Token);
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                ModelState.AddModelError("CustomerError", response.Message);
+                return View(model);
+            }
+        }
 
-            // Require the user to have a confirmed email before they can log on.
-            // var user = await _userManager.FindByEmailAsync(model.Email);
-            // if (user != null)
-            // {
-            //     if (!await _userManager.IsEmailConfirmedAsync(user))
-            //     {
-            //         string code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            //         var callbackUrl = Url.Action("ConfirmEmail", "Account",
-            //            new { userId = user.Id, code = code }, protocol: Request.Scheme);
-            //         await _emailSender.SendEmailAsync(user.Email, "Confirm your email",
-            //                 $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-            //         ViewBag.errorMessage = "You must have a confirmed email to log on. "
-            //                             + "The confirmation token has been resent to your email account.";
-            //         return View("Error");
-            //     }
-            // }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout(string returnUrl = null)
+        {
+            await HttpContext.SignOutAsync();
+            _tokenProvider.ClearToken();
+            return RedirectToAction("Login", "Login", new { area = "Account" });
+        }
 
-            // var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
-            // if (result.Succeeded)
-            // {
-            //     return LocalRedirect(returnUrl);
-            // }
-            // if (result.IsLockedOut)
-            // {
-            //     return RedirectToAction("Lockout");
-            // }
-            // else
-            // {
-            //     ModelState.AddModelError(string.Empty, "Invalid Login Information.");
-            //     model.ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-            //     return View(model);
-            // }
-            return View();
+        private async Task SignInUser(LoginResponse model)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jwt = handler.ReadJwtToken(model.Token);
+
+            var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
+            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Email, jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Email).Value));
+            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Sub, jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Sub).Value));
+            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Name, jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Name).Value));
+            identity.AddClaim(new Claim(ClaimTypes.Name, jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Email).Value));
+            identity.AddClaim(new Claim(ClaimTypes.Role, jwt.Claims.FirstOrDefault(u => u.Type == "role").Value));
+
+            var principal = new ClaimsPrincipal(identity);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
         }
     }
-
 }

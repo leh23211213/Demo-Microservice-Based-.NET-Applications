@@ -6,7 +6,6 @@ using App.Services.AuthAPI.Services;
 using App.Services.AuthAPI.Services.IServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace App.Services.AuthAPI.Extensions

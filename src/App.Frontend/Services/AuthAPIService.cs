@@ -17,9 +17,9 @@ namespace App.Frontend.Services
         {
             return await _baseService.SendAsync(new Request()
             {
-                ApiType = StaticDetail.ApiType.POST,
+                ApiType = StaticDetail.ApiType.POST, 
                 Data = registrationRequest,
-                Url = StaticDetail.AuthAPIBase + "api/auth/AssignRole"
+                Url = StaticDetail.AuthAPIBase + "/api/auth/AssignRole"
             }, withBearer: false);
         }
 
@@ -29,8 +29,8 @@ namespace App.Frontend.Services
             {
                 ApiType = StaticDetail.ApiType.POST,
                 Data = loginRequest,
-                Url = StaticDetail.AuthAPIBase + "api/auth/login"
-            }, withBearer: false);  
+                Url = StaticDetail.AuthAPIBase + "/api/auth/login"
+            }, withBearer: false);
         }
 
         public async Task<Response?> RegisterAsync(RegistrationRequest registerRequest)
@@ -39,7 +39,7 @@ namespace App.Frontend.Services
             {
                 ApiType = StaticDetail.ApiType.POST,
                 Data = registerRequest,
-                Url = StaticDetail.AuthAPIBase + "api/auth/register"
+                Url = StaticDetail.AuthAPIBase + "/api/auth/register"
             }, withBearer: false);
         }
     }

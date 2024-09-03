@@ -1,17 +1,12 @@
-using System.Text.Encodings.Web;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.WebUtilities;
-using System.Text;
 using App.Frontend.Services.IServices;
 using App.Frontend.Areas.Account.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using App.Frontend.Utility;
-using Microsoft.AspNetCore.Identity.Data;
 using App.Frontend.Models;
 
-namespace App.UI.Areas.Account.Controllers
+namespace App.Frontend.Areas.Account.Controllers
 {
     [Area("Account")]
     [Route("[area]/[action]")]
@@ -44,9 +39,9 @@ namespace App.UI.Areas.Account.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegistrationRequest model)
         {
-            Response result = await _authAPIService.RegisterAsync(model);
+            Response response = await _authAPIService.RegisterAsync(model);
 
-            if (result.IsSuccess && result != null)
+            if (response.IsSuccess && response != null)
             {
                 if (string.IsNullOrEmpty(model.Role))
                 {
@@ -62,7 +57,7 @@ namespace App.UI.Areas.Account.Controllers
             }
             else
             {
-                TempData["error"] = result.Message;
+                TempData["error"] = response.Message;
             }
 
             model.Roles = new List<SelectListItem>(){
