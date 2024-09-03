@@ -13,6 +13,7 @@ builder.Services.AddHttpClient<IAuthAPIService, AuthAPIService>();
 
 StaticDetail.AuthAPIBase = builder.Configuration["ServiceUrls:AuthAPI"];
 
+builder.Services.AddScoped<ITokenProvider, TokenProvider>();
 builder.Services.AddScoped<IBaseService, BaseService>();
 builder.Services.AddScoped<IAuthAPIService, AuthAPIService>();
 

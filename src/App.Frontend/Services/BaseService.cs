@@ -20,37 +20,33 @@ namespace App.Frontend.Services
         {
             try
             {
-                HttpClient client = _httpClientFactory.CreateClient("AppAPI");
+
+                HttpClient client = _httpClientFactory.CreateClient("MangoAPI");
                 HttpRequestMessage message = new();
 
                 message.Headers.Add("Accept", "application/json");
-                message.RequestUri = new Uri(request.Url);
-
                 if (request.Data != null)
                 {
                     message.Content = new StringContent(JsonConvert.SerializeObject(request.Data), Encoding.UTF8, "application/json");
                 }
 
                 HttpResponseMessage? apiResponse = null;
-
                 switch (request.ApiType)
                 {
                     case ApiType.POST:
                         message.Method = HttpMethod.Post;
                         break;
-                    case ApiType.PUT:
-                        message.Method = HttpMethod.Put;
-                        break;
                     case ApiType.DELETE:
                         message.Method = HttpMethod.Delete;
+                        break;
+                    case ApiType.PUT:
+                        message.Method = HttpMethod.Put;
                         break;
                     default:
                         message.Method = HttpMethod.Get;
                         break;
                 }
-
                 apiResponse = await client.SendAsync(message);
-
                 switch (apiResponse.StatusCode)
                 {
                     case HttpStatusCode.NotFound:
@@ -76,7 +72,6 @@ namespace App.Frontend.Services
                 };
                 return newResponse;
             }
-
         }
     }
 }
