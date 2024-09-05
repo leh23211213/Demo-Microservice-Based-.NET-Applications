@@ -1,15 +1,14 @@
 using App.Services.AuthAPI.Data;
 using App.Services.Produ.Extensions;
 using App.Services.ProductAPI.Extensions;
-using AutoMapper;
-using Mango.Services.ProductAPI;
 using Microsoft.EntityFrameworkCore;
+using App.Services.ProductAPI.Models.DTOs;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.   
+// Register Response class if it's a service
+builder.Services.AddScoped<Response>();
 
-IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
 builder.Services.ConfigureDatabase(builder.Configuration);
 builder.Services.AppServiceCollection(builder.Configuration);
 

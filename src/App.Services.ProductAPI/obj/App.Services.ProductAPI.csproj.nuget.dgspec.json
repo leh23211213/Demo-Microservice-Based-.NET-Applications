@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\App.Services.ProductAPI.csproj": {}
+    "e:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\App.Services.ProductAPI.csproj": {}
   },
   "projects": {
-    "E:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\App.Services.ProductAPI.csproj": {
+    "e:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\App.Services.ProductAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\App.Services.ProductAPI.csproj",
+        "projectUniqueName": "e:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\App.Services.ProductAPI.csproj",
         "projectName": "App.Services.ProductAPI",
-        "projectPath": "E:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\App.Services.ProductAPI.csproj",
+        "projectPath": "e:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\App.Services.ProductAPI.csproj",
         "packagesPath": "C:\\Users\\lenovo\\.nuget\\packages\\",
-        "outputPath": "E:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\obj\\",
+        "outputPath": "e:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -62,6 +62,10 @@
               "target": "Package",
               "version": "[8.0.8, )"
             },
+            "Microsoft.AspNetCore.OpenApi": {
+              "target": "Package",
+              "version": "[8.0.8, )"
+            },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
               "version": "[8.0.8, )"
@@ -75,6 +79,16 @@
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
               "version": "[8.0.8, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.8, )"
+            },
+            "Microsoft.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[8.0.0, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
