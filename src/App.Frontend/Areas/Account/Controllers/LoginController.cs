@@ -14,14 +14,13 @@ namespace App.Frontend.Areas.Account.Controllers
     [Area("Account")]
     [Route("[Area]/[action]")]
     [AllowAnonymous]
-    [Authorize]
     public class LoginController : Controller
     {
-        private readonly IAuthAPIService _authAPIService;
+        private readonly IAuthService _authService;
         private readonly ITokenProvider _tokenProvider;
-        public LoginController(IAuthAPIService authAPIService, ITokenProvider tokenProvider)
+        public LoginController(IAuthService authService, ITokenProvider tokenProvider)
         {
-            _authAPIService = authAPIService;
+            _authService = authService;
             _tokenProvider = tokenProvider;
         }
 
@@ -31,7 +30,6 @@ namespace App.Frontend.Areas.Account.Controllers
         {
             var model = new LoginRequest()
             {
-
             };
 
             return View(model);
@@ -40,7 +38,7 @@ namespace App.Frontend.Areas.Account.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginRequest model)
         {
-            Response response = await _authAPIService.LoginAsync(model);
+            Response response = await _authService.LoginAsync(model);
 
             if (response.IsSuccess && response != null)
             {
@@ -57,8 +55,7 @@ namespace App.Frontend.Areas.Account.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Logout(string returnUrl = null)
+        public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();
             _tokenProvider.ClearToken();

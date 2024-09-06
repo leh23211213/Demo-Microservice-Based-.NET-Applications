@@ -13,11 +13,11 @@ namespace App.Frontend.Areas.Account.Controllers
     [AllowAnonymous]
     public class RegisterController : Controller
     {
-        private readonly IAuthAPIService _authAPIService;
+        private readonly IAuthService _authService;
 
-        public RegisterController(IAuthAPIService authAPIService)
+        public RegisterController(IAuthService authService)
         {
-            _authAPIService = authAPIService;
+            _authService = authService;
         }
 
         [HttpGet]
@@ -30,16 +30,14 @@ namespace App.Frontend.Areas.Account.Controllers
                 new SelectListItem{Text = StaticDetail.RoleCustomer, Value = StaticDetail.RoleCustomer}
                 }
             };
-
             return View(model);
-
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegistrationRequest model)
         {
-            Response response = await _authAPIService.RegisterAsync(model);
+            Response response = await _authService.RegisterAsync(model);
 
             if (response.IsSuccess && response != null)
             {
@@ -48,7 +46,7 @@ namespace App.Frontend.Areas.Account.Controllers
                     model.Role = StaticDetail.RoleCustomer;
                 }
 
-                Response assignRole = await _authAPIService.AssignRoleAsync(model);
+                Response assignRole = await _authService.AssignRoleAsync(model);
                 if (assignRole != null && assignRole.IsSuccess)
                 {
                     TempData["success"] = "Registration Successful";

@@ -5,10 +5,10 @@ using App.Frontend.Utility;
 
 namespace App.Frontend.Services
 {
-    public class AuthAPIService : IAuthAPIService
+    public class AuthService : IAuthService
     {
         private readonly IBaseService _baseService;
-        public AuthAPIService(IBaseService baseService)
+        public AuthService(IBaseService baseService)
         {
             _baseService = baseService;
         }
@@ -17,10 +17,10 @@ namespace App.Frontend.Services
         {
             return await _baseService.SendAsync(new Request()
             {
-                ApiType = StaticDetail.ApiType.POST, 
+                ApiType = StaticDetail.ApiType.POST,
                 Data = registrationRequest,
                 Url = StaticDetail.AuthAPIBase + "/api/auth/AssignRole"
-            }, withBearer: false);
+            });
         }
 
         public async Task<Response?> LoginAsync(LoginRequest loginRequest)
