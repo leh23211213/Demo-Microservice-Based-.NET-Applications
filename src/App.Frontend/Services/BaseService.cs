@@ -11,20 +11,37 @@ namespace App.Frontend.Services
     public class BaseService : IBaseService
     {
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly ITokenProvider _tokenProvider;
 
-        public BaseService(IHttpClientFactory httpClientFactory)
+        public BaseService(IHttpClientFactory httpClientFactory, ITokenProvider tokenProvider)
         {
             _httpClientFactory = httpClientFactory;
+            _tokenProvider = tokenProvider;
         }
         public async Task<Response?> SendAsync(Request request, bool withBearer = true)
         {
             try
             {
 
-                HttpClient client = _httpClientFactory.CreateClient("MangoAPI");
+                HttpClient client = _httpClientFactory.CreateClient("AppAPI");
                 HttpRequestMessage message = new();
+                if (request.ContentType == ContentType.MultipartFormData)
+                {
+                    message.Headers.Add("Accept", "application/json");
+                }
+                else
+                {
+                    message.Headers.Add("Accept", "application/json");
+                }
 
-                message.Headers.Add("Accept", "application/json");
+                if (withBearer)
+                {
+                    var token = _tokenProvider.GetToken();
+                    message.Headers.Add("Authorization", $" {token}");
+                }
+
+                message.RequestUri = new Uri(request.Url);
+
                 if (request.Data != null)
                 {
                     message.Content = new StringContent(JsonConvert.SerializeObject(request.Data), Encoding.UTF8, "application/json");

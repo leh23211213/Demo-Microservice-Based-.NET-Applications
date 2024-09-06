@@ -3,7 +3,6 @@ using App.Services.AuthAPI.Data;
 using App.Services.ProductAPI.Models;
 using App.Services.ProductAPI.Models.DTOs;
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.Services.ProductAPI.Controllers

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "bXtqZ+CckZo=",
+  "dgSpecHash": "DbG9jCnPZBc=",
   "success": true,
-  "projectFilePath": "e:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\App.Services.ProductAPI.csproj",
+  "projectFilePath": "E:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\App.Services.ProductAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\lenovo\\.nuget\\packages\\automapper\\13.0.1\\automapper.13.0.1.nupkg.sha512",
     "C:\\Users\\lenovo\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",

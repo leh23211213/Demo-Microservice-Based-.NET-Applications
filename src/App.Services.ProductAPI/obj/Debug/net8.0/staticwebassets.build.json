@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "1lUvQrtWsSKXscp2K2nsodJBV4x1l5lmJgbWqvdYxkU=",
+  "Hash": "B68y/F0IRFUXB+C7FOsWgovHSUJdEqcVaVVTTR3ySWE=",
   "Source": "App.Services.ProductAPI",
   "BasePath": "_content/App.Services.ProductAPI",
   "Mode": "Default",
@@ -10,17 +10,17 @@
     {
       "Name": "App.Services.ProductAPI\\wwwroot",
       "Source": "App.Services.ProductAPI",
-      "ContentRoot": "e:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\wwwroot\\",
+      "ContentRoot": "E:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\wwwroot\\",
       "BasePath": "_content/App.Services.ProductAPI",
       "Pattern": "**"
     }
   ],
   "Assets": [
     {
-      "Identity": "e:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\wwwroot\\lib\\Product\\SmartPhone\\IP13-Mini-BK-128GB.png",
+      "Identity": "E:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\wwwroot\\lib\\Product\\SmartPhone\\IP13-Mini-BK-128GB.png",
       "SourceId": "App.Services.ProductAPI",
       "SourceType": "Discovered",
-      "ContentRoot": "e:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\wwwroot\\",
+      "ContentRoot": "E:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\wwwroot\\",
       "BasePath": "_content/App.Services.ProductAPI",
       "RelativePath": "lib/Product/SmartPhone/IP13-Mini-BK-128GB.png",
       "AssetKind": "All",
@@ -36,10 +36,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\Product\\SmartPhone\\IP13-Mini-BK-128GB.png"
     },
     {
-      "Identity": "e:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\wwwroot\\lib\\Product\\SmartPhone\\IP13-Mini-GR-128GB.png",
+      "Identity": "E:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\wwwroot\\lib\\Product\\SmartPhone\\IP13-Mini-GR-128GB.png",
       "SourceId": "App.Services.ProductAPI",
       "SourceType": "Discovered",
-      "ContentRoot": "e:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\wwwroot\\",
+      "ContentRoot": "E:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\wwwroot\\",
       "BasePath": "_content/App.Services.ProductAPI",
       "RelativePath": "lib/Product/SmartPhone/IP13-Mini-GR-128GB.png",
       "AssetKind": "All",
@@ -55,10 +55,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\Product\\SmartPhone\\IP13-Mini-GR-128GB.png"
     },
     {
-      "Identity": "e:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\wwwroot\\lib\\Product\\SmartPhone\\IP13-Mini-PK-128GB.png",
+      "Identity": "E:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\wwwroot\\lib\\Product\\SmartPhone\\IP13-Mini-PK-128GB.png",
       "SourceId": "App.Services.ProductAPI",
       "SourceType": "Discovered",
-      "ContentRoot": "e:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\wwwroot\\",
+      "ContentRoot": "E:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\wwwroot\\",
       "BasePath": "_content/App.Services.ProductAPI",
       "RelativePath": "lib/Product/SmartPhone/IP13-Mini-PK-128GB.png",
       "AssetKind": "All",
@@ -74,10 +74,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\Product\\SmartPhone\\IP13-Mini-PK-128GB.png"
     },
     {
-      "Identity": "e:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\wwwroot\\lib\\Product\\SmartPhone\\IP13-Pro-BL-128GB.png",
+      "Identity": "E:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\wwwroot\\lib\\Product\\SmartPhone\\IP13-Pro-BL-128GB.png",
       "SourceId": "App.Services.ProductAPI",
       "SourceType": "Discovered",
-      "ContentRoot": "e:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\wwwroot\\",
+      "ContentRoot": "E:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\wwwroot\\",
       "BasePath": "_content/App.Services.ProductAPI",
       "RelativePath": "lib/Product/SmartPhone/IP13-Pro-BL-128GB.png",
       "AssetKind": "All",
@@ -93,10 +93,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\Product\\SmartPhone\\IP13-Pro-BL-128GB.png"
     },
     {
-      "Identity": "e:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\wwwroot\\lib\\Product\\SmartPhone\\IP13-Pro-GR-128GB.png",
+      "Identity": "E:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\wwwroot\\lib\\Product\\SmartPhone\\IP13-Pro-GR-128GB.png",
       "SourceId": "App.Services.ProductAPI",
       "SourceType": "Discovered",
-      "ContentRoot": "e:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\wwwroot\\",
+      "ContentRoot": "E:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\wwwroot\\",
       "BasePath": "_content/App.Services.ProductAPI",
       "RelativePath": "lib/Product/SmartPhone/IP13-Pro-GR-128GB.png",
       "AssetKind": "All",
@@ -112,10 +112,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\Product\\SmartPhone\\IP13-Pro-GR-128GB.png"
     },
     {
-      "Identity": "e:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\wwwroot\\lib\\Product\\SmartPhone\\IP13-Pro-SL-128GB.png",
+      "Identity": "E:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\wwwroot\\lib\\Product\\SmartPhone\\IP13-Pro-SL-128GB.png",
       "SourceId": "App.Services.ProductAPI",
       "SourceType": "Discovered",
-      "ContentRoot": "e:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\wwwroot\\",
+      "ContentRoot": "E:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\wwwroot\\",
       "BasePath": "_content/App.Services.ProductAPI",
       "RelativePath": "lib/Product/SmartPhone/IP13-Pro-SL-128GB.png",
       "AssetKind": "All",
@@ -131,10 +131,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\Product\\SmartPhone\\IP13-Pro-SL-128GB.png"
     },
     {
-      "Identity": "e:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\wwwroot\\lib\\Product\\SmartPhone\\IP13-Standard-BK-128GB.png",
+      "Identity": "E:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\wwwroot\\lib\\Product\\SmartPhone\\IP13-Standard-BK-128GB.png",
       "SourceId": "App.Services.ProductAPI",
       "SourceType": "Discovered",
-      "ContentRoot": "e:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\wwwroot\\",
+      "ContentRoot": "E:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\wwwroot\\",
       "BasePath": "_content/App.Services.ProductAPI",
       "RelativePath": "lib/Product/SmartPhone/IP13-Standard-BK-128GB.png",
       "AssetKind": "All",
@@ -150,10 +150,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\Product\\SmartPhone\\IP13-Standard-BK-128GB.png"
     },
     {
-      "Identity": "e:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\wwwroot\\lib\\Product\\SmartPhone\\IP13-Standard-BL-128GB.png",
+      "Identity": "E:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\wwwroot\\lib\\Product\\SmartPhone\\IP13-Standard-BL-128GB.png",
       "SourceId": "App.Services.ProductAPI",
       "SourceType": "Discovered",
-      "ContentRoot": "e:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\wwwroot\\",
+      "ContentRoot": "E:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\wwwroot\\",
       "BasePath": "_content/App.Services.ProductAPI",
       "RelativePath": "lib/Product/SmartPhone/IP13-Standard-BL-128GB.png",
       "AssetKind": "All",
@@ -169,10 +169,10 @@
       "OriginalItemSpec": "wwwroot\\lib\\Product\\SmartPhone\\IP13-Standard-BL-128GB.png"
     },
     {
-      "Identity": "e:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\wwwroot\\lib\\Product\\SmartPhone\\IP13-Standard-WH-128GB.png",
+      "Identity": "E:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\wwwroot\\lib\\Product\\SmartPhone\\IP13-Standard-WH-128GB.png",
       "SourceId": "App.Services.ProductAPI",
       "SourceType": "Discovered",
-      "ContentRoot": "e:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\wwwroot\\",
+      "ContentRoot": "E:\\IT\\VSCode\\Github\\Demo-Microservice-Based-.NET-Applications\\src\\App.Services.ProductAPI\\wwwroot\\",
       "BasePath": "_content/App.Services.ProductAPI",
       "RelativePath": "lib/Product/SmartPhone/IP13-Standard-WH-128GB.png",
       "AssetKind": "All",
