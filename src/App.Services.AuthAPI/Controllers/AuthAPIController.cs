@@ -17,6 +17,20 @@ namespace App.Services.AuthAPI.Controllers
             _response = new Response();
         }
 
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequest model)
+        {
+            var loginResponse = await _authAPIService.Login(model);
+            if (loginResponse.User == null)
+            {
+                _response.IsSuccess = false;
+                _response.Message = "account or password is incorrect";
+                return BadRequest(_response);
+            }
+            _response.Result = loginResponse;
+            return Ok(_response);
+        }
+
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegistrationRequest model)
         {
@@ -30,20 +44,6 @@ namespace App.Services.AuthAPI.Controllers
             return Ok(_response);
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest model)
-        {
-            var loginResponse = await _authAPIService.Login(model);
-            if (loginResponse == null)
-            {
-                _response.IsSuccess = false;
-                _response.Message = "account or password is incorrect";
-                return BadRequest(_response);
-            }
-            _response.Result = loginResponse;
-            return Ok(_response);
-        }
-        
         [HttpPost("AssignRole")]
         public async Task<IActionResult> AssignRole([FromBody] RegistrationRequest model)
         {

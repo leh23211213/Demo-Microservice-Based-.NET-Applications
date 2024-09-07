@@ -11,12 +11,10 @@ namespace App.Services.AuthAPI.Services
     public class JwtTokenGenerator : IJwtTokenGenerator
     {
         private readonly JwtOptions _jwtOptions;
-        private readonly IConfiguration _configuration;
 
-        public JwtTokenGenerator(IOptions<JwtOptions> jwtOptions, IConfiguration configuration)
+        public JwtTokenGenerator(IOptions<JwtOptions> jwtOptions)
         {
             _jwtOptions = jwtOptions.Value;
-            _configuration = configuration;
         }
 
         public string GenerateToken(ApplicationUser applicationUser, IEnumerable<string> roles)

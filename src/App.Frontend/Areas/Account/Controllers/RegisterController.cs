@@ -38,15 +38,15 @@ namespace App.Frontend.Areas.Account.Controllers
         public async Task<IActionResult> Register(RegistrationRequest model)
         {
             Response response = await _authService.RegisterAsync(model);
-
+            Response assignRole;
             if (response.IsSuccess && response != null)
-            {
+            {       
                 if (string.IsNullOrEmpty(model.Role))
                 {
                     model.Role = StaticDetail.RoleCustomer;
                 }
 
-                Response assignRole = await _authService.AssignRoleAsync(model);
+                assignRole = await _authService.AssignRoleAsync(model);
                 if (assignRole != null && assignRole.IsSuccess)
                 {
                     TempData["success"] = "Registration Successful";

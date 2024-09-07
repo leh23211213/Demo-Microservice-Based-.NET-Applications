@@ -1,4 +1,3 @@
-
 namespace App.Services.AuthAPI.Models.DTOs
 {
     public class User

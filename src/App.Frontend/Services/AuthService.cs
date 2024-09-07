@@ -20,7 +20,7 @@ namespace App.Frontend.Services
                 ApiType = StaticDetail.ApiType.POST,
                 Data = registrationRequest,
                 Url = StaticDetail.AuthAPIBase + "/api/auth/AssignRole"
-            });
+            }, withBearer: false);
         }
 
         public async Task<Response?> LoginAsync(LoginRequest loginRequest)
@@ -30,7 +30,7 @@ namespace App.Frontend.Services
                 ApiType = StaticDetail.ApiType.POST,
                 Data = loginRequest,
                 Url = StaticDetail.AuthAPIBase + "/api/auth/login"
-            }, withBearer: false);
+            });
         }
 
         public async Task<Response?> RegisterAsync(RegistrationRequest registerRequest)

@@ -31,26 +31,32 @@ namespace App.Frontend.Areas.Account.Controllers
             var model = new LoginRequest()
             {
             };
-
             return View(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> Login(LoginRequest model)
         {
-            Response response = await _authService.LoginAsync(model);
-
-            if (response.IsSuccess && response != null)
+            if (!ModelState.IsValid)
             {
-                LoginResponse loginResponse = JsonConvert.DeserializeObject<LoginResponse>(Convert.ToString(response.Result));
-                await SignInUser(loginResponse);
-                _tokenProvider.SetToken(loginResponse.Token);
-                return RedirectToAction("Index", "Home");
+                TempData["error"] = "123";
+                return RedirectToAction("Login");
             }
             else
             {
-                ModelState.AddModelError("CustomerError", response.Message);
-                return View(model);
+                Response response = await _authService.LoginAsync(model);
+                if (response.IsSuccess && response != null)
+                {
+                    LoginResponse loginResponse = JsonConvert.DeserializeObject<LoginResponse>(Convert.ToString(response.Result));
+                    await SignInUser(loginResponse);
+                    _tokenProvider.SetToken(loginResponse.Token);
+                    return RedirectToAction("Index", "Product");
+                }
+                else
+                {
+                    ModelState.AddModelError("CustomerError", response.Message);
+                    return View(model);
+                }
             }
         }
 
