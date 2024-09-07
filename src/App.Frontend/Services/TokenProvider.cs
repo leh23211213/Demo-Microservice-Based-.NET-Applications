@@ -19,7 +19,7 @@ namespace App.Frontend.Services
             _httpContextAccessor.HttpContext?.Response.Cookies.Delete(StaticDetail.TokenCookie);
         }
 
-        public string? GetToken()
+        public string? GetToken()   
         {
             string? token = null;
             bool? hasToken = _httpContextAccessor.HttpContext?.Request.Cookies.TryGetValue(StaticDetail.TokenCookie, out token);

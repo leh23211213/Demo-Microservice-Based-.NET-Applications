@@ -34,24 +34,17 @@ namespace App.Services.AuthAPI.Extensions
             });
 
             // Configure Identity
+            services.AddControllers();
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen();
+            services.AddAuthorization();
+
             services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>()
                     .AddDefaultTokenProviders();
             services.Configure<JwtOptions>(configuration.GetSection("ApiSettings:JwtOptions"));
-            services.AddControllers();
             services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
             services.AddScoped<IAuthAPIService, AuthAPIService>();
-            services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen();
-            services.AddMemoryCache();
-            services.AddAuthorization();
-            // Configure Session
-            services.AddDistributedMemoryCache();
-            services.AddSession(options =>
-            {
-                options.IdleTimeout = TimeSpan.FromSeconds(10);
-                options.Cookie.HttpOnly = true;
-                options.Cookie.IsEssential = true;
-            });
+
             return services;
         }
     }

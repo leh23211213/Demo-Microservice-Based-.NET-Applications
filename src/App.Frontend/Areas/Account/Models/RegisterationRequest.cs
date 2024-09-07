@@ -20,13 +20,8 @@ public class RegistrationRequest
     [Display(Name = "Confirm password")]
     [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
     public string ConfirmPassword { get; set; } = null!;
-
-    [Required]
-    public string PhoneNumber { get; set; }
-    [Required]
     public string? Role { get; set; }
-    [Required]
-    public List<SelectListItem> Roles { get; set; } // To store the list of available roles
+    public List<SelectListItem>? Roles { get; set; } // To store the list of available roles
 
     public IList<AuthenticationScheme>? ExternalLogins { get; set; } = null!;
 }

@@ -27,7 +27,7 @@ namespace App.Frontend.Services
                 HttpRequestMessage message = new();
                 if (request.ContentType == ContentType.MultipartFormData)
                 {
-                    message.Headers.Add("Accept", "application/json");
+                    message.Headers.Add("Accept", "*/*");
                 }
                 else
                 {
@@ -37,11 +37,10 @@ namespace App.Frontend.Services
                 if (withBearer)
                 {
                     var token = _tokenProvider.GetToken();
-                    message.Headers.Add("Authorization", $" {token}");
+                    message.Headers.Add("Authorization", $"Bearer {token}");
                 }
 
                 message.RequestUri = new Uri(request.Url);
-
                 if (request.Data != null)
                 {
                     message.Content = new StringContent(JsonConvert.SerializeObject(request.Data), Encoding.UTF8, "application/json");

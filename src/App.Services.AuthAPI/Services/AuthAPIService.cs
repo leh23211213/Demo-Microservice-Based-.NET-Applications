@@ -1,4 +1,3 @@
-
 using App.Services.AuthAPI.Data;
 using App.Services.AuthAPI.Models;
 using App.Services.AuthAPI.Models.DTOs;
@@ -48,7 +47,7 @@ namespace App.Services.AuthAPI.Services
 
             if (account == null || !isValid)
             {
-                return new LoginResponse() { User = null, Token = "" };
+                return new LoginResponse() { User = null, Token = null };
             }
 
             var roles = await _userManager.GetRolesAsync(account);
@@ -57,9 +56,7 @@ namespace App.Services.AuthAPI.Services
             User user = new()
             {
                 Email = account.Email,
-                Id = account.Id,
                 Name = account.Name,
-                PhoneNumber = account.PhoneNumber,
             };
 
             LoginResponse loginResponseresponse = new LoginResponse()
@@ -79,8 +76,8 @@ namespace App.Services.AuthAPI.Services
                 Email = RegistrationRequest.Email,
                 NormalizedEmail = RegistrationRequest.Email.ToUpper(),
                 Name = RegistrationRequest.Name,
-                PhoneNumber = RegistrationRequest.PhoneNumber
             };
+
             try
             {
                 var result = await _userManager.CreateAsync(applicationUser, RegistrationRequest.Password);
@@ -89,10 +86,9 @@ namespace App.Services.AuthAPI.Services
                     var userToReturn = _dbContext.Users.First(x => x.UserName == RegistrationRequest.Email);
                     User user = new()
                     {
-                        Email = userToReturn.Email,
                         Id = userToReturn.Id,
+                        Email = userToReturn.Email,
                         Name = userToReturn.Name,
-                        PhoneNumber = userToReturn.PhoneNumber,
                     };
                     return "";
                 }
