@@ -47,13 +47,13 @@ namespace App.Services.AuthAPI.Services
 
             if (account == null || !isValid)
             {
-                return new LoginResponse() { User = null, Token = null };
+                return new LoginResponse() { UserDTO = null, Token = null };
             }
 
             var roles = await _userManager.GetRolesAsync(account);
             var token = _jwtTokenGenerator.GenerateToken(account, roles);
 
-            User user = new()
+            UserDTO user = new()
             {
                 Email = account.Email,
                 Name = account.Name,
@@ -61,34 +61,36 @@ namespace App.Services.AuthAPI.Services
 
             LoginResponse loginResponseresponse = new LoginResponse()
             {
-                User = user,
+                UserDTO = user,
                 Token = token
             };
 
             return loginResponseresponse;
         }
 
-        public async Task<string> Register(RegistrationRequest RegistrationRequest)
+        public async Task<string> Register(RegistrationRequest registrationRequest)
         {
             ApplicationUser applicationUser = new()
             {
-                UserName = RegistrationRequest.Email,
-                Email = RegistrationRequest.Email,
-                NormalizedEmail = RegistrationRequest.Email.ToUpper(),
-                Name = RegistrationRequest.Name,
+                UserName = registrationRequest.Email,
+                Email = registrationRequest.Email,
+                NormalizedEmail = registrationRequest.Email.ToUpper(),
+                Name = registrationRequest.Name,
+                PhoneNumber = registrationRequest.PhoneNumber
             };
 
             try
             {
-                var result = await _userManager.CreateAsync(applicationUser, RegistrationRequest.Password);
+                var result = await _userManager.CreateAsync(applicationUser, registrationRequest.Password);
                 if (result.Succeeded)
                 {
-                    var userToReturn = _dbContext.Users.First(x => x.UserName == RegistrationRequest.Email);
-                    User user = new()
+                    var userToReturn = _dbContext.Users.First(x => x.UserName == registrationRequest.Email);
+                    UserDTO userDTO = new()
                     {
                         Id = userToReturn.Id,
                         Email = userToReturn.Email,
                         Name = userToReturn.Name,
+                        PhoneNumber = userToReturn.PhoneNumber
                     };
                     return "";
                 }

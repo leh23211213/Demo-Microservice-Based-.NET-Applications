@@ -21,7 +21,7 @@ namespace App.Services.AuthAPI.Controllers
         public async Task<IActionResult> Login([FromBody] LoginRequest model)
         {
             var loginResponse = await _authAPIService.Login(model);
-            if (loginResponse.User == null)
+            if (loginResponse.UserDTO == null)
             {
                 _response.IsSuccess = false;
                 _response.Message = "account or password is incorrect";
