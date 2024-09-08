@@ -37,13 +37,9 @@ namespace App.Frontend.Areas.Account.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginRequest model)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                TempData["error"] = "123";
-                return RedirectToAction("Login");
-            }
-            else
-            {
+
                 Response response = await _authService.LoginAsync(model);
                 if (response.IsSuccess && response != null)
                 {
@@ -54,10 +50,20 @@ namespace App.Frontend.Areas.Account.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("CustomerError", response.Message);
+                    TempData["error"] = response.Message;
                     return View(model);
                 }
             }
+            else
+            {
+                TempData["error"] = "123";
+                return RedirectAction("Login");
+            }
+        }
+
+        private IActionResult RedirectAction(string v)
+        {
+            throw new NotImplementedException();
         }
 
         [HttpPost]

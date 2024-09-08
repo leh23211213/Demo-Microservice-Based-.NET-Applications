@@ -1,7 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Mvc.Rendering;
-
 namespace App.Frontend.Areas.Account.Models;
 public class RegistrationRequest
 {
@@ -20,8 +17,17 @@ public class RegistrationRequest
     [Display(Name = "Confirm password")]
     [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
     public string ConfirmPassword { get; set; } = null!;
-    public string? Role { get; set; }
-    public List<SelectListItem>? Roles { get; set; } // To store the list of available roles
 
-    public IList<AuthenticationScheme>? ExternalLogins { get; set; } = null!;
+    [Required(ErrorMessage = "Name is required.")]
+    [StringLength(50, ErrorMessage = "Name cannot be longer than 50 characters.")]
+    [RegularExpression(@"^[a-zA-Z\s]*$", ErrorMessage = "Name can only contain letters and spaces.")]
+    public string Name { get; set; }
+
+    [Required(ErrorMessage = "Phone number is required.")]
+    [Phone(ErrorMessage = "Invalid phone number format.")]
+    [RegularExpression(@"^\d{10}$", ErrorMessage = "Phone number must be exactly 10 digits.")]
+    public string PhoneNumber { get; set; }
+
+    public string? Role { get; set; }
+    // // public IList<AuthenticationScheme>? ExternalLogins { get; set; } = null!;
 }

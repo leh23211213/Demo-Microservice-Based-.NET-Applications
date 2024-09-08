@@ -22,9 +22,9 @@ namespace App.Frontend.Services
         {
             try
             {
-
                 HttpClient client = _httpClientFactory.CreateClient("AppAPI");
                 HttpRequestMessage message = new();
+
                 if (request.ContentType == ContentType.MultipartFormData)
                 {
                     message.Headers.Add("Accept", "*/*");

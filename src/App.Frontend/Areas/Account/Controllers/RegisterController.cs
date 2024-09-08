@@ -23,14 +23,13 @@ namespace App.Frontend.Areas.Account.Controllers
         [HttpGet]
         public async Task<ActionResult> Register()
         {
-            var model = new RegistrationRequest
+            var roleList = new List<SelectListItem>()
             {
-                Roles = new List<SelectListItem>(){
-                new SelectListItem{Text = StaticDetail.RoleAdmin, Value = StaticDetail.RoleAdmin},
-                new SelectListItem{Text = StaticDetail.RoleCustomer, Value = StaticDetail.RoleCustomer}
-                }
+                new SelectListItem{Text=StaticDetail.RoleAdmin,Value=StaticDetail.RoleAdmin},
+                new SelectListItem{Text=StaticDetail.RoleCustomer,Value=StaticDetail.RoleCustomer},
             };
-            return View(model);
+            ViewBag.RoleList = roleList;
+            return View();
         }
 
         [HttpPost]
@@ -39,8 +38,9 @@ namespace App.Frontend.Areas.Account.Controllers
         {
             Response response = await _authService.RegisterAsync(model);
             Response assignRole;
+
             if (response.IsSuccess && response != null)
-            {       
+            {
                 if (string.IsNullOrEmpty(model.Role))
                 {
                     model.Role = StaticDetail.RoleCustomer;
@@ -58,10 +58,12 @@ namespace App.Frontend.Areas.Account.Controllers
                 TempData["error"] = response.Message;
             }
 
-            model.Roles = new List<SelectListItem>(){
-                new SelectListItem{Text = StaticDetail.RoleAdmin, Value = StaticDetail.RoleAdmin},
-                new SelectListItem{Text = StaticDetail.RoleCustomer, Value = StaticDetail.RoleCustomer}
-                };
+            var roleList = new List<SelectListItem>()
+            {
+                new SelectListItem{Text=StaticDetail.RoleAdmin,Value=StaticDetail.RoleAdmin},
+                new SelectListItem{Text=StaticDetail.RoleCustomer,Value=StaticDetail.RoleCustomer},
+            };
+            ViewBag.RoleList = roleList;
 
             return View(model);
         }
