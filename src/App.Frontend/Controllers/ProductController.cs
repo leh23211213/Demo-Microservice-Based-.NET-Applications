@@ -13,19 +13,20 @@ namespace App.Frontend.Controllers
             _productService = productService;
         }
 
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        public async Task<IActionResult> Index(int curentPage = 1)
         {
-            List<ProductDTO>? products = new();
-            Response? response = await _productService.GetAsync();
+            PaginationDTO pagination = new();
+            Response? response = await _productService.GetAsync(curentPage);
             if (response != null && response.IsSuccess)
             {
-                products = JsonConvert.DeserializeObject<List<ProductDTO>>(Convert.ToString(response.Result));
+                pagination = JsonConvert.DeserializeObject<PaginationDTO>(Convert.ToString(response.Result));
             }
             else
             {
                 TempData["error"] = response?.Message;
             }
-            return View(products);
+            return View(pagination);
         }
     }
 }

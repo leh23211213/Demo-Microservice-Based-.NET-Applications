@@ -1,6 +1,5 @@
 
 using static App.Frontend.Utility.StaticDetail;
-
 namespace App.Frontend.Models;
 
 public class Request

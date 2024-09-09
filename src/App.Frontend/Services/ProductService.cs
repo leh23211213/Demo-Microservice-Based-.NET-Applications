@@ -13,12 +13,12 @@ namespace App.Frontend.Services
             _baseService = baseService;
         }
 
-        public async Task<Response> GetAsync()
+        public async Task<Response> GetAsync(int currentPage)
         {
             return await _baseService.SendAsync(new Request
             {
                 ApiType = StaticDetail.ApiType.GET,
-                Url = StaticDetail.ProductAPIBase + "/api/product"
+                Url = StaticDetail.ProductAPIBase + "/api/product/page/" + currentPage
             });
         }
 
@@ -27,11 +27,11 @@ namespace App.Frontend.Services
             return await _baseService.SendAsync(new Request
             {
                 ApiType = StaticDetail.ApiType.GET,
-                Url = StaticDetail.ProductAPIBase + "/api/product" + id
+                Url = StaticDetail.ProductAPIBase + "/api/product/" + id
             });
         }
 
-        public async Task<Response> CreateAsync(ProductDTO product)
+        public async Task<Response> CreateAsync(Product product)
         {
             return await _baseService.SendAsync(new Request
             {
@@ -41,7 +41,7 @@ namespace App.Frontend.Services
             });
         }
 
-        public async Task<Response> UpdateAsync(ProductDTO product)
+        public async Task<Response> UpdateAsync(Product product)
         {
             return await _baseService.SendAsync(new Request
             {
@@ -56,7 +56,7 @@ namespace App.Frontend.Services
             return await _baseService.SendAsync(new Request
             {
                 ApiType = StaticDetail.ApiType.DELETE,
-                Url = StaticDetail.ProductAPIBase + "/api/product" + id
+                Url = StaticDetail.ProductAPIBase + "/api/product/" + id
             });
         }
     }

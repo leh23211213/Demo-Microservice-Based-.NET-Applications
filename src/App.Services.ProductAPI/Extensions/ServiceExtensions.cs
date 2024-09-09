@@ -1,5 +1,5 @@
 using System.Text;
-using AutoMapper;
+using App.Services.ProductAPI.Models.DTOs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -9,11 +9,9 @@ namespace App.Services.ProductAPI.Extensions
     {
         public static IServiceCollection AppServiceCollection(this IServiceCollection services, IConfiguration configuration)
         {
-            // Add services to the container.   
-            IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
-            services.AddSingleton(mapper);
-            // services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
+            // Add services to the container. 
+            services.AddAutoMapper(typeof(MappingConfig));
+            services.AddScoped<Response>();
             var settingsSection = configuration.GetSection("ApiSettings");
 
             var secret = settingsSection.GetValue<string>("Secret");
@@ -31,19 +29,19 @@ namespace App.Services.ProductAPI.Extensions
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
-                    ValidateActor = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
                     ValidIssuer = issuer,
+                    ValidateIssuerSigningKey = true,
                     ValidAudience = audience,
+                    ValidateAudience = true,
+                    //ValidateActor = true,
+                    //  ValidateLifetime = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key)
                 };
             });
-            // Configure Identity
+            services.AddAuthorization();
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
-            services.AddAuthorization();
             services.AddAuthentication();
 
             return services;

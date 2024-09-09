@@ -3,32 +3,61 @@ using App.Services.AuthAPI.Data;
 using App.Services.ProductAPI.Models;
 using App.Services.ProductAPI.Models.DTOs;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace App.Services.ProductAPI.Controllers
 {
     [ApiController]
     [Route("api/product")]
+    //[Authorize]
     public class ProductAPIController : ControllerBase
     {
         private readonly ApplicationDbContext _dbContext;
         private Response _response;
         private IMapper _mapper;
 
-        public ProductAPIController(ApplicationDbContext dbContext, Response response, IMapper mapper)
+        public ProductAPIController(ApplicationDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
             _response = new Response();
             _mapper = mapper;
         }
 
-        [HttpGet]
-        public Response Get()
+        [HttpGet("page/{currentPage}")]
+        public async Task<ActionResult<Response>> Get(int currentPage = 1)
         {
+            const int pageSize = 6;
             try
             {
-                IEnumerable<Product> products = _dbContext.Products.ToList();
-                _response.Result = _mapper.Map<IEnumerable<ProductDTO>>(products);
+
+                var products = await _dbContext.Products
+                                .Skip((currentPage - 1) * pageSize)
+                                .Take(pageSize)
+                                .Select(p => new Product
+                                {
+                                    ProductName = p.ProductName,
+                                    Price = p.Price,
+                                    ImageUrl = p.ImageUrl,
+                                    ImageLocalPath = p.ImageLocalPath
+                                }).ToListAsync();
+                var totalItems = await _dbContext.Products.CountAsync();
+                var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+                Pagination pagination = new()
+                {
+                    Products = products,
+                    totalPages = totalPages,
+                    currentPage = currentPage,
+                };
+
+                if (currentPage > totalPages)
+                {
+                    currentPage = totalPages;
+                }
+
+                _response.Result = _mapper.Map<PaginationDTO>(pagination);
             }
             catch (Exception ex)
             {
@@ -40,7 +69,7 @@ namespace App.Services.ProductAPI.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public Response Get(string id)
+        public async Task<ActionResult<Response>> Get(string id)
         {
             try
             {
@@ -56,8 +85,8 @@ namespace App.Services.ProductAPI.Controllers
         }
 
         [HttpPost]
-        // [Authorize(Roles = "ADMIN")]
-        public Response Create(ProductDTO productDTO)
+        //[Authorize(Roles = "ADMIN")]
+        public async Task<ActionResult<Response>> Create(ProductDTO productDTO)
         {
             try
             {
@@ -102,9 +131,9 @@ namespace App.Services.ProductAPI.Controllers
             return _response;
         }
 
-        //[Authorize(Roles = "ADMIN")]
         [HttpPut]
-        public Response Put(ProductDTO productDTO)
+        //[Authorize(Roles = "ADMIN")]
+        public async Task<ActionResult<Response>> Put(ProductDTO productDTO)
         {
             try
             {
@@ -146,8 +175,8 @@ namespace App.Services.ProductAPI.Controllers
 
         [HttpDelete]
         [Route("{id}")]
-        // [Authorize(Roles = "ADMIN")]
-        public Response Delete(string id)
+        //[Authorize(Roles = "ADMIN")]
+        public async Task<ActionResult<Response>> Delete(string id)
         {
             try
             {
@@ -173,3 +202,43 @@ namespace App.Services.ProductAPI.Controllers
         }
     }
 }
+
+
+//         public async Task<IActionResult> Index( int page = 1)
+// {
+//     int pageSize = 6;
+//     string cacheKey = $"Products_Page_{page}";
+
+//     if (!_cache.TryGetValue(cacheKey, out List<ProductViewModel> productViewModels))
+//     {
+//         var products = await _context.Products
+//             .Skip((page - 1) * pageSize)
+//             .Take(pageSize)
+//             .ToListAsync();
+
+//         productViewModels = products.Select(p => new ProductViewModel
+//         {
+//             ProductId = p.ProductId,
+//             ProductName = p.ProductName,
+//             Price = p.Price,
+//             Description = p.Description,
+//             ImageUrl = p.ImageUrl
+//         }).ToList();
+
+//         var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMinutes(5));
+
+//         _cache.Set(cacheKey, productViewModels, cacheEntryOptions);
+//     }
+
+//     var totalProduct = await _context.Products.CountAsync();
+//     var totalPages = (int)Math.Ceiling(totalProduct / (double)pageSize);
+
+//     var viewModel = new ProductListViewModel
+//     {
+//         Products = productViewModels,
+//         CurrentPage = page,
+//         TotalPages = totalPages
+//     };
+
+//     return View(viewModel);
+// }
