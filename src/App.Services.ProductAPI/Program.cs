@@ -2,16 +2,10 @@ using App.Services.AuthAPI.Data;
 using App.Services.Produ.Extensions;
 using App.Services.ProductAPI.Extensions;
 using Microsoft.EntityFrameworkCore;
-using App.Services.ProductAPI.Models.DTOs;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Register Response class if it's a service
-builder.Services.AddScoped<Response>();
-
 builder.Services.ConfigureDatabase(builder.Configuration);
 builder.Services.AppServiceCollection(builder.Configuration);
-
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.

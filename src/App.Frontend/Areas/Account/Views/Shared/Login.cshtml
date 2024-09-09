@@ -34,14 +34,14 @@
                         <form id="login" method="post" class="form-horizontal">
                             <div class="form-floating mb-3">
                                 <input asp-for="Email" class="form-control" autocomplete="username"
-                                    placeholder="name@example.com" />
+                                    placeholder="name@example.com" value="admin@gmail.com"/>
                                 <label asp-for="Email" class="form-label">Email</label>
                                 <span asp-validation-for="Email" class="text-danger" />
                             </div>
 
                             <div class="form-floating mb-3">
                                 <input asp-for="Password" class="form-control" autocomplete="current-password"
-                                    placeholder="password" />
+                                    placeholder="password" value="Admin123*"/>
                                 <label asp-for="Password" class="form-label">Password</label>
                                 <span asp-validation-for="Password" class="text-danger" />
                             </div>
