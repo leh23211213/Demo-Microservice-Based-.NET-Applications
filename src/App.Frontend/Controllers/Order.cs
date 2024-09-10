@@ -1,19 +1,21 @@
 using Microsoft.AspNetCore.Mvc;
+using App.Frontend.Models;
 
 namespace App.Frontend.Controllers
 {
-    [Route("[controller]")]
-    public class Order : Controller
+
+    public class OrderController : Controller
     {
         private readonly ILogger<Order> _logger;
 
-        public Order(ILogger<Order> logger)
+        public OrderController(ILogger<Order> logger)
         {
             _logger = logger;
         }
 
         public IActionResult Index()
         {
+
             return View();
         }
 

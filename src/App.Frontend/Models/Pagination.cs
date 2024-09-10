@@ -1,6 +1,6 @@
 namespace App.Frontend.Models
 {
-    public class PaginationDTO
+    public class Pagination
     {
         public IEnumerable<Product> Products { get; set; }
         public int totalPages { get; set; }

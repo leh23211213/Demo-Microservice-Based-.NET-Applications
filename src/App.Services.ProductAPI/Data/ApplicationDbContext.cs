@@ -2,7 +2,7 @@
 using App.Services.ProductAPI.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace App.Services.AuthAPI.Data;
+namespace App.Services.ProductAPI.Data;
 public class ApplicationDbContext : DbContext
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
