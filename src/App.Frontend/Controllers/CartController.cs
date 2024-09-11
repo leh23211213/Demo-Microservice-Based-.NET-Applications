@@ -2,12 +2,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace App.Frontend.Controllers
 {
-    [Route("[controller]")]
     public class CartController : Controller
     {
 
         public IActionResult Index()
         {
+          
             return View();
         }
 

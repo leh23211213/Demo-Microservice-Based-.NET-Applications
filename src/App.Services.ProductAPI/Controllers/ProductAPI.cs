@@ -1,9 +1,8 @@
 
-using App.Services.AuthAPI.Data;
+using App.Services.ProductAPI.Data;
 using App.Services.ProductAPI.Models;
 using App.Services.ProductAPI.Models.DTOs;
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,7 +11,7 @@ namespace App.Services.ProductAPI.Controllers
     [ApiController]
     [Route("api/product")]
     //[Authorize]
-    public class ProductAPIController : ControllerBase
+    public class ProductAPIController : Controller
     {
         private readonly ApplicationDbContext _dbContext;
         private Response _response;
@@ -26,15 +25,13 @@ namespace App.Services.ProductAPI.Controllers
         }
 
         [HttpGet("page/{currentPage}")]
-        public async Task<ActionResult<Response>> Get(int currentPage = 1)
+        public async Task<ActionResult<Response>> GetAsync(int currentPage = 1)
         {
             const int pageSize = 6;
+            IEnumerable<Product> products;
             try
             {
-
-                var products = await _dbContext.Products
-                                .Skip((currentPage - 1) * pageSize)
-                                .Take(pageSize)
+                products = await _dbContext.Products.Skip((currentPage - 1) * pageSize).Take(pageSize)
                                 .Select(p => new Product
                                 {
                                     ProductName = p.ProductName,
@@ -42,6 +39,7 @@ namespace App.Services.ProductAPI.Controllers
                                     ImageUrl = p.ImageUrl,
                                     ImageLocalPath = p.ImageLocalPath
                                 }).ToListAsync();
+
                 var totalItems = await _dbContext.Products.CountAsync();
                 var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
 
@@ -67,9 +65,8 @@ namespace App.Services.ProductAPI.Controllers
             return _response;
         }
 
-        [HttpGet]
-        [Route("{id}")]
-        public async Task<ActionResult<Response>> Get(string id)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Response>> GetAsync(string id)
         {
             try
             {
@@ -86,7 +83,7 @@ namespace App.Services.ProductAPI.Controllers
 
         [HttpPost]
         //[Authorize(Roles = "ADMIN")]
-        public async Task<ActionResult<Response>> Create(ProductDTO productDTO)
+        public async Task<ActionResult<Response>> CreateAsync(ProductDTO productDTO)
         {
             try
             {
@@ -133,7 +130,7 @@ namespace App.Services.ProductAPI.Controllers
 
         [HttpPut]
         //[Authorize(Roles = "ADMIN")]
-        public async Task<ActionResult<Response>> Put(ProductDTO productDTO)
+        public async Task<ActionResult<Response>> UpdateAsync(ProductDTO productDTO)
         {
             try
             {
@@ -173,10 +170,9 @@ namespace App.Services.ProductAPI.Controllers
             return _response;
         }
 
-        [HttpDelete]
-        [Route("{id}")]
+        [HttpDelete("{id}")]
         //[Authorize(Roles = "ADMIN")]
-        public async Task<ActionResult<Response>> Delete(string id)
+        public async Task<ActionResult<Response>> RemoveAsync(string id)
         {
             try
             {
@@ -202,43 +198,3 @@ namespace App.Services.ProductAPI.Controllers
         }
     }
 }
-
-
-//         public async Task<IActionResult> Index( int page = 1)
-// {
-//     int pageSize = 6;
-//     string cacheKey = $"Products_Page_{page}";
-
-//     if (!_cache.TryGetValue(cacheKey, out List<ProductViewModel> productViewModels))
-//     {
-//         var products = await _context.Products
-//             .Skip((page - 1) * pageSize)
-//             .Take(pageSize)
-//             .ToListAsync();
-
-//         productViewModels = products.Select(p => new ProductViewModel
-//         {
-//             ProductId = p.ProductId,
-//             ProductName = p.ProductName,
-//             Price = p.Price,
-//             Description = p.Description,
-//             ImageUrl = p.ImageUrl
-//         }).ToList();
-
-//         var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMinutes(5));
-
-//         _cache.Set(cacheKey, productViewModels, cacheEntryOptions);
-//     }
-
-//     var totalProduct = await _context.Products.CountAsync();
-//     var totalPages = (int)Math.Ceiling(totalProduct / (double)pageSize);
-
-//     var viewModel = new ProductListViewModel
-//     {
-//         Products = productViewModels,
-//         CurrentPage = page,
-//         TotalPages = totalPages
-//     };
-
-//     return View(viewModel);
-// }
