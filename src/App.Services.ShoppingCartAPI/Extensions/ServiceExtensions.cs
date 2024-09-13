@@ -1,4 +1,8 @@
 using System.Text;
+using App.Services.ShoppingCartAPI.Models;
+using App.Services.ShoppingCartAPI.Services;
+using App.Services.ShoppingCartAPI.Services.IServices;
+using App.Services.ShoppingCartAPI.Utility;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -8,6 +12,20 @@ namespace App.Services.ShoppingCartAPI.Extensions
     {
         public static IServiceCollection AppServiceCollection(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddScoped<ApiAuthenticationHttpClientHandle>();
+            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<Response>();
+
+            services.AddHttpContextAccessor();
+            services.AddHttpClient("Product", u => u.BaseAddress = new Uri(configuration["ServiceUrls:ProductAPI"])).AddHttpMessageHandler<ApiAuthenticationHttpClientHandle>();
+
+            var settingsSection = configuration.GetSection("ApiSettings");
+
+            var secret = settingsSection.GetValue<string>("Secret");
+            var issuer = settingsSection.GetValue<string>("Issuer");
+            var audience = settingsSection.GetValue<string>("Audience");
+            var key = Encoding.UTF8.GetBytes(secret);
+
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -18,21 +36,18 @@ namespace App.Services.ShoppingCartAPI.Extensions
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
-                    ValidateActor = true,
-                    ValidateLifetime = true,
+                    ValidIssuer = issuer,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = configuration["JwtOptions:Issuer"],
-                    ValidAudience = configuration["JwtOptions:Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtOptions:Secret"]))
+                    ValidAudience = audience,
+                    ValidateAudience = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key)
                 };
             });
-
-            // Configure Identity
+            services.AddAuthorization();
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
-            services.AddAuthorization();
-
+            services.AddAuthentication();
             return services;
         }
     }
