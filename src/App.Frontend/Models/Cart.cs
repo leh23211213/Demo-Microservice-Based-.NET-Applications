@@ -1,10 +1,9 @@
-namespace App.Frontend.Models;
+using System.ComponentModel.DataAnnotations.Schema;
 
+namespace App.Frontend.Models;
+[NotMapped]
 public class Cart
 {
-    public string UserId { get; set; }
-    public string UserName { get; set; }
-    public decimal TemporaryPrice { get; set; } = 0;
-    public decimal TotalPrice { get; set; } = 0;
-    public List<CartItemDetails> CartItems { get; set; }
+    public CartHeader CartHeader { get; set; }
+    public IEnumerable<CartDetails>? CartDetails { get; set; }
 }

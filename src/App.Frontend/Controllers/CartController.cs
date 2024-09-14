@@ -1,20 +1,33 @@
+using System.IdentityModel.Tokens.Jwt;
+using App.Frontend.Models;
+using App.Frontend.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace App.Frontend.Controllers
 {
     public class CartController : Controller
     {
+        private readonly IProductService _productService;
 
-        public IActionResult Index()
+        public CartController(IProductService productService)
         {
-          
-            return View();
+            _productService = productService;
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        public async Task<ActionResult<Cart>> Index()
         {
-            return View("Error!");
+            var userId = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
+            Response responses = await _productService.GetAsync(userId);
+            if (responses.Result != null && responses.IsSuccess)
+            {
+                Cart cart = JsonConvert.DeserializeObject<Cart>(responses.Result.ToString());
+                return cart;
+            }
+            return new Cart();
         }
+
+
+
     }
 }

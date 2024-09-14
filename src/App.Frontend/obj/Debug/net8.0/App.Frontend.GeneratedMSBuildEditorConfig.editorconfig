@@ -58,20 +58,36 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FydFxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/App.Frontend/Views/Home/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/App.Frontend/Views/Home/Get.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxHZXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/App.Frontend/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/App.Frontend/Views/Order/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJcRGV0YWlscy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/App.Frontend/Views/Order/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/App.Frontend/Views/Order/OrderDetails.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJcT3JkZXJEZXRhaWxzLmNzaHRtbA==
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/App.Frontend/Views/Product/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/App.Frontend/Views/Product/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxEZXRhaWxzLmNzaHRtbA==
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/App.Frontend/Views/Product/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxEZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/App.Frontend/Views/Product/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxFZGl0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/App.Frontend/Views/Product/Index.cshtml]

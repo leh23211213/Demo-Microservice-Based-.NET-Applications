@@ -24,9 +24,9 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.ExpireTimeSpan = TimeSpan.FromHours(10);
-        options.LoginPath = "/Account/Login";
-        options.AccessDeniedPath = "/Account/AccessDenied";
+        options.ExpireTimeSpan = TimeSpan.FromHours(24);
+        options.LoginPath = "Areas/Account/Login";
+        options.AccessDeniedPath = "Areas/Account/AccessDenied";
     });
 
 var app = builder.Build();

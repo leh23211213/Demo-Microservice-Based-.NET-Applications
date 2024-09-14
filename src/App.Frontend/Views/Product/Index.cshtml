@@ -1,108 +1,62 @@
-﻿@model Pagination
+﻿@model IEnumerable<Product>
+<div class="card shadow border-0 mt-4">
+	<div class="card-header bg-secondary bg-gradient ml-0 py-3">
+		<div class="row">
+			<div class="col-12 text-center">
+				<h1 class="text-white">Products List</h1>
+			</div>
+		</div>
+	</div>
+	<div class="card-body p-4">
+		<div class="row pb-3">
+			<div class="col-6">
+			</div>
+			<div class="col-6 text-end">
+				<a asp-action="ProductCreate" class="btn btn-outline-primary"><i class="bi bi-plus-square"></i> Create
+					New Product</a>
+			</div>
+		</div>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>
+						Name
+					</th>
+					<th>
+						Category Name
+					</th>
+					<th>
+						Price
+					</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model)
+				{
+					<tr>
+						<td>
+							@item.Name
+						</td>
+						<td>
+							@item.CategoryName
+						</td>
+						<td>
+							@((item.Price).ToString("c"))
+						</td>
+						<td>
+							<a class="btn btn-success" asp-action="ProductEdit" asp-route-productId="@item.ProductId">
+								<i class="bi bi-pencil-square"></i>
+							</a>
+							<a class="btn btn-danger" asp-action="ProductDelete" asp-route-productId="@item.ProductId">
+								<i class="bi bi-trash"></i>
+							</a>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
 
-@{
-    ViewData["Title"] = "Index";
-}
+	</div>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter&display=swap">
-    <link rel="stylesheet" type="text/css" href="~/css/Product/Index.css" asp-append-version="true">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <style>
-        .pagination a {
-            margin: 0 5px;
-            padding: 5px 10px;
-            text-decoration: none;
-            border: 1px solid #ddd;
-        }
-
-        .pagination a.active {
-            background-color: #007bff;
-            color: white;
-            border: 1px solid #007bff;
-        }
-    </style>
-</head>
-<div class="page-content">
-    <div class="Content">
-        <div class="Left-Content">
-        </div>
-        <div class="Right-Content">
-            <div class="box-filter top-box  block-scroll-main cate-42">
-                <section>
-                    <h3 class="Title">All Product</h3>
-                    <form class="input-group w-50 float-right" asp-area="Customer" asp-controller="Product"
-                        asp-action="Search" method="get">
-                        <input type="text" class="form-control" placeholder="Search for" name="item" />
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="submit">Search</button>
-                        </div>
-                    </form>
-                </section>
-            </div>
-            <section id="CategoryPage" data-name="Phone" data-template="cate">
-                <div class="Product-Box">
-                    <ul class="List-Product">
-                        @foreach (var item in Model.Products)
-                        {
-                            <li class="Item">
-                                <div class="Item-Img">
-                                    <a asp-controller="Product" asp-action="Detail" asp-route-id="@item.ProductId"> <img
-                                            src="@Url.Content(item.ImageUrl)" alt=""> </a>
-                                </div>
-                                <div class="Product-Info">
-                                    <h3>@item.ProductName</h3>
-                                    <strong class="price">@item.Price<sup>đ</sup></strong>
-                                </div>
-                                <div>
-                                    <a asp-controller="Product" asp-action="Detail" asp-route-id="@item.ProductId"
-                                        class="details-button">Detail</a>
-                                </div>
-                            </li>
-                        }
-                    </ul>
-                    <div class="pagination">
-                        @for (int i = 1; i <= Model.totalPages; i++)
-                        {
-                            <a asp-controller="Product" asp-action="Index" asp-route-page="@i"
-                                class="@(i == Model.currentPage ? "active" : "")">
-                                @i
-                            </a>
-                        }
-                    </div>
-                </div>
-            </section>
-        </div>
-    </div>
 </div>
-<script>
-    $(document).ready(function () {
-        $('.add-to-cart').click(function () {
-            var productId = $(this).data('product-id');
-            var quantity = $(this).data('quantity');
-            var token = $('input[name="__RequestVerificationToken"]').val();
-
-            $.ajax({
-                url: '@Url.Action("AddToCart", "Cart")',
-                type: 'POST',
-                data: {
-                    productId: productId,
-                    quantity: quantity,
-                    __RequestVerificationToken: token
-                },
-                success: function (response) {
-                    if (response.success) {
-                        alert("Product added to cart!");
-                    } else {
-                        alert("There was an error adding the product to the cart.");
-                    }
-                },
-                error: function () {
-                    alert("There was an error processing your request.");
-                }
-            });
-        });
-    });
-</script>
