@@ -1,0 +1,53 @@
+﻿@model Product
+
+<head>
+    <link rel="stylesheet" href="~/css/Product/Detail.css" asp-append-version="true">
+</head>
+
+<form action="post">
+    <input asp-for="Id" hidden />
+    <div class="page-content">
+        <section class="landing-page-section">
+            <div class="top">
+                <h2 class="Product-Name">
+                    @Model.Name
+                </h2>
+            </div>
+            <div class="divider"></div>
+            <div></div>
+            <div class="detail-content">
+                <div class="pricing-card">
+                    <img src="@Url.Content(@Model.ImageUrl)" alt="">
+                    <div class="divider"></div>
+                    <ul>
+                        <li>
+                            NULL
+                        </li>
+                    </ul>
+                </div>
+                <div class="pricing-card pricing-card--primary">
+                    <div class="pricing-card__price">
+                        @Model.Price
+                    </div>
+                    <div class="divider"></div>
+                    <div class="group-button">
+                        <ul>
+                            <li>
+                                <button type="submit" class="btn btn-primary form-control btn-lg"
+                                    style="height:50px;">Add to Cart</button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <a asp-action="Index" class="btn btn-success btn-square form-control btn-lg" style="height:50px;">Back
+                    to List</a>
+            </div>
+        </section>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

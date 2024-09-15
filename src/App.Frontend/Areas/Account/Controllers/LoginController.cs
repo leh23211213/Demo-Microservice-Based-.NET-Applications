@@ -37,27 +37,18 @@ namespace App.Frontend.Areas.Account.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginRequest model)
         {
-            if (ModelState.IsValid)
+            Response response = await _authService.LoginAsync(model);
+            if (response.IsSuccess && response != null)
             {
-
-                Response response = await _authService.LoginAsync(model);
-                if (response.IsSuccess && response != null)
-                {
-                    LoginResponse loginResponse = JsonConvert.DeserializeObject<LoginResponse>(Convert.ToString(response.Result));
-                    await SignInUser(loginResponse);
-                    _tokenProvider.SetToken(loginResponse.Token);
-                    return RedirectToAction("Index", "Product");
-                }
-                else
-                {
-                    TempData["error"] = response.Message;
-                    return View(model);
-                }
+                LoginResponse loginResponse = JsonConvert.DeserializeObject<LoginResponse>(Convert.ToString(response.Result));
+                await SignInUser(loginResponse);
+                _tokenProvider.SetToken(loginResponse.Token);
+                return RedirectToAction("Index", "Product");
             }
             else
             {
-                TempData["error"] = "123";
-                return RedirectAction("Login");
+                TempData["error"] = response.Message;
+                return View(model);
             }
         }
 

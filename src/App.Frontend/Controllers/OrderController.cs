@@ -1,16 +1,16 @@
 using Microsoft.AspNetCore.Mvc;
-using App.Frontend.Models;
+using App.Frontend.Services.IServices;
 
 namespace App.Frontend.Controllers
 {
 
     public class OrderController : Controller
     {
-        private readonly ILogger<Order> _logger;
+        private readonly IProductService _productService;
 
-        public OrderController(ILogger<Order> logger)
+        public OrderController(IProductService productService)
         {
-            _logger = logger;
+            _productService = productService;
         }
 
         public IActionResult Index()

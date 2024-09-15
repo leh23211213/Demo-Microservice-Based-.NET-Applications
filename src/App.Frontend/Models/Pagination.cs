@@ -2,8 +2,12 @@ namespace App.Frontend.Models
 {
     public class Pagination
     {
-        public IEnumerable<Product> Products { get; set; }
-        public int totalPages { get; set; }
-        public int currentPage { get; set; }
+        public Pagination()
+        {
+            Products = new List<Product>();
+        }
+        public List<Product>? Products { get; set; } = null!;
+        public int totalPages { get; set; } = 0;
+        public int currentPage { get; set; } = 1;
     }
 }
