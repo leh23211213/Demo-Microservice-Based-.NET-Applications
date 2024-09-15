@@ -12,6 +12,7 @@ builder.Services.AddHttpClient();
 
 builder.Services.AddHttpClient<IAuthService, AuthService>();
 builder.Services.AddHttpClient<IProductService, ProductService>();
+builder.Services.AddHttpClient<ICartService, CartService>();
 
 StaticDetail.AuthAPIBase = builder.Configuration["ServiceUrls:AuthAPI"];
 StaticDetail.ProductAPIBase = builder.Configuration["ServiceUrls:ProductAPI"];
@@ -20,13 +21,14 @@ builder.Services.AddScoped<ITokenProvider, TokenProvider>();
 builder.Services.AddScoped<IBaseService, BaseService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ICartService, CartService>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
         options.ExpireTimeSpan = TimeSpan.FromHours(24);
-        options.LoginPath = "Areas/Account/Login";
-        options.AccessDeniedPath = "Areas/Account/AccessDenied";
+        options.LoginPath = "/Account/Login";
+        options.AccessDeniedPath = "/Account/AccessDenied";
     });
 
 var app = builder.Build();

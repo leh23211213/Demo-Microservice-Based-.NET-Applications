@@ -37,3 +37,4 @@ E:\IT\VSCode\Github\Demo-Microservice-Based-.NET-Applications\src\App.Frontend\b
 E:\IT\VSCode\Github\Demo-Microservice-Based-.NET-Applications\src\App.Frontend\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
 E:\IT\VSCode\Github\Demo-Microservice-Based-.NET-Applications\src\App.Frontend\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
 E:\IT\VSCode\Github\Demo-Microservice-Based-.NET-Applications\src\App.Frontend\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
+E:\IT\VSCode\Github\Demo-Microservice-Based-.NET-Applications\src\App.Frontend\bin\Debug\net8.0\IdentityModel.dll
