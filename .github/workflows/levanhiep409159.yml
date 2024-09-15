@@ -9,6 +9,7 @@ env:
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
   WORKING_DIRECTORY: ./src/App.Frontend
+  DOTNET_ROOT: ./src/App.Frontend
 jobs:
   build:
     runs-on: windows-latest
@@ -20,8 +21,7 @@ jobs:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
         
     - name: Restore
-      run: dotnet restore App.Frontend.csproj
-      working-directory: ${{ env.WORKING_DIRECTORY }}
+      run: dotnet restore ${{ DOTNET_ROOT }}
       
     - name: Build
       run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
