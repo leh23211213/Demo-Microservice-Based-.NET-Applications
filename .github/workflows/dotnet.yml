@@ -5,7 +5,7 @@ on:
       - main
 env:
   AZURE_WEBAPP_NAME: levanhiep409159
-  AZURE_WEBAPP_PACKAGE_PATH: .\src\App.Frontend\published
+  AZURE_WEBAPP_PACKAGE_PATH: App.Frontend\published
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
   WORKING_DIRECTORY: ./src/App.Frontend
