@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace App.Frontend.Models
 {
     public class Product
@@ -7,13 +9,13 @@ namespace App.Frontend.Models
         public string? ImageUrl { get; set; } = null!;
         public string? ImageLocalPath { get; set; } = null!;
 
-        [MaxFileSize(1)]
-        [AllowedExtensions(new string[] { ".jpg", ".png" })]
+        // [MaxFileSize(1)]
+        //  [AllowedExtensions(new string[] { ".jpg", ".png" })]
         public IFormFile? Image { get; set; } = null!;
 
         [Range(1, 10)]
         public int Count { get; set; } = 1;
-        
+
         public double Price { get; set; } = 0;
 
         public string? Size { get; set; } = null!;
