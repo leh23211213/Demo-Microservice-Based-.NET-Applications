@@ -3,9 +3,6 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 env:
   AZURE_WEBAPP_NAME: levanhiep409159
   AZURE_WEBAPP_PACKAGE_PATH: App.Frontend\published
