@@ -1,4 +1,4 @@
-using App.Services.AuthAPI.Models.DTOs;
+using App.Services.AuthAPI.Models;
 
 namespace App.Services.AuthAPI.Services.IServices
 {

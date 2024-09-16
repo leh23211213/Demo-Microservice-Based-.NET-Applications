@@ -62,10 +62,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxEZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/App.Frontend/Views/Home/Get.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxHZXQuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
 [E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/App.Frontend/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -92,6 +88,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/App.Frontend/Views/Product/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/App.Frontend/Views/Shared/coverPage.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXGNvdmVyUGFnZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [E:/IT/VSCode/Github/Demo-Microservice-Based-.NET-Applications/src/App.Frontend/Views/Shared/Error.cshtml]
