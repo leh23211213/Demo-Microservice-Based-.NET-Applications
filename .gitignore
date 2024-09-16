@@ -1,15 +1,12 @@
 # Ignore Visual Studio folder
 .vs/
+.vscode/
+.idea/
 
 # Ignore environment and configuration files
-appsettings.json
-appsettings.Production.json
-appsettings.Development.json
+appsettings.production.json
 
-# Ignore build output directories
 bin/
 obj/
-
-# Ignore debug and release build folders
 Debug/
 Release/
