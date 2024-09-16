@@ -35,7 +35,7 @@ jobs:
     - name: Publish Artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: webapp
+        name: webapp-dotnet-version-${{ DOTNET_CORE_VERSION }}
         path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
   deploy:
     runs-on: ubuntu-latest
@@ -44,7 +44,7 @@ jobs:
     - name: Download artifact from build job
       uses: actions/download-artifact@v3
       with:
-        name: webapp
+        name: webapp-dotnet-version-${{ DOTNET_CORE_VERSION }}
         path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
     - name: Deploy to Azure WebApp
       uses: azure/webapps-deploy@v2
