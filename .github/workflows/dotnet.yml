@@ -18,7 +18,7 @@ jobs:
     environment: production
     strategy:
       matrix:
-        os: [windows-latest]
+        os: [ubuntu-latest]
     name: build-${{matrix.os}}
     runs-on: ${{ matrix.os }}
 
@@ -45,7 +45,7 @@ jobs:
 
         
   deploy:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     needs: build
 
     
