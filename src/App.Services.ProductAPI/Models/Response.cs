@@ -1,5 +1,5 @@
 
-namespace App.Services.ProductAPI.Models.DTOs
+namespace App.Services.ProductAPI.Models
 {
     public class Response
     {
