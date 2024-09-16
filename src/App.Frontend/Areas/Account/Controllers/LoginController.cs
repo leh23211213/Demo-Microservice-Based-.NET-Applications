@@ -43,18 +43,13 @@ namespace App.Frontend.Areas.Account.Controllers
                 LoginResponse loginResponse = JsonConvert.DeserializeObject<LoginResponse>(Convert.ToString(response.Result));
                 await SignInUser(loginResponse);
                 _tokenProvider.SetToken(loginResponse.Token);
-                return RedirectToAction("Index", "Product");
+                return RedirectToAction("Index", "Home");
             }
             else
             {
                 TempData["error"] = response.Message;
                 return View(model);
             }
-        }
-
-        private IActionResult RedirectAction(string v)
-        {
-            throw new NotImplementedException();
         }
 
         [HttpPost]

@@ -1,6 +1,5 @@
 using App.Services.AuthAPI.Data;
 using App.Services.AuthAPI.Models;
-using App.Services.AuthAPI.Models.DTOs;
 using App.Services.AuthAPI.Service.IService;
 using App.Services.AuthAPI.Services.IServices;
 using Microsoft.AspNetCore.Identity;
@@ -47,21 +46,19 @@ namespace App.Services.AuthAPI.Services
 
             if (account == null || !isValid)
             {
-                return new LoginResponse() { UserDTO = null, Token = null };
+                return new LoginResponse() { User = null, Token = null };
             }
 
             var roles = await _userManager.GetRolesAsync(account);
             var token = _jwtTokenGenerator.GenerateToken(account, roles);
 
-            UserDTO user = new()
-            {
-                Email = account.Email,
-                Name = account.Name,
-            };
-
             LoginResponse loginResponseresponse = new LoginResponse()
             {
-                UserDTO = user,
+                User = new()
+                {
+                    Email = account.Email,
+                    Name = account.Name,
+                },
                 Token = token
             };
 
@@ -85,7 +82,7 @@ namespace App.Services.AuthAPI.Services
                 if (result.Succeeded)
                 {
                     var userToReturn = _dbContext.Users.First(x => x.UserName == registrationRequest.Email);
-                    UserDTO userDTO = new()
+                    User userDTO = new()
                     {
                         Id = userToReturn.Id,
                         Email = userToReturn.Email,
