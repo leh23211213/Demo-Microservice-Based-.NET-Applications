@@ -1,6 +1,15 @@
-.vs
-*/.vs
+# Ignore Visual Studio folder
+.vs/
 
+# Ignore environment and configuration files
 appsettings.json
 appsettings.Production.json
 appsettings.Development.json
+
+# Ignore build output directories
+bin/
+obj/
+
+# Ignore debug and release build folders
+Debug/
+Release/
