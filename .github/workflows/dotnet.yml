@@ -18,7 +18,7 @@ jobs:
     environment: production
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [windowns-latest]
     name: build-${{matrix.os}}
     runs-on: ${{ matrix.os }}
 
