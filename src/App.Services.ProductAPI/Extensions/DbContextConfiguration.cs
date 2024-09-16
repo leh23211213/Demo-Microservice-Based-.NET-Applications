@@ -1,6 +1,6 @@
-using App.Services.AuthAPI.Data;
+using App.Services.ProductAPI.Data;
 using Microsoft.EntityFrameworkCore;
-namespace App.Services.Produ.Extensions
+namespace App.Services.ProductAPI.Extensions
 {
     public static class DbContextConfiguration
     {

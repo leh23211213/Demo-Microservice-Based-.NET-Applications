@@ -1,8 +1,6 @@
 
 using App.Services.ProductAPI.Data;
 using App.Services.ProductAPI.Models;
-using App.Services.ProductAPI.Models.DTOs;
-using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,13 +13,11 @@ namespace App.Services.ProductAPI.Controllers
     {
         private readonly ApplicationDbContext _dbContext;
         private Response _response;
-        private IMapper _mapper;
 
-        public ProductAPIController(ApplicationDbContext dbContext, IMapper mapper)
+        public ProductAPIController(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
             _response = new Response();
-            _mapper = mapper;
         }
 
         [HttpGet("page/{currentPage}")]
@@ -55,7 +51,7 @@ namespace App.Services.ProductAPI.Controllers
                     currentPage = totalPages;
                 }
 
-                _response.Result = _mapper.Map<PaginationDTO>(pagination);
+                _response.Result = pagination;
             }
             catch (Exception ex)
             {
@@ -71,7 +67,7 @@ namespace App.Services.ProductAPI.Controllers
             try
             {
                 Product product = _dbContext.Products.First(u => u.ProductId == id);
-                _response.Result = _mapper.Map<ProductDTO>(product);
+                _response.Result = product;
             }
             catch (Exception ex)
             {
@@ -83,17 +79,16 @@ namespace App.Services.ProductAPI.Controllers
 
         [HttpPost]
         //[Authorize(Roles = "ADMIN")]
-        public async Task<ActionResult<Response>> CreateAsync(ProductDTO productDTO)
+        public async Task<ActionResult<Response>> CreateAsync(Product product)
         {
             try
             {
-                Product product = _mapper.Map<Product>(productDTO);
                 _dbContext.Add(product);
                 _dbContext.SaveChanges();
 
-                if (productDTO.Image != null)
+                if (product.Image != null)
                 {
-                    string fileName = product.ProductId + Path.GetExtension(productDTO.Image.FileName);
+                    string fileName = product.ProductId + Path.GetExtension(product.Image.FileName);
                     string filePath = @"wwwroot\lib\Product\SmartPhone\" + fileName;
 
                     var directoryLocation = Path.Combine(Directory.GetCurrentDirectory(), filePath);
@@ -106,7 +101,7 @@ namespace App.Services.ProductAPI.Controllers
                     var filePathDirectory = Path.Combine(Directory.GetCurrentDirectory(), filePath);
                     using (var fileStream = new FileStream(filePathDirectory, FileMode.Create))
                     {
-                        productDTO.Image.CopyTo(fileStream);
+                        product.Image.CopyTo(fileStream);
                     }
                     var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.Value}{HttpContext.Request.PathBase.Value}";
                     product.ImageUrl = baseUrl + "/SmartPhone/" + fileName;
@@ -118,7 +113,7 @@ namespace App.Services.ProductAPI.Controllers
                 }
                 _dbContext.Update(product);
                 _dbContext.SaveChanges();
-                _response.Result = _mapper.Map<ProductDTO>(product);
+                _response.Result = product;
             }
             catch (Exception ex)
             {
@@ -130,12 +125,11 @@ namespace App.Services.ProductAPI.Controllers
 
         [HttpPut]
         //[Authorize(Roles = "ADMIN")]
-        public async Task<ActionResult<Response>> UpdateAsync(ProductDTO productDTO)
+        public async Task<ActionResult<Response>> UpdateAsync(Product product)
         {
             try
             {
-                Product product = _mapper.Map<Product>(productDTO);
-                if (productDTO.Image != null)
+                if (product.Image != null)
                 {
                     if (!string.IsNullOrEmpty(product.ImageLocalPath))
                     {
@@ -146,12 +140,12 @@ namespace App.Services.ProductAPI.Controllers
                             file.Delete();
                         }
                     }
-                    string fileName = product.ProductId + Path.GetExtension(productDTO.Image.FileName);
+                    string fileName = product.ProductId + Path.GetExtension(product.Image.FileName);
                     string filePath = @"wwwroot\ProductImages\" + fileName;
                     var filePathDirectory = Path.Combine(Directory.GetCurrentDirectory(), filePath);
                     using (var fileStream = new FileStream(filePathDirectory, FileMode.Create))
                     {
-                        productDTO.Image.CopyTo(fileStream);
+                        product.Image.CopyTo(fileStream);
                     }
                     var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.Value}{HttpContext.Request.PathBase.Value}";
                     product.ImageUrl = baseUrl + "/ProductImages/" + fileName;
@@ -160,7 +154,7 @@ namespace App.Services.ProductAPI.Controllers
 
                 _dbContext.Update(product);
                 _dbContext.SaveChanges();
-                _response.Result = _mapper.Map<ProductDTO>(product);
+                _response.Result = product;
             }
             catch (Exception ex)
             {
