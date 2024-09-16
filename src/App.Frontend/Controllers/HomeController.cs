@@ -19,12 +19,7 @@ namespace App.Frontend.Controllers
         }
 
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        public async Task<IActionResult> Get(int curentPage = 1)
+        public async Task<IActionResult> Index(int curentPage = 1)
         {
             Pagination pagination = new();
             Response? response = await _productService.GetAsync(curentPage);
@@ -39,6 +34,8 @@ namespace App.Frontend.Controllers
 
             return View(pagination);
         }
+
+
 
         public async Task<IActionResult> Detail(string id)
         {
@@ -91,6 +88,11 @@ namespace App.Frontend.Controllers
                 TempData["error"] = response?.Message;
             }
             return View(product);
+        }
+
+        public async Task<IActionResult> coverPage()
+        {
+            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -1,4 +1,7 @@
-namespace App.Services.AuthAPI.Models.DTOs;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace App.Services.AuthAPI.Models;
+[NotMapped]
 public class RegistrationRequest
 {
     public string Email { get; set; }

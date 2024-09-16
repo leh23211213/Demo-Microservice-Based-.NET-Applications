@@ -3,3 +3,9 @@
 
 appsettings.json
 appsettings.Development.json
+
+.vs
+*/.vs
+
+.vscode
+*/.vscode
