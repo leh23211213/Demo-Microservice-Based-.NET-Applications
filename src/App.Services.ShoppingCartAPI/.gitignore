@@ -1,5 +1,7 @@
-*/appsettings.Development.json
-*/appsettings.json
-
 appsettings.json
 appsettings.Development.json
+appsettings.Production.json
+.vs
+
+obj/Debug/net8.0/*.cs
+obj/Debug/net8.0/*.cache
