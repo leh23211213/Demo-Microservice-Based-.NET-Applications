@@ -8,19 +8,12 @@ namespace App.Frontend.Services
     public class AuthService : IAuthService
     {
         private readonly IBaseService _baseService;
-        public AuthService(IBaseService baseService)
+        private string _url;
+        public AuthService(IBaseService baseService, IConfiguration configuration)
         {
             _baseService = baseService;
-        }
+            _url = configuration.GetValue<string>("ServiceUrls:authAPI");
 
-        public async Task<Response?> AssignRoleAsync(RegistrationRequest registrationRequest)
-        {
-            return await _baseService.SendAsync(new Request()
-            {
-                ApiType = StaticDetail.ApiType.POST,
-                Data = registrationRequest,
-                Url = StaticDetail.AuthAPIBase + "/api/auth/AssignRole"
-            }, withBearer: false);
         }
 
         public async Task<Response?> LoginAsync(LoginRequest loginRequest)
@@ -29,7 +22,7 @@ namespace App.Frontend.Services
             {
                 ApiType = StaticDetail.ApiType.POST,
                 Data = loginRequest,
-                Url = StaticDetail.AuthAPIBase + "/api/auth/login"
+                Url = _url + $"/api/{StaticDetail.CurrentAPIVersion}/auth/login"
             });
         }
 
@@ -39,7 +32,17 @@ namespace App.Frontend.Services
             {
                 ApiType = StaticDetail.ApiType.POST,
                 Data = registerRequest,
-                Url = StaticDetail.AuthAPIBase + "/api/auth/register"
+                Url = _url + $"/api/{StaticDetail.CurrentAPIVersion}/auth/register"
+            }, withBearer: false);
+        }
+        // TODO : logout 
+        public async Task<Response?> LogoutAsync(Token token)
+        {
+            return await _baseService.SendAsync(new Request()
+            {
+                ApiType = StaticDetail.ApiType.POST,
+                Data = token,
+                Url = _url + $"/api/{StaticDetail.CurrentAPIVersion}/UsersAuth/revoke"
             }, withBearer: false);
         }
     }

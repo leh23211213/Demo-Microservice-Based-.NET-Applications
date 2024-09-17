@@ -1,8 +1,12 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using App.Services.AuthAPI.Data;
 using App.Services.AuthAPI.Models;
-using App.Services.AuthAPI.Service.IService;
 using App.Services.AuthAPI.Services.IServices;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace App.Services.AuthAPI.Services
 {
@@ -11,58 +15,17 @@ namespace App.Services.AuthAPI.Services
         private readonly ApplicationDbContext _dbContext;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IJwtTokenGenerator _jwtTokenGenerator;
+        private string secretKey;
 
         public AuthAPIService(ApplicationDbContext dbContext,
                                 UserManager<ApplicationUser> userManager,
                                 RoleManager<IdentityRole> roleManager,
-                                IJwtTokenGenerator jwtTokenGenerator)
+                                IConfiguration configuration)
         {
             _dbContext = dbContext;
             _userManager = userManager;
             _roleManager = roleManager;
-            _jwtTokenGenerator = jwtTokenGenerator;
-        }
-
-        public async Task<bool> AssignRole(string email, string roleName)
-        {
-            var account = _dbContext.Users.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
-            if (account != null)
-            {
-                if (!_roleManager.RoleExistsAsync(roleName).GetAwaiter().GetResult())
-                {
-                    await _roleManager.CreateAsync(new IdentityRole(roleName));
-                }
-                await _userManager.AddToRoleAsync(account, roleName);
-                return true;
-            }
-            return false;
-        }
-
-        public async Task<LoginResponse> Login(LoginRequest loginRequest)
-        {
-            var account = _dbContext.Users.FirstOrDefault(u => u.Email.ToLower() == loginRequest.Email.ToLower());
-            bool isValid = await _userManager.CheckPasswordAsync(account, loginRequest.Password);
-
-            if (account == null || !isValid)
-            {
-                return new LoginResponse() { User = null, Token = null };
-            }
-
-            var roles = await _userManager.GetRolesAsync(account);
-            var token = _jwtTokenGenerator.GenerateToken(account, roles);
-
-            LoginResponse loginResponseresponse = new LoginResponse()
-            {
-                User = new()
-                {
-                    Email = account.Email,
-                    Name = account.Name,
-                },
-                Token = token
-            };
-
-            return loginResponseresponse;
+            secretKey = configuration.GetValue<string>("ApiSettings:Secret");
         }
 
         public async Task<string> Register(RegistrationRequest registrationRequest)
@@ -81,6 +44,13 @@ namespace App.Services.AuthAPI.Services
                 var result = await _userManager.CreateAsync(applicationUser, registrationRequest.Password);
                 if (result.Succeeded)
                 {
+                    if (!_roleManager.RoleExistsAsync(registrationRequest.Role).GetAwaiter().GetResult())
+                    {
+                        await _roleManager.CreateAsync(new IdentityRole(registrationRequest.Role));
+                    }
+                    await _userManager.AddToRoleAsync(applicationUser, registrationRequest.Role);
+
+
                     var userToReturn = _dbContext.Users.First(x => x.UserName == registrationRequest.Email);
                     User userDTO = new()
                     {
@@ -89,7 +59,7 @@ namespace App.Services.AuthAPI.Services
                         Name = userToReturn.Name,
                         PhoneNumber = userToReturn.PhoneNumber
                     };
-                    return "";
+                    return string.Empty;
                 }
                 else
                 {
@@ -99,6 +69,162 @@ namespace App.Services.AuthAPI.Services
             catch (Exception ex)
             {
                 return $"Error Encountered: {ex.Message}";
+            }
+        }
+        public async Task<Token> Login(LoginRequest loginRequest)
+        {
+            var user = _dbContext.Users.FirstOrDefault(u => u.Email.ToLower() == loginRequest.Email.ToLower());
+            bool isValid = await _userManager.CheckPasswordAsync(user, loginRequest.Password);
+
+            if (user == null || !isValid)
+            {
+                return new Token() { AccessToken = string.Empty };
+            }
+            //if user was found generate JWT Token
+            var jwtTokenId = $"JTI{Guid.NewGuid()}";
+            var accessToken = await GetAccessToken(user, jwtTokenId);
+            var refreshToken = await CreateNewRefreshToken(user.Id, jwtTokenId);
+
+            Token token = new()
+            {
+                AccessToken = accessToken,
+                RefreshToken = refreshToken,
+            };
+
+            return token;
+        }
+        public async Task<Token> RefreshAccessToken(Token tokenDTO)
+        {
+            // Find an existing refresh token
+            var existingRefreshToken = await _dbContext.RefreshTokens.FirstOrDefaultAsync(u => u.Refresh_Token == tokenDTO.RefreshToken);
+            if (existingRefreshToken == null)
+            {
+                return new Token();
+            }
+
+            // Compare data from existing refresh and access token provided and if there is any missmatch then consider it as a fraud
+            var isTokenValid = GetAccessTokenData(tokenDTO.AccessToken, existingRefreshToken.UserId, existingRefreshToken.JwtTokenId);
+            if (!isTokenValid)
+            {
+                await MarkTokenAsInvalid(existingRefreshToken);
+                return new Token();
+            }
+
+            // When someone tries to use not valid refresh token, fraud possible
+            if (!existingRefreshToken.IsValid)
+            {
+                await MarkAllTokenInChainAsInvalid(existingRefreshToken.UserId, existingRefreshToken.JwtTokenId);
+            }
+            // If just expired then mark as invalid and return empty
+            if (existingRefreshToken.ExpiresAt < DateTime.UtcNow)
+            {
+                await MarkTokenAsInvalid(existingRefreshToken);
+                return new Token();
+            }
+
+            // replace old refresh with a new one with updated expire date
+            var newRefreshToken = await CreateNewRefreshToken(existingRefreshToken.UserId, existingRefreshToken.JwtTokenId);
+
+            // revoke existing refresh token
+            await MarkTokenAsInvalid(existingRefreshToken);
+
+            // generate new access token
+            var applicationUser = _dbContext.Users.FirstOrDefault(u => u.Id == existingRefreshToken.UserId);
+            if (applicationUser == null)
+                return new Token();
+
+            var newAccessToken = await GetAccessToken(applicationUser, existingRefreshToken.JwtTokenId);
+
+            return new Token()
+            {
+                AccessToken = newAccessToken,
+                RefreshToken = newRefreshToken,
+            };
+
+        }
+        public async Task RevokeRefreshToken(Token token)
+        {
+            var existingRefreshToken = await _dbContext.RefreshTokens.FirstOrDefaultAsync(_ => _.Refresh_Token == token.RefreshToken);
+
+            if (existingRefreshToken == null)
+                return;
+            // Compare data from existing refresh and access token provided and
+            // if there is any missmatch then we should do nothing with refresh token
+            var isTokenValid = GetAccessTokenData(token.AccessToken, existingRefreshToken.UserId, existingRefreshToken.JwtTokenId);
+            if (!isTokenValid)
+            {
+
+                return;
+            }
+
+            await MarkAllTokenInChainAsInvalid(existingRefreshToken.UserId, existingRefreshToken.JwtTokenId);
+
+        }
+        private async Task<string> GetAccessToken(ApplicationUser user, string jwtTokenId)
+        {
+
+            var roles = await _userManager.GetRolesAsync(user);
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(secretKey);
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]{
+                    new Claim(ClaimTypes.Email, user.Email.ToString()),
+                    new Claim(ClaimTypes.Role, roles.FirstOrDefault()),
+                    new Claim(JwtRegisteredClaimNames.Jti, jwtTokenId),
+                    new Claim(JwtRegisteredClaimNames.Sub, user.Id),
+                    new Claim(JwtRegisteredClaimNames.Aud, ""),
+                }),
+                Expires = DateTime.UtcNow.AddMinutes(1),
+                //Issuer = "https://magicvilla-api.com",
+                //Audience = "https://test-magic-api.com",
+                SigningCredentials = new(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var tokenString = tokenHandler.WriteToken(token);
+            return tokenString;
+        }
+        private async Task<string> CreateNewRefreshToken(string user, string jwtTokenId)
+        {
+            RefreshToken refreshToken = new()
+            {
+                IsValid = true,
+                UserId = user,
+                JwtTokenId = jwtTokenId,
+                ExpiresAt = DateTime.UtcNow.AddMinutes(2),
+                Refresh_Token = Guid.NewGuid() + "-" + Guid.NewGuid(),
+            };
+
+            await _dbContext.RefreshTokens.AddAsync(refreshToken);
+            await _dbContext.SaveChangesAsync();
+            return refreshToken.Refresh_Token;
+        }
+        private Task MarkTokenAsInvalid(RefreshToken refreshToken)
+        {
+            refreshToken.IsValid = false;
+            return _dbContext.SaveChangesAsync();
+        }
+        private async Task MarkAllTokenInChainAsInvalid(string userId, string tokenId)
+        {
+            await _dbContext.RefreshTokens.Where(u => u.UserId == userId
+               && u.JwtTokenId == tokenId)
+                   .ExecuteUpdateAsync(u => u.SetProperty(refreshToken => refreshToken.IsValid, false));
+        }
+        private bool GetAccessTokenData(string accessToken, string expectedUserId, string expectedTokenId)
+        {
+            try
+            {
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var jwt = tokenHandler.ReadJwtToken(accessToken);
+                var jwtTokenId = jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Jti).Value;
+                var userId = jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Sub).Value;
+                return userId == expectedUserId && jwtTokenId == expectedTokenId;
+            }
+            catch
+            {
+                return false;
             }
         }
     }

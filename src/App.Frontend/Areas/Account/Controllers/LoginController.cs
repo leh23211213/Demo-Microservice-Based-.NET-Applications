@@ -40,9 +40,9 @@ namespace App.Frontend.Areas.Account.Controllers
             Response response = await _authService.LoginAsync(model);
             if (response.IsSuccess && response != null)
             {
-                LoginResponse loginResponse = JsonConvert.DeserializeObject<LoginResponse>(Convert.ToString(response.Result));
-                await SignInUser(loginResponse);
-                _tokenProvider.SetToken(loginResponse.Token);
+                var token = JsonConvert.DeserializeObject<Token>(Convert.ToString(response.Result));
+                await SignInUser(token);
+                _tokenProvider.SetToken(token);
                 return RedirectToAction("Index", "Home");
             }
             else
@@ -56,20 +56,19 @@ namespace App.Frontend.Areas.Account.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();
+            var token = _tokenProvider.GetToken();
+            await _authService.LogoutAsync(token);
             _tokenProvider.ClearToken();
             return RedirectToAction("Login", "Login", new { area = "Account" });
         }
 
-        private async Task SignInUser(LoginResponse model)
+        private async Task SignInUser(Token token)
         {
             var handler = new JwtSecurityTokenHandler();
-            var jwt = handler.ReadJwtToken(model.Token);
+            var jwt = handler.ReadJwtToken(token.AccessToken);
 
             var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
-            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Email, jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Email).Value));
-            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Sub, jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Sub).Value));
-            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Name, jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Name).Value));
-            identity.AddClaim(new Claim(ClaimTypes.Name, jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Email).Value));
+            identity.AddClaim(new Claim(ClaimTypes.Name, jwt.Claims.FirstOrDefault(u => u.Type == "unique_name").Value));
             identity.AddClaim(new Claim(ClaimTypes.Role, jwt.Claims.FirstOrDefault(u => u.Type == "role").Value));
 
             var principal = new ClaimsPrincipal(identity);
