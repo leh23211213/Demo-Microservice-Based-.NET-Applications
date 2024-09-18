@@ -27,7 +27,7 @@ namespace App.Services.AuthAPI.Controllers.v2
             {
                 _response.StatusCode = HttpStatusCode.BadRequest;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add("Email or password is incorrect");
+                _response.Message = "Email or password is incorrect";
                 return BadRequest(_response);
             }
             _response.StatusCode = HttpStatusCode.OK;

@@ -1,7 +1,7 @@
 
 namespace App.Frontend.Utility;
 
-public class StaticDetail
+public static class StaticDetail
 {
     public static string AuthAPIBase { get; set; }
     public static string ProductAPIBase { get; set; }

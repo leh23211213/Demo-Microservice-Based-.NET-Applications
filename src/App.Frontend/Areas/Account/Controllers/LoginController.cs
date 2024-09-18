@@ -24,7 +24,6 @@ namespace App.Frontend.Areas.Account.Controllers
             _tokenProvider = tokenProvider;
         }
 
-        // GET: /Account/Login
         [HttpGet]
         public async Task<ActionResult> Login()
         {
@@ -68,7 +67,7 @@ namespace App.Frontend.Areas.Account.Controllers
             var jwt = handler.ReadJwtToken(token.AccessToken);
 
             var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
-            identity.AddClaim(new Claim(ClaimTypes.Name, jwt.Claims.FirstOrDefault(u => u.Type == "unique_name").Value));
+            identity.AddClaim(new Claim(ClaimTypes.Name, jwt.Claims.FirstOrDefault(u => u.Type == "email").Value));
             identity.AddClaim(new Claim(ClaimTypes.Role, jwt.Claims.FirstOrDefault(u => u.Type == "role").Value));
 
             var principal = new ClaimsPrincipal(identity);

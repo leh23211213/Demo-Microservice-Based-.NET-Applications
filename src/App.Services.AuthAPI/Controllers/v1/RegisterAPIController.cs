@@ -27,7 +27,7 @@ namespace App.Services.AuthAPI.Controllers.v1
             {
                 _response.StatusCode = HttpStatusCode.BadRequest;
                 _response.IsSuccess = false;
-                _response.ErrorMessages.Add(errorMessage);
+                _response.Message = errorMessage;
                 return BadRequest(_response);
             }
             _response.StatusCode = HttpStatusCode.OK;

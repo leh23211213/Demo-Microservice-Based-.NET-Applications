@@ -35,15 +35,15 @@ namespace App.Frontend.Services
                 Url = _url + $"/api/{StaticDetail.CurrentAPIVersion}/auth/register"
             }, withBearer: false);
         }
-        // TODO : logout 
+
         public async Task<Response?> LogoutAsync(Token token)
         {
             return await _baseService.SendAsync(new Request()
             {
                 ApiType = StaticDetail.ApiType.POST,
                 Data = token,
-                Url = _url + $"/api/{StaticDetail.CurrentAPIVersion}/UsersAuth/revoke"
-            }, withBearer: false);
+                Url = _url + $"/api/{StaticDetail.CurrentAPIVersion}/auth/revoke"
+            });
         }
     }
 }

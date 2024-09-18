@@ -50,7 +50,7 @@ namespace App.Frontend.Areas.Account.Controllers
             }
             else
             {
-                TempData["error"] = response.Message;
+                TempData["error"] = response?.Message;
             }
 
             var roleList = new List<SelectListItem>()
