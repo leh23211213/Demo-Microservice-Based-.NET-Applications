@@ -38,11 +38,7 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
-    if (app.Environment.IsDevelopment())
-    {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "App.Services.AuthAPI V1");
-    }
-    else
+    if (!app.Environment.IsDevelopment())
     {
         app.UseSwaggerUI(options =>
         {
