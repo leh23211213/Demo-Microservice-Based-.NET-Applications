@@ -32,7 +32,7 @@ jobs:
       - name: Update appsettings.json with connection string
         run: |
           echo "Updating appsettings.json with the connection string"
-          sed -i 's|"PlaceholderConnectionString"|"${{ secrets.AZURE_SQL_LEVANHIEP049159AUTHENTICATIONAPI_CONNECTION_STRING }}"|' appsettings.Production.json
+          sed -i 's|"PlaceholderConnectionString"|"${{ secrets.AZURE_SQL_CONNECTION_STRING }}"|' ./src/App.Services.AuthAPI/appsettings.Production.json
 
       - name: Setup .NET Core SDK
         uses: actions/setup-dotnet@v3
