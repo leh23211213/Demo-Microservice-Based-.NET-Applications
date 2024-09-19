@@ -36,22 +36,21 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 app.UseSwagger();
-
-if (app.Environment.IsDevelopment())
+app.UseSwaggerUI(options =>
 {
-    app.UseSwaggerUI(options =>
-       {
-           options.SwaggerEndpoint("/swagger/v1/swagger.json", "App.Services.AuthAPI V1");
-       });
-}
-else
-{
-    app.UseSwaggerUI(options =>
+    if (app.Environment.IsDevelopment())
     {
         options.SwaggerEndpoint("/swagger/v1/swagger.json", "App.Services.AuthAPI V1");
-        options.RoutePrefix = string.Empty;
-    });
-}
+    }
+    else
+    {
+        app.UseSwaggerUI(options =>
+        {
+            options.SwaggerEndpoint("/swagger/v1/swagger.json", "App.Services.AuthAPI V1");
+            options.RoutePrefix = string.Empty;
+        });
+    }
+});
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
