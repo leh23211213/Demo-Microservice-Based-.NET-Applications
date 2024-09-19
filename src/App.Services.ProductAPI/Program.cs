@@ -1,4 +1,3 @@
-using App.Services.Produ.Extensions;
 using App.Services.ProductAPI.Data;
 using App.Services.ProductAPI.Extensions;
 using Microsoft.AspNetCore.Mvc;
