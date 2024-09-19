@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using IdentityModel;
+using App.Frontend.Utility;
 namespace App.Frontend.Controllers
 {
     public class HomeController : Controller
@@ -22,7 +23,7 @@ namespace App.Frontend.Controllers
         public async Task<IActionResult> Index(int curentPage = 1)
         {
             Pagination pagination = new();
-            Response? response = await _productService.GetAsync(curentPage);
+            Response? response = await _productService.GetAsync(curentPage, HttpContext.Session.GetString(StaticDetail.SessionToken));
             if (response.IsSuccess && response != null && response.Result != null)
             {
                 pagination.Products = JsonConvert.DeserializeObject<List<Product>>(response.Result.ToString());
@@ -40,7 +41,7 @@ namespace App.Frontend.Controllers
         public async Task<IActionResult> Detail(string id)
         {
             Product? product = new();
-            Response? response = await _productService.GetAsync(id);
+            Response? response = await _productService.GetAsync(id, HttpContext.Session.GetString(StaticDetail.SessionToken));
             if (response != null && response.IsSuccess)
             {
                 product = JsonConvert.DeserializeObject<Product>(Convert.ToString(response.Result));
@@ -77,7 +78,7 @@ namespace App.Frontend.Controllers
             List<CartDetails> cartDetailsList = new() { cartDetails };
             cart.CartDetails = cartDetailsList;
 
-            Response response = await _cartService.AddAsync(cart);
+            Response response = await _cartService.AddAsync(cart, HttpContext.Session.GetString(StaticDetail.SessionToken));
             if (response != null && response.IsSuccess)
             {
                 TempData["success"] = "Item has been added to Cart.";

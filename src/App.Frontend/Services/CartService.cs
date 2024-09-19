@@ -14,33 +14,36 @@ namespace App.Frontend.Services
             _baseService = baseService;
         }
 
-        public async Task<Response> GetAsync(string userId)
+        public async Task<Response> GetAsync(string userId, string token)
         {
             return await _baseService.SendAsync(new Request()
             {
                 ApiType = StaticDetail.ApiType.GET,
-                Url = StaticDetail.ShoppingCartAPIBase + "/api/cart/get/" + userId
+                Url = StaticDetail.ShoppingCartAPIBase + "/api/cart/get/" + userId,
+                Token = token
             });
         }
 
-        public async Task<Response> RemoveAsync(int cartDetailsId)
+        public async Task<Response> RemoveAsync(int cartDetailsId, string token)
         {
             return await _baseService.SendAsync(new Request()
             {
                 ApiType = StaticDetail.ApiType.GET,
                 Data = cartDetailsId,
-                Url = StaticDetail.ShoppingCartAPIBase + "/api/cart/remove"
+                Url = StaticDetail.ShoppingCartAPIBase + "/api/cart/remove",
+                Token = token
             });
         }
 
-        public async Task<Response> AddAsync(Cart cart)
+        public async Task<Response> AddAsync(Cart cart, string token)
         {
 
             return await _baseService.SendAsync(new Request()
             {
                 ApiType = StaticDetail.ApiType.GET,
                 Data = cart,
-                Url = StaticDetail.ShoppingCartAPIBase + "/api/cart/add"
+                Url = StaticDetail.ShoppingCartAPIBase + "/api/cart/add",
+                Token = token
             });
         }
     }

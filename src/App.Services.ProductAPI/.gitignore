@@ -1,6 +1,0 @@
-appsettings.json
-appsettings.Development.json
-appsettings.Production.json
-.vs
-bin
-obj

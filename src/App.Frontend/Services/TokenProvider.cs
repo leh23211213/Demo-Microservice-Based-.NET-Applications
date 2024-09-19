@@ -1,4 +1,5 @@
 
+using App.Frontend.Models;
 using App.Frontend.Services.IServices;
 using App.Frontend.Utility;
 
@@ -16,19 +17,35 @@ namespace App.Frontend.Services
 
         public void ClearToken()
         {
-            _httpContextAccessor.HttpContext?.Response.Cookies.Delete(StaticDetail.TokenCookie);
+            _httpContextAccessor.HttpContext?.Response.Cookies.Delete(StaticDetail.AccessToken);
+            _httpContextAccessor.HttpContext?.Response.Cookies.Delete(StaticDetail.RefreshToken);
         }
 
-        public string? GetToken()   
+        public Token GetToken()
         {
-            string? token = null;
-            bool? hasToken = _httpContextAccessor.HttpContext?.Request.Cookies.TryGetValue(StaticDetail.TokenCookie, out token);
-            return hasToken is true ? token : null;
+            try
+            {
+                bool hasAccessToken = _httpContextAccessor.HttpContext.Request.Cookies.TryGetValue(StaticDetail.TokenCookie, out string accessToken);
+                bool hasRefreshToken = _httpContextAccessor.HttpContext.Request.Cookies.TryGetValue(StaticDetail.TokenCookie, out string refreshToken);
+
+                Token token = new()
+                {
+                    AccessToken = accessToken,
+                    RefreshToken = refreshToken
+                };
+                return hasAccessToken is true ? token : null;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
-        public void SetToken(string token)
+        public void SetToken(Token token)
         {
-            _httpContextAccessor.HttpContext?.Response.Cookies.Append(StaticDetail.TokenCookie, token);
+            var cookieOptions = new CookieOptions { Expires = DateTime.UtcNow.AddDays(60) };
+            _httpContextAccessor.HttpContext?.Response.Cookies.Append(StaticDetail.AccessToken, token.AccessToken, cookieOptions);
+            _httpContextAccessor.HttpContext?.Response.Cookies.Append(StaticDetail.RefreshToken, token.RefreshToken, cookieOptions);
         }
     }
 }

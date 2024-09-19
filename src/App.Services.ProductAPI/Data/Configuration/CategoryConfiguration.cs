@@ -8,8 +8,8 @@ namespace App.Services.ProductAPI.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<Category> builder)
         {
-            builder.HasKey(c => c.CategoryId);
-            builder.Property(c => c.CategoryName).IsRequired().HasMaxLength(100);
+            builder.HasKey(c => c.Id);
+            builder.Property(c => c.Name).IsRequired().HasMaxLength(100);
         }
     }
 }

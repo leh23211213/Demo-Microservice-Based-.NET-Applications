@@ -1,8 +1,8 @@
 namespace App.Services.ProductAPI.Models;
 
-public partial class Color
+public class Color
 {
-    public int ColorId { get; set; }
-    public string ColorName { get; set; } = null!;
+    public int Id { get; set; }
+    public string Name { get; set; } = null!;
     public ICollection<Product> Products { get; set; }
 }

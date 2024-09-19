@@ -1,18 +1,58 @@
 using App.Services.ProductAPI.Data;
 using App.Services.ProductAPI.Extensions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.ConfigureDatabase(builder.Configuration);
 builder.Services.AppServiceCollection(builder.Configuration);
 
-var app = builder.Build();
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+builder.Services.AddApiVersioning(options =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.ReportApiVersions = true;
+});
+
+builder.Services.AddVersionedApiExplorer(options =>
+{
+    options.GroupNameFormat = "'v'VVV";
+    options.SubstituteApiVersionInUrl = true;
+});
+
+builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1.0",
+        Title = "App.Services.ProductAPI",
+    });
+});
+
+var app = builder.Build();
+app.UseSwagger();
+app.UseSwaggerUI(options =>
+{
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwaggerUI(options =>
+        {
+            options.SwaggerEndpoint("/swagger/v1/swagger.json", "App.Services.ProductAPI V1");
+        });
+    }
+    else
+    {
+        app.UseSwaggerUI(options =>
+        {
+            options.SwaggerEndpoint("/swagger/v1/swagger.json", "App.Services.ProductAPI V1");
+            options.RoutePrefix = string.Empty;
+        });
+    }
+});
 
 app.UseHttpsRedirection();
 app.UseAuthentication();

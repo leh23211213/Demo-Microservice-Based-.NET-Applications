@@ -45,17 +45,12 @@ namespace App.Frontend.Areas.Account.Controllers
                 {
                     model.Role = StaticDetail.RoleCustomer;
                 }
-
-                assignRole = await _authService.AssignRoleAsync(model);
-                if (assignRole != null && assignRole.IsSuccess)
-                {
-                    TempData["success"] = "Registration Successful";
-                    return RedirectToAction("Login", "Login", new { area = "Account" });
-                }
+                TempData["success"] = "Registration Successful";
+                return RedirectToAction("Login", "Login", new { area = "Account" });
             }
             else
             {
-                TempData["error"] = response.Message;
+                TempData["error"] = response?.Message;
             }
 
             var roleList = new List<SelectListItem>()

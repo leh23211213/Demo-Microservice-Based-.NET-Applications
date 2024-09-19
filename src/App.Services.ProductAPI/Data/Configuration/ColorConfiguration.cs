@@ -7,8 +7,8 @@ namespace App.Services.ProductAPI.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<Color> builder)
         {
-            builder.HasKey(c => c.ColorId);
-            builder.Property(c => c.ColorName).IsRequired().HasMaxLength(50);
+            builder.HasKey(c => c.Id);
+            builder.Property(c => c.Name).IsRequired().HasMaxLength(50);
         }
     }
 }
