@@ -7,8 +7,8 @@ namespace App.Services.ProductAPI.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<Brand> builder)
         {
-            builder.HasKey(b => b.BrandId);
-            builder.Property(b => b.BrandName).IsRequired().HasMaxLength(100);
+            builder.HasKey(b => b.Id);
+            builder.Property(b => b.Name).IsRequired().HasMaxLength(100);
             builder.Property(b => b.ImageUrl).HasMaxLength(200);
         }
     }

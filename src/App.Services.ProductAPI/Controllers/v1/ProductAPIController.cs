@@ -1,31 +1,56 @@
 
+using System.Text.Json;
 using App.Services.ProductAPI.Data;
 using App.Services.ProductAPI.Models;
 using App.Services.ProductAPI.Models.DTOs;
-using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace App.Services.ProductAPI.Controllers
+namespace App.Services.ProductAPI.Controllers.v1
 {
+    [Route("api/v{version:apiVersion}/product")]
     [ApiController]
-    [Route("api/product")]
-    //[Authorize]
+    [ApiVersion("1.0")]
     public class ProductAPIController : Controller
     {
         private readonly ApplicationDbContext _dbContext;
         private Response _response;
-        private IMapper _mapper;
 
-        public ProductAPIController(ApplicationDbContext dbContext, IMapper mapper)
+        public ProductAPIController(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
             _response = new Response();
-            _mapper = mapper;
         }
 
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<Response>> Get()
+        {
+            try
+            {
+                IEnumerable<Product> products = await _dbContext.Products.ToListAsync();
+                _response.Result = products;
+                _response.StatusCode = System.Net.HttpStatusCode.OK;
+            }
+            catch (Exception ex)
+            {
+                _response.Message = ex.Message;
+                _response.IsSuccess = false;
+                _response.StatusCode = System.Net.HttpStatusCode.BadRequest;
+            }
+            return _response;
+        }
+
+
         [HttpGet("page/{currentPage}")]
-        public async Task<ActionResult<Response>> GetAsync(int currentPage = 1)
+        [ResponseCache(CacheProfileName = "Default30")]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<Response>> GetAsync([FromQuery] string? search, int currentPage = 1)
         {
             const int pageSize = 6;
             IEnumerable<Product> products;
@@ -34,11 +59,11 @@ namespace App.Services.ProductAPI.Controllers
                 products = await _dbContext.Products.Skip((currentPage - 1) * pageSize).Take(pageSize)
                                 .Select(p => new Product
                                 {
-                                    ProductName = p.ProductName,
+                                    Name = p.Name,
                                     Price = p.Price,
                                     ImageUrl = p.ImageUrl,
                                     ImageLocalPath = p.ImageLocalPath
-                                }).ToListAsync();
+                                }).AsNoTracking().ToListAsync();
 
                 var totalItems = await _dbContext.Products.CountAsync();
                 var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
@@ -50,12 +75,15 @@ namespace App.Services.ProductAPI.Controllers
                     currentPage = currentPage,
                 };
 
-                if (currentPage > totalPages)
+                if (currentPage > 0)
                 {
-                    currentPage = totalPages;
+                    if (currentPage > totalPages)
+                    {
+                        currentPage = totalPages;
+                    }
                 }
-
-                _response.Result = _mapper.Map<PaginationDTO>(pagination);
+                _response.StatusCode = System.Net.HttpStatusCode.OK;
+                _response.Result = pagination;
             }
             catch (Exception ex)
             {
@@ -70,8 +98,8 @@ namespace App.Services.ProductAPI.Controllers
         {
             try
             {
-                Product product = _dbContext.Products.First(u => u.ProductId == id);
-                _response.Result = _mapper.Map<ProductDTO>(product);
+                Product product = _dbContext.Products.First(u => u.Id == id);
+                _response.Result = product;
             }
             catch (Exception ex)
             {
@@ -82,18 +110,17 @@ namespace App.Services.ProductAPI.Controllers
         }
 
         [HttpPost]
-        //[Authorize(Roles = "ADMIN")]
-        public async Task<ActionResult<Response>> CreateAsync(ProductDTO productDTO)
+        [Authorize(Roles = "ADMIN")]
+        public async Task<ActionResult<Response>> CreateAsync(Product product)
         {
             try
             {
-                Product product = _mapper.Map<Product>(productDTO);
                 _dbContext.Add(product);
                 _dbContext.SaveChanges();
 
-                if (productDTO.Image != null)
+                if (product.Image != null)
                 {
-                    string fileName = product.ProductId + Path.GetExtension(productDTO.Image.FileName);
+                    string fileName = product.Id + Path.GetExtension(product.Image.FileName);
                     string filePath = @"wwwroot\lib\Product\SmartPhone\" + fileName;
 
                     var directoryLocation = Path.Combine(Directory.GetCurrentDirectory(), filePath);
@@ -106,7 +133,7 @@ namespace App.Services.ProductAPI.Controllers
                     var filePathDirectory = Path.Combine(Directory.GetCurrentDirectory(), filePath);
                     using (var fileStream = new FileStream(filePathDirectory, FileMode.Create))
                     {
-                        productDTO.Image.CopyTo(fileStream);
+                        product.Image.CopyTo(fileStream);
                     }
                     var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.Value}{HttpContext.Request.PathBase.Value}";
                     product.ImageUrl = baseUrl + "/SmartPhone/" + fileName;
@@ -118,7 +145,7 @@ namespace App.Services.ProductAPI.Controllers
                 }
                 _dbContext.Update(product);
                 _dbContext.SaveChanges();
-                _response.Result = _mapper.Map<ProductDTO>(product);
+                _response.Result = product;
             }
             catch (Exception ex)
             {
@@ -129,13 +156,12 @@ namespace App.Services.ProductAPI.Controllers
         }
 
         [HttpPut]
-        //[Authorize(Roles = "ADMIN")]
-        public async Task<ActionResult<Response>> UpdateAsync(ProductDTO productDTO)
+        [Authorize(Roles = "ADMIN")]
+        public async Task<ActionResult<Response>> UpdateAsync(Product product)
         {
             try
             {
-                Product product = _mapper.Map<Product>(productDTO);
-                if (productDTO.Image != null)
+                if (product.Image != null)
                 {
                     if (!string.IsNullOrEmpty(product.ImageLocalPath))
                     {
@@ -146,12 +172,12 @@ namespace App.Services.ProductAPI.Controllers
                             file.Delete();
                         }
                     }
-                    string fileName = product.ProductId + Path.GetExtension(productDTO.Image.FileName);
+                    string fileName = product.Id + Path.GetExtension(product.Image.FileName);
                     string filePath = @"wwwroot\ProductImages\" + fileName;
                     var filePathDirectory = Path.Combine(Directory.GetCurrentDirectory(), filePath);
                     using (var fileStream = new FileStream(filePathDirectory, FileMode.Create))
                     {
-                        productDTO.Image.CopyTo(fileStream);
+                        product.Image.CopyTo(fileStream);
                     }
                     var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.Value}{HttpContext.Request.PathBase.Value}";
                     product.ImageUrl = baseUrl + "/ProductImages/" + fileName;
@@ -160,7 +186,7 @@ namespace App.Services.ProductAPI.Controllers
 
                 _dbContext.Update(product);
                 _dbContext.SaveChanges();
-                _response.Result = _mapper.Map<ProductDTO>(product);
+                _response.Result = product;
             }
             catch (Exception ex)
             {
@@ -171,12 +197,12 @@ namespace App.Services.ProductAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        //[Authorize(Roles = "ADMIN")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<Response>> RemoveAsync(string id)
         {
             try
             {
-                Product product = _dbContext.Products.First(u => u.ProductId == id);
+                Product product = _dbContext.Products.First(u => u.Id == id);
                 if (!string.IsNullOrEmpty(product.ImageLocalPath))
                 {
                     var oldFilePathDirectory = Path.Combine(Directory.GetCurrentDirectory(), product.ImageLocalPath);
