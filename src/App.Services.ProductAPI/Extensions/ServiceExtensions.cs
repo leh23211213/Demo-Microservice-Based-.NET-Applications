@@ -1,6 +1,7 @@
 using System.Text;
 using App.Services.ProductAPI.Models.DTOs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
 namespace App.Services.ProductAPI.Extensions
@@ -10,7 +11,17 @@ namespace App.Services.ProductAPI.Extensions
         public static IServiceCollection AppServiceCollection(this IServiceCollection services, IConfiguration configuration)
         {
             // Add services to the container. 
-            services.AddAutoMapper(typeof(MappingConfig));
+            services.AddResponseCaching();
+            services.AddControllers(option =>
+             {
+                 option.CacheProfiles.Add("Default30",
+                    new CacheProfile()
+                    {
+                        Duration = 30
+                    });
+                 //option.ReturnHttpNotAcceptable=true;
+             }).AddNewtonsoftJson().AddXmlDataContractSerializerFormatters();
+
             services.AddScoped<Response>();
             var settingsSection = configuration.GetSection("ApiSettings");
 
@@ -33,8 +44,6 @@ namespace App.Services.ProductAPI.Extensions
                     ValidateIssuerSigningKey = true,
                     ValidAudience = audience,
                     ValidateAudience = true,
-                    //ValidateActor = true,
-                    //  ValidateLifetime = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key)
                 };
             });
@@ -43,7 +52,6 @@ namespace App.Services.ProductAPI.Extensions
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
             services.AddAuthentication();
-
             return services;
         }
     }

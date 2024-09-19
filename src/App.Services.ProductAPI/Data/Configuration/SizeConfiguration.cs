@@ -7,7 +7,7 @@ namespace App.Services.ProductAPI.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<Size> builder)
         {
-            builder.HasKey(s => s.SizeId);
+            builder.HasKey(s => s.Id);
             builder.Property(s => s.RAM).IsRequired().HasMaxLength(50);
         }
     }

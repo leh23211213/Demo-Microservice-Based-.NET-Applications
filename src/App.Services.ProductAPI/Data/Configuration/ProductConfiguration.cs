@@ -9,9 +9,9 @@ namespace App.Services.ProductAPI.Data.Configuration
               public void Configure(EntityTypeBuilder<Product> builder)
               {
                      builder.ToTable("Products");
-                     builder.HasKey(e => e.ProductId);
+                     builder.HasKey(e => e.Id);
 
-                     builder.Property(e => e.ProductName).HasMaxLength(100).IsRequired();
+                     builder.Property(e => e.Name).HasMaxLength(100).IsRequired();
                      builder.Property(e => e.Price).HasColumnType("decimal(18,2)").IsRequired();
                      builder.Property(e => e.ImageUrl).HasMaxLength(255).IsRequired(false);
 

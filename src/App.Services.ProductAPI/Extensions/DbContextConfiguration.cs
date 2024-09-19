@@ -1,4 +1,4 @@
-using App.Services.AuthAPI.Data;
+using App.Services.ProductAPI.Data;
 using Microsoft.EntityFrameworkCore;
 namespace App.Services.Produ.Extensions
 {
