@@ -1,8 +1,6 @@
 
-using System.Text.Json;
 using App.Services.ProductAPI.Data;
 using App.Services.ProductAPI.Models;
-using App.Services.ProductAPI.Models.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
