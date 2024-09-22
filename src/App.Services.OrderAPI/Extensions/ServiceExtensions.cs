@@ -21,9 +21,9 @@ namespace App.Services.OrderAPI.Extensions
                     ValidateActor = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = configuration["JwtOptions:Issuer"],
-                    ValidAudience = configuration["JwtOptions:Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtOptions:Secret"]))
+                    ValidIssuer = configuration["Issuer"],
+                    ValidAudience = configuration["Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Secret"]))
                 };
             });
 
