@@ -19,7 +19,7 @@ namespace App.Frontend.Controllers
         public async Task<ActionResult<Cart>> Index()
         {
             var userId = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
-            Response responses = await _productService.GetAsync(userId, HttpContext.Session.GetString(StaticDetail.SessionToken));
+            Response responses = await _productService.GetAsync(userId, Request.Cookies["JWTToken"]);
             if (responses.Result != null && responses.IsSuccess)
             {
                 Cart cart = JsonConvert.DeserializeObject<Cart>(responses.Result.ToString());

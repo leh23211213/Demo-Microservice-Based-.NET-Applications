@@ -175,7 +175,7 @@ namespace App.Services.AuthAPI.Services
                     new Claim(JwtRegisteredClaimNames.Jti, jwtTokenId),
                     new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(1),
+                Expires = DateTime.UtcNow.AddMinutes(15),
                 //Issuer = "",
                 //Audience = "",
                 SigningCredentials = new(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

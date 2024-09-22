@@ -22,8 +22,16 @@ namespace App.Frontend.Controllers
 
         public async Task<IActionResult> Index(int curentPage = 1)
         {
+            var accessToken = Request.Cookies["JWTToken"];
+
+            if (accessToken == null)
+            {
+                return Unauthorized("Access token is missing.");
+            }
+
+
             Pagination pagination = new();
-            Response? response = await _productService.GetAsync(curentPage, HttpContext.Session.GetString(StaticDetail.SessionToken));
+            Response? response = await _productService.GetAsync(curentPage, accessToken);
             if (response.IsSuccess && response != null && response.Result != null)
             {
                 pagination.Products = JsonConvert.DeserializeObject<List<Product>>(response.Result.ToString());
@@ -40,8 +48,9 @@ namespace App.Frontend.Controllers
 
         public async Task<IActionResult> Detail(string id)
         {
+             var accessToken = Request.Cookies["JWTToken"];
             Product? product = new();
-            Response? response = await _productService.GetAsync(id, HttpContext.Session.GetString(StaticDetail.SessionToken));
+            Response? response = await _productService.GetAsync(id, accessToken);
             if (response != null && response.IsSuccess)
             {
                 product = JsonConvert.DeserializeObject<Product>(Convert.ToString(response.Result));
@@ -54,6 +63,7 @@ namespace App.Frontend.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(Product product)
         {
             var userId = User.Claims.Where(u => u.Type == JwtClaimTypes.Subject)?.FirstOrDefault()?.Value;
@@ -77,8 +87,8 @@ namespace App.Frontend.Controllers
 
             List<CartDetails> cartDetailsList = new() { cartDetails };
             cart.CartDetails = cartDetailsList;
-
-            Response response = await _cartService.AddAsync(cart, HttpContext.Session.GetString(StaticDetail.SessionToken));
+ var accessToken = Request.Cookies["JWTToken"];
+            Response response = await _cartService.AddAsync(cart, accessToken);
             if (response != null && response.IsSuccess)
             {
                 TempData["success"] = "Item has been added to Cart.";

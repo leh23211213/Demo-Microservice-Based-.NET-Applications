@@ -9,10 +9,10 @@ namespace App.Frontend.Services
 {
     public class ApiMessageRequestBuilder : IApiMessageRequestBuilder
     {
-        public HttpRequestMessage Build(Request Request)
+        public HttpRequestMessage Build(Request request)
         {
             HttpRequestMessage message = new();
-            if (Request.ContentType == ContentType.MultipartFormData)
+            if (request.ContentType == ContentType.MultipartFormData)
             {
                 message.Headers.Add("Accept", "*/*");
             }
@@ -21,13 +21,13 @@ namespace App.Frontend.Services
                 message.Headers.Add("Accept", "application/json");
             }
 
-            message.RequestUri = new Uri(Request.Url);
-            if (Request.ContentType == ContentType.MultipartFormData)
+            message.RequestUri = new Uri(request.Url);
+            if (request.ContentType == ContentType.MultipartFormData)
             {
                 var content = new MultipartFormDataContent();
-                foreach (var prop in Request.Data.GetType().GetProperties())
+                foreach (var prop in request.Data.GetType().GetProperties())
                 {
-                    var value = prop.GetValue(Request.Data);
+                    var value = prop.GetValue(request.Data);
                     if (value is FormFile)
                     {
                         var file = (FormFile)value;
@@ -45,14 +45,14 @@ namespace App.Frontend.Services
             }
             else
             {
-                if (Request.Data != null)
+                if (request.Data != null)
                 {
-                    message.Content = new StringContent(JsonConvert.SerializeObject(Request.Data),
+                    message.Content = new StringContent(JsonConvert.SerializeObject(request.Data),
                         Encoding.UTF8, "application/json");
                 }
             }
 
-            switch (Request.ApiType)
+            switch (request.ApiType)
             {
                 case ApiType.POST:
                     message.Method = HttpMethod.Post;

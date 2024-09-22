@@ -33,14 +33,14 @@ namespace App.Frontend.Services
             _apiMessageRequestBuilder = apiMessageRequestBuilder;
         }
 
-        public async Task<Response?> SendAsync(Request Request, bool withBearer = true)
+        public async Task<Response?> SendAsync(Request request, bool withBearer = true)
         {
             try
             {
                 var client = _httpClientFactory.CreateClient("ApplicationAPI");
                 var messageFactory = () =>
                 {
-                    return _apiMessageRequestBuilder.Build(Request);
+                    return _apiMessageRequestBuilder.Build(request);
                 };
 
                 HttpResponseMessage httpResponseMessage = null;
@@ -188,7 +188,7 @@ namespace App.Frontend.Services
             var jwt = handler.ReadJwtToken(token.AccessToken);
 
             var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
-            identity.AddClaim(new Claim(ClaimTypes.Name, jwt.Claims.FirstOrDefault(u => u.Type == "unique_name").Value));
+            identity.AddClaim(new Claim(ClaimTypes.Name, jwt.Claims.FirstOrDefault(u => u.Type == "email").Value));
             identity.AddClaim(new Claim(ClaimTypes.Role, jwt.Claims.FirstOrDefault(u => u.Type == "role").Value));
             var principal = new ClaimsPrincipal(identity);
             await _httpContextAccessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
