@@ -4,6 +4,6 @@ namespace App.Services.ShoppingCartAPI.Models;
 [NotMapped]
 public class Cart
 {
-    public CartHeader cartHeader { get; set; }
-    public IEnumerable<CartDetails>? cartDetails { get; set; }
+    public CartHeader CartHeader { get; set; }
+    public IEnumerable<CartDetails>? CartDetails { get; set; }
 }

@@ -1,5 +1,5 @@
 using System.Text;
-using App.Services.ProductAPI.Models.DTOs;
+using App.Services.ProductAPI.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;

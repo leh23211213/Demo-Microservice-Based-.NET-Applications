@@ -55,16 +55,16 @@ namespace App.Frontend.Services
                     switch (httpResponseMessage.StatusCode)
                     {
                         case HttpStatusCode.NotFound:
-                            FinalApiResponse.Message =  "Not Found" ;
+                            FinalApiResponse.Message = "Not Found";
                             break;
                         case HttpStatusCode.Forbidden:
-                            FinalApiResponse.Message = "Access Denied" ;
+                            FinalApiResponse.Message = "Access Denied";
                             break;
                         case HttpStatusCode.Unauthorized:
-                            FinalApiResponse.Message = "Unauthorized" ;
+                            FinalApiResponse.Message = "Unauthorized";
                             break;
                         case HttpStatusCode.InternalServerError:
-                            FinalApiResponse.Message = "Internal Server Error" ;
+                            FinalApiResponse.Message = "Internal Server Error";
                             break;
                         default:
                             var apiContent = await httpResponseMessage.Content.ReadAsStringAsync();
@@ -75,7 +75,7 @@ namespace App.Frontend.Services
                 }
                 catch (Exception e)
                 {
-                    FinalApiResponse.Message =  e.Message.ToString();
+                    FinalApiResponse.Message = e.Message.ToString();
                 }
                 var res = JsonConvert.SerializeObject(FinalApiResponse);
                 var returnObj = JsonConvert.DeserializeObject<Response>(res);

@@ -52,7 +52,7 @@ namespace App.Services.AuthAPI.Services
 
 
                     var userToReturn = _dbContext.Users.First(x => x.UserName == registrationRequest.Email);
-                    User userDTO = new()
+                    User user = new()
                     {
                         Id = userToReturn.Id,
                         Email = userToReturn.Email,
@@ -93,17 +93,17 @@ namespace App.Services.AuthAPI.Services
 
             return token;
         }
-        public async Task<Token> RefreshAccessToken(Token tokenDTO)
+        public async Task<Token> RefreshAccessToken(Token token)
         {
             // Find an existing refresh token
-            var existingRefreshToken = await _dbContext.RefreshTokens.FirstOrDefaultAsync(u => u.Refresh_Token == tokenDTO.RefreshToken);
+            var existingRefreshToken = await _dbContext.RefreshTokens.FirstOrDefaultAsync(u => u.Refresh_Token == token.RefreshToken);
             if (existingRefreshToken == null)
             {
                 return new Token();
             }
 
             // Compare data from existing refresh and access token provided and if there is any missmatch then consider it as a fraud
-            var isTokenValid = GetAccessTokenData(tokenDTO.AccessToken, existingRefreshToken.UserId, existingRefreshToken.JwtTokenId);
+            var isTokenValid = GetAccessTokenData(token.AccessToken, existingRefreshToken.UserId, existingRefreshToken.JwtTokenId);
             if (!isTokenValid)
             {
                 await MarkTokenAsInvalid(existingRefreshToken);

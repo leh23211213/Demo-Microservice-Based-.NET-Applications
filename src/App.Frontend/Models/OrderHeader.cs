@@ -11,7 +11,7 @@ public class Order
 
     public string? Country { get; set; } = null!;
 
-    public decimal TotalPrice { get; set; } = 0;
+    public double TotalPrice { get; set; } = 0;
     public DateTime OrderDate { get; set; }
     public List<OrderDetails> OrderDetails { get; set; } = null!;
 }
