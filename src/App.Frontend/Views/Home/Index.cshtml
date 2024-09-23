@@ -40,7 +40,6 @@
             </div>
             <section id="CategoryPage" data-name="Phone" data-template="cate">
                 <div class="Product-Box">
-                    <form>
                         <ul class="List-Product">
                             @foreach (var item in Model.Products)
                             {
@@ -59,18 +58,15 @@
                                 </li>
                             }
                         </ul>
-                    </form>
-                    <form>
+                </div>
                         <div class="pagination">
                             @for (int i = 1; i <= Model.totalPages; i++)
                             {
-                                <a asp-action="Index" asp-route-page="@i" class="@(i == Model.currentPage ? "active" : "")">
+                                <a asp-action="Index" asp-route-curentPage="@i" class="@(i == Model.currentPage ? "active" : "")">
                                     @i
                                 </a>
                             }
                         </div>
-                    </form>
-                </div>
             </section>
         </div>
     </div>

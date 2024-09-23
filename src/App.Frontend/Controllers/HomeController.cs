@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using IdentityModel;
-using App.Frontend.Utility;
 namespace App.Frontend.Controllers
 {
     public class HomeController : Controller
@@ -20,21 +19,13 @@ namespace App.Frontend.Controllers
         }
 
 
-        public async Task<IActionResult> Index(int curentPage = 1)
+        public async Task<IActionResult> Index([FromBody] string? search, int curentPage = 1)
         {
-            var accessToken = Request.Cookies["JWTToken"];
-
-            if (accessToken == null)
-            {
-                return Unauthorized("Access token is missing.");
-            }
-
-
+            Response? response = await _productService.GetAsync(search, curentPage);
             Pagination pagination = new();
-            Response? response = await _productService.GetAsync(curentPage, accessToken);
             if (response.IsSuccess && response != null && response.Result != null)
             {
-                pagination.Products = JsonConvert.DeserializeObject<List<Product>>(response.Result.ToString());
+                pagination = JsonConvert.DeserializeObject<Pagination>(Convert.ToString(response.Result));
             }
             else
             {
@@ -48,9 +39,8 @@ namespace App.Frontend.Controllers
 
         public async Task<IActionResult> Detail(string id)
         {
-             var accessToken = Request.Cookies["JWTToken"];
+            Response? response = await _productService.GetAsync(id);
             Product? product = new();
-            Response? response = await _productService.GetAsync(id, accessToken);
             if (response != null && response.IsSuccess)
             {
                 product = JsonConvert.DeserializeObject<Product>(Convert.ToString(response.Result));
@@ -87,7 +77,13 @@ namespace App.Frontend.Controllers
 
             List<CartDetails> cartDetailsList = new() { cartDetails };
             cart.CartDetails = cartDetailsList;
- var accessToken = Request.Cookies["JWTToken"];
+
+            var accessToken = Request.Cookies["JWTToken"];
+            if (accessToken == null)
+            {
+                return Unauthorized("Access token is missing.");
+            }
+
             Response response = await _cartService.AddAsync(cart, accessToken);
             if (response != null && response.IsSuccess)
             {

@@ -15,13 +15,13 @@ builder.Services.AddHttpClient<IAuthService, AuthService>();
 builder.Services.AddHttpClient<IProductService, ProductService>();
 builder.Services.AddHttpClient<ICartService, CartService>();
 
-
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 
 StaticDetail.AuthAPIBase = builder.Configuration["ServiceUrls:AuthAPI"];
 StaticDetail.ProductAPIBase = builder.Configuration["ServiceUrls:ProductAPI"];
 StaticDetail.ShoppingCartAPIBase = builder.Configuration["ServiceUrls:ShoppingCartAPI"];
+
 
 builder.Services.AddScoped<IBaseService, BaseService>();
 builder.Services.AddScoped<IAuthService, AuthService>();

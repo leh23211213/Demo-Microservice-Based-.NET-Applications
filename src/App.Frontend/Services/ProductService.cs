@@ -1,7 +1,6 @@
 using App.Frontend.Models;
 using App.Frontend.Services.IServices;
 using App.Frontend.Utility;
-using Microsoft.AspNetCore.Mvc;
 
 namespace App.Frontend.Services
 {
@@ -14,23 +13,30 @@ namespace App.Frontend.Services
             _baseService = baseService;
         }
 
-        public async Task<Response> GetAsync(int currentPage, string token)
+        public async Task<Response> GetAsync(string? search, int currentPage)
         {
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                return await _baseService.SendAsync(new Request
+                {
+                    ApiType = StaticDetail.ApiType.GET,
+                    Url = StaticDetail.ProductAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/product/page/" + currentPage + $"?search={search}"
+                });
+            }
+
             return await _baseService.SendAsync(new Request
             {
                 ApiType = StaticDetail.ApiType.GET,
-                Url = StaticDetail.ProductAPIBase + "/api/product/page/" + currentPage,
-                Token = token
+                Url = StaticDetail.ProductAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/product/page/" + currentPage,
             });
         }
 
-        public async Task<Response> GetAsync(string id, string token)
+        public async Task<Response> GetAsync(string id)
         {
             return await _baseService.SendAsync(new Request
             {
                 ApiType = StaticDetail.ApiType.GET,
-                Url = StaticDetail.ProductAPIBase + "/api/product/" + id,
-                Token = token
+                Url = StaticDetail.ProductAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/product/" + id,
             });
         }
 
@@ -40,7 +46,7 @@ namespace App.Frontend.Services
             {
                 ApiType = StaticDetail.ApiType.POST,
                 Data = product,
-                Url = StaticDetail.ProductAPIBase + "/api/product",
+                Url = StaticDetail.ProductAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/product",
                 Token = token
             });
         }
@@ -51,7 +57,7 @@ namespace App.Frontend.Services
             {
                 ApiType = StaticDetail.ApiType.PUT,
                 Data = product,
-                Url = StaticDetail.ProductAPIBase + "/api/product",
+                Url = StaticDetail.ProductAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/product",
                 Token = token
             });
         }
@@ -61,7 +67,7 @@ namespace App.Frontend.Services
             return await _baseService.SendAsync(new Request
             {
                 ApiType = StaticDetail.ApiType.DELETE,
-                Url = StaticDetail.ProductAPIBase + "/api/product/" + id,
+                Url = StaticDetail.ProductAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/product/" + id,
                 Token = token
             });
         }

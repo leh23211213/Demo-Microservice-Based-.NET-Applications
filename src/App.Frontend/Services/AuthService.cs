@@ -8,12 +8,9 @@ namespace App.Frontend.Services
     public class AuthService : IAuthService
     {
         private readonly IBaseService _baseService;
-        private string _url;
-        public AuthService(IBaseService baseService, IConfiguration configuration)
+        public AuthService(IBaseService baseService)
         {
             _baseService = baseService;
-            _url = configuration.GetValue<string>("ServiceUrls:authAPI");
-
         }
 
         public async Task<Response?> LoginAsync(LoginRequest loginRequest)
@@ -22,7 +19,7 @@ namespace App.Frontend.Services
             {
                 ApiType = StaticDetail.ApiType.POST,
                 Data = loginRequest,
-                Url = _url + $"/api/{StaticDetail.CurrentAPIVersion}/auth/login"
+                Url = StaticDetail.AuthAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/auth/login"
             });
         }
 
@@ -32,7 +29,7 @@ namespace App.Frontend.Services
             {
                 ApiType = StaticDetail.ApiType.POST,
                 Data = registerRequest,
-                Url = _url + $"/api/{StaticDetail.CurrentAPIVersion}/auth/register"
+                Url = StaticDetail.AuthAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/auth/register"
             }, withBearer: false);
         }
 
@@ -42,7 +39,7 @@ namespace App.Frontend.Services
             {
                 ApiType = StaticDetail.ApiType.POST,
                 Data = token,
-                Url = _url + $"/api/{StaticDetail.CurrentAPIVersion}/auth/revoke"
+                Url = StaticDetail.AuthAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/auth/revoke"
             });
         }
     }

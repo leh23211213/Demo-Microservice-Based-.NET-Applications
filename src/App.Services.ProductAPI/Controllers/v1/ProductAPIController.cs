@@ -1,10 +1,16 @@
 
+using System.Net;
 using App.Services.ProductAPI.Data;
 using App.Services.ProductAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.JsonPatch;
+using System.Net;
+using System.Text.Json;
 namespace App.Services.ProductAPI.Controllers.v1
 {
     [Route("api/v{version:apiVersion}/product")]
@@ -21,39 +27,25 @@ namespace App.Services.ProductAPI.Controllers.v1
             _response = new Response();
         }
 
+
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Response>> Get()
-        {
-            try
-            {
-                IEnumerable<Product> products = await _dbContext.Products.ToListAsync();
-                _response.Result = products;
-                _response.StatusCode = System.Net.HttpStatusCode.OK;
-            }
-            catch (Exception ex)
-            {
-                _response.Message = ex.Message;
-                _response.IsSuccess = false;
-                _response.StatusCode = System.Net.HttpStatusCode.BadRequest;
-            }
-            return _response;
-        }
-
-
-        [HttpGet("page/{currentPage}")]
-        [ResponseCache(CacheProfileName = "Default30")]
+        [ResponseCache(CacheProfileName = "Default10")]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<Response>> GetAsync([FromQuery] string? search, int currentPage = 1)
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<Response>> GetAsync([FromQuery] string? search,
+                                                            int currentPage = 1, int pageSize = 6)
         {
-            const int pageSize = 6;
-            IEnumerable<Product> products;
+            IEnumerable<Product> products = null;
             try
             {
+                if (!string.IsNullOrEmpty(search))
+                {
+                    products = await _dbContext.Products.Where(p => p.Name.ToLower().Contains(search.ToLower())).ToListAsync();
+                }
+
                 products = await _dbContext.Products.Skip((currentPage - 1) * pageSize).Take(pageSize)
                                 .Select(p => new Product
                                 {
@@ -66,13 +58,6 @@ namespace App.Services.ProductAPI.Controllers.v1
                 var totalItems = await _dbContext.Products.CountAsync();
                 var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
 
-                Pagination pagination = new()
-                {
-                    Products = products,
-                    totalPages = totalPages,
-                    currentPage = currentPage,
-                };
-
                 if (currentPage > 0)
                 {
                     if (currentPage > totalPages)
@@ -80,8 +65,16 @@ namespace App.Services.ProductAPI.Controllers.v1
                         currentPage = totalPages;
                     }
                 }
-                _response.StatusCode = System.Net.HttpStatusCode.OK;
+
+                Pagination pagination = new()
+                {
+                    Products = products,
+                    totalPages = totalPages
+                };
+
+                _response.StatusCode = HttpStatusCode.OK;
                 _response.Result = pagination;
+                return Ok(_response);
             }
             catch (Exception ex)
             {
