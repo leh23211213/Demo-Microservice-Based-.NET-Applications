@@ -5,12 +5,6 @@ using App.Services.ProductAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.JsonPatch;
-using System.Net;
-using System.Text.Json;
 namespace App.Services.ProductAPI.Controllers.v1
 {
     [Route("api/v{version:apiVersion}/product")]
@@ -36,8 +30,9 @@ namespace App.Services.ProductAPI.Controllers.v1
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Response>> GetAsync([FromQuery] string? search,
-                                                            int currentPage = 1, int pageSize = 6)
+                                                            int currentPage = 1)
         {
+            const int pageSize = 6;
             IEnumerable<Product> products = null;
             try
             {
@@ -58,8 +53,13 @@ namespace App.Services.ProductAPI.Controllers.v1
                 var totalItems = await _dbContext.Products.CountAsync();
                 var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
 
-                if (currentPage > 0)
+                if (currentPage < 0)
                 {
+                    return BadRequest("Not Found");
+                }
+                else
+                {
+
                     if (currentPage > totalPages)
                     {
                         currentPage = totalPages;
@@ -69,12 +69,12 @@ namespace App.Services.ProductAPI.Controllers.v1
                 Pagination pagination = new()
                 {
                     Products = products,
-                    totalPages = totalPages
+                    totalPages = totalPages,
+                    currentPage = currentPage
                 };
 
                 _response.StatusCode = HttpStatusCode.OK;
                 _response.Result = pagination;
-                return Ok(_response);
             }
             catch (Exception ex)
             {

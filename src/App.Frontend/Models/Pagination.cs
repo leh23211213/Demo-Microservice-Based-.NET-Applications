@@ -7,7 +7,7 @@ namespace App.Frontend.Models
             Products = new List<Product>();
         }
         public List<Product>? Products { get; set; } = null!;
-        public int totalPages { get; set; } = 0;
-        public int currentPage { get; set; } = 1;
+        public int totalPages { get; set; }
+        public int currentPage { get; set; }
     }
 }

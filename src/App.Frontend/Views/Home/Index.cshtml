@@ -62,7 +62,7 @@
                         <div class="pagination">
                             @for (int i = 1; i <= Model.totalPages; i++)
                             {
-                                <a asp-action="Index" asp-route-curentPage="@i" class="@(i == Model.currentPage ? "active" : "")">
+                                <a asp-controller="Home" asp-action="Index" asp-route-curentPage="@i" class="@(i == Model.currentPage ? "active" : "")">
                                     @i
                                 </a>
                             }

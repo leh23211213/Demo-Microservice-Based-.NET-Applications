@@ -15,19 +15,10 @@ namespace App.Frontend.Services
 
         public async Task<Response> GetAsync(string? search, int currentPage)
         {
-            if (!string.IsNullOrWhiteSpace(search))
-            {
-                return await _baseService.SendAsync(new Request
-                {
-                    ApiType = StaticDetail.ApiType.GET,
-                    Url = StaticDetail.ProductAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/product/page/" + currentPage + $"?search={search}"
-                });
-            }
-
             return await _baseService.SendAsync(new Request
             {
                 ApiType = StaticDetail.ApiType.GET,
-                Url = StaticDetail.ProductAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/product/page/" + currentPage,
+                Url = StaticDetail.ProductAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/product?currentPage=" + currentPage,
             });
         }
 
