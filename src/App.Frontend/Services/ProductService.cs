@@ -18,7 +18,7 @@ namespace App.Frontend.Services
             return await _baseService.SendAsync(new Request
             {
                 ApiType = StaticDetail.ApiType.GET,
-                Url = StaticDetail.ProductAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/product?currentPage=" + currentPage,
+                Url = StaticDetail.ProductAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/product/" + $"?search={search}&currentPage={currentPage}",
             });
         }
 

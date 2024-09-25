@@ -30,8 +30,8 @@
             <div class="box-filter top-box  block-scroll-main cate-42">
                 <section>
                     <h3 class="Title">All Product</h3>
-                    <form class="input-group w-50 float-right" method="get">
-                        <input type="text" class="form-control" placeholder="Search for" name="item" />
+                    <form class="input-group w-50 float-right" method="get" asp-controller="Home" asp-action="Index">
+                        <input type="text" class="form-control" placeholder="Search for" name="search" />
                         <div class="input-group-append">
                             <button class="btn btn-outline-secondary" type="submit">Search</button>
                         </div>
@@ -40,33 +40,34 @@
             </div>
             <section id="CategoryPage" data-name="Phone" data-template="cate">
                 <div class="Product-Box">
-                        <ul class="List-Product">
-                            @foreach (var item in Model.Products)
-                            {
-                                <li class="Item">
-                                    <div class="Item-Img">
-                                        <img src="@Url.Content(item.ImageUrl)" />
-                                    </div>
-                                    <div class="Product-Info">
-                                        <h3>@item.Name</h3>
-                                        <strong class="price">@item.Price<sup>đ</sup></strong>
-                                    </div>
-                                    <div>
-                                        <a asp-action="Detail" asp-route-Id="@item.Id"
-                                            class="btn btn-success form-control">Detail</a>
-                                    </div>
-                                </li>
-                            }
-                        </ul>
+                    <ul class="List-Product">
+                        @foreach (var item in Model.Products)
+                        {
+                            <li class="Item">
+                                <div class="Item-Img">
+                                    <img src="@Url.Content(item.ImageUrl)" />
+                                </div>
+                                <div class="Product-Info">
+                                    <h3>@item.Name</h3>
+                                    <strong class="price">@item.Price<sup>đ</sup></strong>
+                                </div>
+                                <div>
+                                    <a asp-action="Details" asp-route-Id="@item.Id"
+                                        class="btn btn-success form-control">Detail</a>
+                                </div>
+                            </li>
+                        }
+                    </ul>
                 </div>
-                        <div class="pagination">
-                            @for (int i = 1; i <= Model.totalPages; i++)
-                            {
-                                <a asp-controller="Home" asp-action="Index" asp-route-curentPage="@i" class="@(i == Model.currentPage ? "active" : "")">
-                                    @i
-                                </a>
-                            }
-                        </div>
+                <div class="pagination">
+                    @for (int i = 1; i <= Model.totalPages; i++)
+                    {
+                        <a asp-controller="Home" asp-action="Index" asp-route-curentPage="@i"
+                            class="@(i == Model.currentPage ? "active" : "")">
+                            @i
+                        </a>
+                    }
+                </div>
             </section>
         </div>
     </div>

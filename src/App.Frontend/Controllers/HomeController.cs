@@ -18,8 +18,7 @@ namespace App.Frontend.Controllers
             _productService = productService;
         }
 
-
-        public async Task<IActionResult> Index([FromBody] string? search, int curentPage = 1)
+        public async Task<IActionResult> Index([FromQuery] string? search = null, [FromQuery] int curentPage = 1)
         {
             Response? response = await _productService.GetAsync(search, curentPage);
             Pagination pagination = new();
@@ -31,13 +30,10 @@ namespace App.Frontend.Controllers
             {
                 TempData["error"] = response?.Message;
             }
-
             return View(pagination);
         }
 
-
-
-        public async Task<IActionResult> Detail(string id)
+        public async Task<IActionResult> Details(string id)
         {
             Response? response = await _productService.GetAsync(id);
             Product? product = new();

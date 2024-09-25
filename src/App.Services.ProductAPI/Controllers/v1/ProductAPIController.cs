@@ -23,34 +23,27 @@ namespace App.Services.ProductAPI.Controllers.v1
 
 
         [HttpGet]
-        [ResponseCache(CacheProfileName = "Default10")]
+        // [ResponseCache(CacheProfileName = "Default10")]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Response>> GetAsync([FromQuery] string? search,
-                                                            int currentPage = 1)
+        public async Task<ActionResult<Response>> Get([FromQuery] string? search = "", [FromQuery] int currentPage = 1)
         {
-            const int pageSize = 6;
-            IEnumerable<Product> products = null;
             try
             {
+                const int pageSize = 6;
+                IEnumerable<Product> products = null;
+
+                products = await _dbContext.Products.ToListAsync();
+
                 if (!string.IsNullOrEmpty(search))
                 {
-                    products = await _dbContext.Products.Where(p => p.Name.ToLower().Contains(search.ToLower())).ToListAsync();
+                    products = _dbContext.Products.Where(p => p.Name.ToLower().Contains(search.ToLower()));
                 }
 
-                products = await _dbContext.Products.Skip((currentPage - 1) * pageSize).Take(pageSize)
-                                .Select(p => new Product
-                                {
-                                    Name = p.Name,
-                                    Price = p.Price,
-                                    ImageUrl = p.ImageUrl,
-                                    ImageLocalPath = p.ImageLocalPath
-                                }).AsNoTracking().ToListAsync();
-
-                var totalItems = await _dbContext.Products.CountAsync();
+                var totalItems = products.Count();
                 var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
 
                 if (currentPage < 0)
@@ -59,11 +52,19 @@ namespace App.Services.ProductAPI.Controllers.v1
                 }
                 else
                 {
-
                     if (currentPage > totalPages)
                     {
                         currentPage = totalPages;
                     }
+                    products = products.Skip((currentPage - 1) * pageSize).Take(pageSize)
+                                                    .Select(p => new Product
+                                                    {
+                                                        Id = p.Id,
+                                                        Name = p.Name,
+                                                        Price = p.Price,
+                                                        ImageUrl = p.ImageUrl,
+                                                        ImageLocalPath = p.ImageLocalPath
+                                                    });
                 }
 
                 Pagination pagination = new()
@@ -79,30 +80,33 @@ namespace App.Services.ProductAPI.Controllers.v1
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
+                _response.StatusCode = HttpStatusCode.NotFound;
                 _response.Message = ex.Message;
             }
             return _response;
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Response>> GetAsync(string id)
+        public async Task<ActionResult<Response>> Get(string id)
         {
             try
             {
                 Product product = _dbContext.Products.First(u => u.Id == id);
+                _response.StatusCode = HttpStatusCode.OK;
                 _response.Result = product;
             }
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
                 _response.Message = ex.Message;
+                _response.StatusCode = HttpStatusCode.NotFound;
             }
             return _response;
         }
 
         [HttpPost]
         [Authorize(Roles = "ADMIN")]
-        public async Task<ActionResult<Response>> CreateAsync(Product product)
+        public async Task<ActionResult<Response>> Create(Product product)
         {
             try
             {
@@ -148,7 +152,7 @@ namespace App.Services.ProductAPI.Controllers.v1
 
         [HttpPut]
         [Authorize(Roles = "ADMIN")]
-        public async Task<ActionResult<Response>> UpdateAsync(Product product)
+        public async Task<ActionResult<Response>> Update(Product product)
         {
             try
             {
@@ -189,7 +193,7 @@ namespace App.Services.ProductAPI.Controllers.v1
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "ADMIN")]
-        public async Task<ActionResult<Response>> RemoveAsync(string id)
+        public async Task<ActionResult<Response>> Remove(string id)
         {
             try
             {
