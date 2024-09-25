@@ -16,6 +16,12 @@ namespace App.Frontend.Controllers
             _productService = productService;
         }
 
+        public IActionResult Index1()
+        {
+            return View();
+        }
+
+        [HttpGet]
         public async Task<ActionResult<Cart>> Index()
         {
             var userId = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
