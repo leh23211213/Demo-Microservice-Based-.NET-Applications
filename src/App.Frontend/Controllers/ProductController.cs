@@ -17,6 +17,12 @@ namespace App.Frontend.Controllers
             _productService = productService;
         }
 
+        public IActionResult Index1()
+        {
+            return View();
+        }
+
+
         public async Task<IActionResult> Index()
         {
             return View();

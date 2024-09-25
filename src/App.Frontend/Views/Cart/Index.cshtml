@@ -1,4 +1,4 @@
-@* @model Cart
+@model Cart
 @{
     ViewData["Title"] = "Cart";
 }
@@ -60,7 +60,7 @@
                     </form>
                 </div>
                 <div class="infinite-scroll-component">
-                    @foreach (var item in Model.CartItems)
+                    @foreach (var item in Model.CartDetails)
                     {
                         <div class="Seller">
                             <div class="List-Intended">
@@ -70,14 +70,14 @@
                                             <input type="checkbox" name="cb" />
                                         </label>
                                         <a href="#">
-                                            <img src="@Url.Content(item.ImageUrl)" width="80" height="60">
+                                            <img src="@Url.Content(item.Product.ImageUrl)" width="80" height="60">
                                         </a>
                                         <div class="Item-Content">
-                                            <a href="">@item.ProductName</a>
+                                            <a href="">@item.Product.Name</a>
                                         </div>
                                     </div>
                                     <div class="Item-Price">
-                                        <div type="normal" class="Price">@item.Price <sup>đ</sup></div>
+                                        <div type="normal" class="Price">@item.Product.Price <sup>đ</sup></div>
                                     </div>
                                     <div class="Item-Quantity">
                                         <form asp-area="Customer" asp-action="DecreaseQuantity" asp-controller="Cart"
@@ -86,8 +86,8 @@
                                             <input type="hidden" name="productId" value="@item.ProductId" />
                                             <button type="submit" class="Substract">-</button>
                                         </form>
-                                        <input id="product-@item.CartItemId" class="base-stats" type="number" name="quantity"
-                                            value="@item.Quantity" readonly />
+                                        <input id="product-@item.Id" class="base-stats" type="number" name="quantity"
+                                            value="@item.Count" readonly />
                                         <form asp-area="Customer" asp-action="IncreaseQuantity" asp-controller="Cart"
                                             method="post">
                                             @Html.AntiForgeryToken()
@@ -95,13 +95,13 @@
                                             <button type="submit" class="Add">+</button>
                                         </form>
                                     </div>
-                                    <div id="itemTotal-@item.CartItemId" class="Item-Subtotal">
-                                        @item.Price <sup>đ</sup>
+                                    <div id="itemTotal-@item.Id" class="Item-Subtotal">
+                                        @item.Product.Price <sup>đ</sup>
                                     </div>
                                     <div class="Item-Action">
                                         <form asp-area="Customer" asp-action="Delete" asp-controller="Cart">
                                             @Html.AntiForgeryToken()
-                                            <input type="hidden" name="id" value="@item.CartItemId" />
+                                            <input type="hidden" name="id" value="@item.Id" />
                                             <img src="https://frontend.tikicdn.com/_desktop-next/static/img/icons/trash.svg"
                                                 alt="deleted" class="delete-button" style="cursor: pointer;"
                                                 onclick="submitDeleteForm(this)">
@@ -117,7 +117,7 @@
                                 <div class="Address-Block">
                                     <div class="Customer-Info">
                                         <p class="Customer-Info-Name">
-                                            @Model.UserName
+                                            UserName
                                         </p>
                                         <i></i>
                                     </div>
@@ -144,7 +144,7 @@
                             </div>
                             <form asp-area="Customer" asp-action="Buy" asp-controller="Order" method="post">
                                 @Html.AntiForgeryToken()
-                                <input type="hidden" name="UserId" value="@Model.UserId" />
+                                <input type="hidden" name="UserId" />
                                 <button type="submit" class="button">BUY</button>
                             </form>
                         </div>
@@ -161,4 +161,4 @@ else
     <div>
         <p>Nothing</p>
     </div>
-} *@
+}
