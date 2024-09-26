@@ -34,12 +34,11 @@ jobs:
         uses: anothrNick/github-tag-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          INITIAL_VERSION: 1.0.2
+          INITIAL_VERSION: 1.0.0
           DEFAULT_BUMP: patch
 
     outputs:
       new_version: ${{ steps.tab_bump.outputs.new_tag }}
-   # if: "contains(github.event.head_commit.message, 'deploy app.frontend.service')"
   build:
     runs-on: ${{ matrix.os }}
     needs: generate-version
@@ -79,11 +78,12 @@ jobs:
           path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
           
   deploy:
-  
     runs-on: ${{ matrix.os }}
     needs: build
     
     environment: Production
+    
+    if: "contains(github.event.head_commit.message, 'deploy')"
     
     strategy:
       matrix:
