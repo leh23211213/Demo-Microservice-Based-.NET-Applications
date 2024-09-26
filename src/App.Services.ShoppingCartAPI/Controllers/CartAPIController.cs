@@ -25,8 +25,8 @@ namespace App.Services.ShoppingCartAPI.Controllers
             _dbContext = _dbContext;
         }
 
-        [HttpGet("checkout/{userId}")]
-        public async Task<Response> Checkout(string userId)
+        [HttpGet]
+        public async Task<Response> Get(string userId)
         {
             try
             {
@@ -59,7 +59,7 @@ namespace App.Services.ShoppingCartAPI.Controllers
             return _response;
         }
 
-        [HttpPost("Add")]
+        [HttpPost]
         public async Task<Response> Add(Cart cart)
         {
             try
@@ -106,13 +106,13 @@ namespace App.Services.ShoppingCartAPI.Controllers
             return _response;
         }
 
-        [HttpPost]
+        [HttpDelete]
         public async Task<Response> Remove([FromBody] string cartDetailsId)
         {
             try
             {
                 CartDetails cartDetails = _dbContext.CartDetails.First(u => u.Id == cartDetailsId);
-                
+
             }
             catch (Exception ex)
             {
