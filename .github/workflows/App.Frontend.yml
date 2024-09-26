@@ -24,17 +24,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         if: "contains(github.event.head_commit.message, 'deploy application')"
-        
         with:
           fetch-depth: '0'
-      - name: Setup .NET Core SDK
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
-          include-prerelease: true
-
-      - name: Restore Dependencies
-        run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
 
       - name: Generate Git Tag
         id: generate_tag
@@ -57,7 +48,16 @@ jobs:
           git tag $NEW_TAG
           git push origin $NEW_TAG
           
-       # we build, test, and deploy steps here   
+       # we build, test, and deploy steps here  
+
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
+          include-prerelease: true
+
+      - name: Restore Dependencies
+        run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
       - name: Build
         run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
 
