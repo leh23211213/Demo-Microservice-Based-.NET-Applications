@@ -23,24 +23,25 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-        if: "contains(github.event.head_commit.message, 'deploy application')"
+        if: "contains(github.event.head_commit.message, 'deploy app.frontend.service')"
         with:
           fetch-depth: '0'
 
-      - name: Generate Git Tag
-        id: generate_tag
+      - name: Generate new tag
         run: |
-            VERSION_PREFIX="v"
-            VERSION_MAJOR_MINOR="1.0"
-            VERSION_PATCH=$(git tag --list "${VERSION_PREFIX}${VERSION_MAJOR_MINOR}.*" --sort=-version:refname | head -n 1 | grep -oE '[0-9]+$')
-            if [ -z "$VERSION_PATCH" ]; then
-              VERSION_PATCH=0
-            else
-              VERSION_PATCH=$((VERSION_PATCH + 1))
-            fi
-            NEW_TAG="${VERSION_PREFIX}${VERSION_MAJOR_MINOR}.${VERSION_PATCH}"
-            echo "Generated new tag: $NEW_TAG"
-            echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
+          VERSION_PREFIX="v"
+          VERSION_MAJOR_MINOR="1.0"
+          VERSION_PATCH=$(git tag --list "${VERSION_PREFIX}${VERSION_MAJOR_MINOR}.*" --sort=-version:refname | head -n 1 | grep -oE '[0-9]+$')
+          if [ -z "$VERSION_PATCH" ]; then
+            VERSION_PATCH=0
+          else
+            VERSION_PATCH=$((VERSION_PATCH + 1))
+          fi
+          NEW_TAG="${VERSION_PREFIX}${VERSION_MAJOR_MINOR}.${VERSION_PATCH}"
+          echo "Generated new tag: $NEW_TAG"
+          echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
+        shell: bash
+            
       - name: Push Git Tag
         run: |
           git config user.name "GitHub Actions"
