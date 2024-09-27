@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using App.Frontend.Models;
 using App.Frontend.Services.IServices;
 using App.Frontend.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -9,29 +10,30 @@ namespace App.Frontend.Controllers
 {
     public class CartController : Controller
     {
-        private readonly IProductService _productService;
+        private readonly ICartService _cartService;
 
-        public CartController(IProductService productService)
+        public CartController(ICartService cartService)
         {
-            _productService = productService;
-        }
-
-        public IActionResult Index1()
-        {
-            return View();
+            _cartService = cartService;
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<Cart>> Index()
         {
             var userId = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
-            Response responses = await _productService.GetAsync(userId);
+            var accessToken = Request.Cookies["JWTToken"];
+
+            Response responses = await _cartService.GetAsync(userId, accessToken);
             if (responses.Result != null && responses.IsSuccess)
             {
                 Cart cart = JsonConvert.DeserializeObject<Cart>(responses.Result.ToString());
-                return cart;
+                return View(cart);
             }
-            return new Cart();
+            return View(new Cart());
         }
+
+
+
     }
 }

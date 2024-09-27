@@ -19,7 +19,7 @@ namespace App.Frontend.Services
             return await _baseService.SendAsync(new Request()
             {
                 ApiType = StaticDetail.ApiType.GET,
-                Url = StaticDetail.ShoppingCartAPIBase + "/api/cart/checkout/" + userId,
+                Url = StaticDetail.ShoppingCartAPIBase + "/api/cart/Checkout/" + userId,
                 Token = token
             });
         }
@@ -28,9 +28,9 @@ namespace App.Frontend.Services
         {
             return await _baseService.SendAsync(new Request()
             {
-                ApiType = StaticDetail.ApiType.GET,
+                ApiType = StaticDetail.ApiType.POST,
                 Data = cartDetailsId,
-                Url = StaticDetail.ShoppingCartAPIBase + "/api/cart/remove",
+                Url = StaticDetail.ShoppingCartAPIBase + "/api/cart/Remove",
                 Token = token
             });
         }
@@ -40,9 +40,9 @@ namespace App.Frontend.Services
 
             return await _baseService.SendAsync(new Request()
             {
-                ApiType = StaticDetail.ApiType.GET,
+                ApiType = StaticDetail.ApiType.POST,
                 Data = cart,
-                Url = StaticDetail.ShoppingCartAPIBase + "/api/cart/add",
+                Url = StaticDetail.ShoppingCartAPIBase + "/api/cart/Add",
                 Token = token
             });
         }

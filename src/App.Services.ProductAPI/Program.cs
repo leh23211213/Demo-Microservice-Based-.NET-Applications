@@ -1,6 +1,6 @@
 using App.Services.ProductAPI.Data;
 using App.Services.ProductAPI.Extensions;
-using Mango.Services.ProductAPI.Extensions;
+using App.Services.ShoppingCartAPI.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
