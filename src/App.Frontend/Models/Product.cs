@@ -15,9 +15,9 @@ namespace App.Frontend.Models
 
         [Range(1, 10)]
         public int Count { get; set; } = 1;
-
         public double Price { get; set; } = 0;
 
+        public string Description { get; set; } = null!;
         public string? Size { get; set; } = null!;
         public string? Color { get; set; } = null!;
         public string? Category { get; set; } = null!;

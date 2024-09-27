@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="~/css/Product/Detail.css" asp-append-version="true">
 </head>
 
-<form action="post">
+<form method="post">
     <input asp-for="Id" hidden />
     <div class="page-content">
         <section class="landing-page-section">
@@ -21,6 +21,12 @@
                     <div class="divider"></div>
                     <ul>
                         <li>
+                            <div class="row pl-3">
+                                <div class="col-12">
+                                    <span class="badge bg-primary text-success p-3 border">@Model.Category</span>
+                                    <p class="text-secondary pt-3">@Html.Raw(Model.Description)</p>
+                                </div>
+                            </div>
                         </li>
                     </ul>
                 </div>

@@ -15,8 +15,8 @@ public class CartHeader
     public string? Phone { get; set; }
     public string? Email { get; set; }
 
-    public CartHeader()
-    {
-        Id = Guid.NewGuid().ToString();
-    }
+    // public CartHeader()
+    // {
+    //     Id = Guid.NewGuid().ToString();
+    // }
 }
