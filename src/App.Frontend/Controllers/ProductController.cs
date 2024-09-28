@@ -8,24 +8,28 @@ namespace App.Frontend.Controllers
     public class ProductController : Controller
     {
 
-        private readonly ICartService _cartService;
         private readonly IProductService _productService;
 
-        public ProductController(ICartService cartService, IProductService productService)
+        public ProductController(IProductService productService)
         {
-            _cartService = cartService;
             _productService = productService;
         }
 
-        public IActionResult Index1()
-        {
-            return View();
-        }
-
-
         public async Task<IActionResult> Index()
         {
-            return View();
+            List<Product>? products = new();
+
+            Response? response = await _productService.GetAllAsync();
+            if (response.IsSuccess && response.Result != null)
+            {
+                products = JsonConvert.DeserializeObject<List<Product>>(Convert.ToString(response.Result));
+            }
+            else
+            {
+                TempData["error"] = response?.Message;
+            }
+
+            return View(products);
         }
 
         public async Task<IActionResult> Create()
@@ -35,26 +39,82 @@ namespace App.Frontend.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAsync(Product product)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+                var accessToken = Request.Cookies["JWTToken"];
+                Response? response = await _productService.CreateAsync(product, accessToken);
+                if (response.IsSuccess && response.Result != null)
+                {
+                    TempData["success"] = "Product create successfully";
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    TempData["error"] = response?.Message;
+                }
+            }
+            return View(product);
         }
         public async Task<IActionResult> Update(string productId)
         {
-            return View();
+            Response? response = await _productService.GetAsync(productId);
+            if (response.IsSuccess && response.Result != null)
+            {
+                Product product = JsonConvert.DeserializeObject<Product>(Convert.ToString(response.Result));
+                return View(product);
+            }
+            else
+            {
+                TempData["error"] = response?.Message;
+            }
+            return NotFound();
         }
         [HttpPost]
         public async Task<IActionResult> UpdateAsync(Product product)
         {
-            return View();
+            var accessToken = Request.Cookies["JWTToken"];
+            Response? response = await _productService.UpdateAsync(product, accessToken);
+            if (!response.IsSuccess && response.Result != null)
+            {
+                TempData["success"] = "Product deleted successfully";
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                TempData["error"] = response?.Message;
+            }
+            return View(product);
         }
 
         public async Task<IActionResult> Delete(string productId)
         {
-            return View();
+            Response? response = await _productService.GetAsync(productId);
+            if (!response.IsSuccess && response.Result != null)
+            {
+                Product product = JsonConvert.DeserializeObject<Product>(Convert.ToString(response.Result));
+                return View(product);
+            }
+            else
+            {
+                TempData["error"] = response?.Message;
+            }
+            return NotFound();
         }
         [HttpPost]
-        public async Task<IActionResult> DeleteAsync(string productId)
+        public async Task<IActionResult> DeleteAsync(Product product)
         {
-            return View();
+            var accessToken = Request.Cookies["JWTToken"];
+            Response? response = await _productService.DeleteAsync(product.Id, accessToken);
+            if (!response.IsSuccess && response.Result != null)
+            {
+                TempData["success"] = "Product deleted successfully";
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                TempData["error"] = response?.Message;
+            }
+            return View(product);
         }
     }
 }
