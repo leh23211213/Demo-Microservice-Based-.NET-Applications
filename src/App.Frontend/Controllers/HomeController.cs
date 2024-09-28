@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using IdentityModel;
+using Microsoft.AspNetCore.Authorization;
 namespace App.Frontend.Controllers
 {
     public class HomeController : Controller
@@ -48,24 +49,19 @@ namespace App.Frontend.Controllers
             return View(product);
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Add(Product product)
+        public async Task<IActionResult> AddToCart(Product product)
         {
-            var userId = User.Claims.Where(u => u.Type == JwtClaimTypes.Subject)?.FirstOrDefault()?.Value;
-            if (string.IsNullOrEmpty(userId))
-            {
-                TempData["error"] = "User not authenticated.";
-                return RedirectToAction(nameof(Index));
-            }
-
             Cart cart = new()
             {
                 CartHeader = new CartHeader()
                 {
-                    UserId = userId
+                    UserId = User.Claims.Where(u => u.Type == JwtClaimTypes.Subject)?.FirstOrDefault()?.Value
                 }
             };
+
             CartDetails cartDetails = new CartDetails()
             {
                 ProductId = product.Id
@@ -75,10 +71,6 @@ namespace App.Frontend.Controllers
             cart.CartDetails = cartDetailsList;
 
             var accessToken = Request.Cookies["JWTToken"];
-            if (accessToken == null)
-            {
-                return Unauthorized("Access token is missing.");
-            }
 
             Response response = await _cartService.AddAsync(cart, accessToken);
             if (response != null && response.IsSuccess)
@@ -93,7 +85,7 @@ namespace App.Frontend.Controllers
             return View(product);
         }
 
-        public async Task<IActionResult> coverPage()
+        public async Task<IActionResult> CoverPage()
         {
             return View();
         }

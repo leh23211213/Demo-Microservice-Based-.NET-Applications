@@ -13,7 +13,16 @@ namespace App.Frontend.Services
             _baseService = baseService;
         }
 
-        public async Task<Response> GetAsync(string? search, int currentPage)
+        public async Task<Response?> GetAllProductsAsync()
+        {
+            return await _baseService.SendAsync(new Request()
+            {
+                ApiType = StaticDetail.ApiType.GET,
+                Url = StaticDetail.ProductAPIBase + "/api/product"
+            });
+        }
+
+        public async Task<Response?> GetAsync(string? search, int currentPage)
         {
             return await _baseService.SendAsync(new Request
             {
@@ -22,7 +31,7 @@ namespace App.Frontend.Services
             });
         }
 
-        public async Task<Response> GetAsync(string id)
+        public async Task<Response?> GetAsync(string id)
         {
             return await _baseService.SendAsync(new Request
             {
@@ -31,7 +40,7 @@ namespace App.Frontend.Services
             });
         }
 
-        public async Task<Response> CreateAsync(Product product, string token)
+        public async Task<Response?> CreateAsync(Product product, string token)
         {
             return await _baseService.SendAsync(new Request
             {
@@ -42,7 +51,7 @@ namespace App.Frontend.Services
             });
         }
 
-        public async Task<Response> UpdateAsync(Product product, string token)
+        public async Task<Response?> UpdateAsync(Product product, string token)
         {
             return await _baseService.SendAsync(new Request
             {
@@ -53,7 +62,7 @@ namespace App.Frontend.Services
             });
         }
 
-        public async Task<Response> Delete(string id, string token)
+        public async Task<Response?> Delete(string id, string token)
         {
             return await _baseService.SendAsync(new Request
             {

@@ -1,4 +1,4 @@
-using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using App.Services.ShoppingCartAPI.Data;
 using App.Services.ShoppingCartAPI.Models;
 using App.Services.ShoppingCartAPI.Services.IServices;
@@ -26,7 +26,7 @@ namespace App.Services.ShoppingCartAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<Response> Get(string userId)
+        public async Task<Response> Checkout(string userId)
         {
             try
             {
@@ -55,6 +55,7 @@ namespace App.Services.ShoppingCartAPI.Controllers
             {
                 _response.IsSuccess = false;
                 _response.Message = ex.Message;
+                _response.StatusCode = HttpStatusCode.NotFound;
             }
             return _response;
         }
@@ -102,6 +103,7 @@ namespace App.Services.ShoppingCartAPI.Controllers
             {
                 _response.IsSuccess = false;
                 _response.Message = ex.Message;
+                _response.StatusCode = HttpStatusCode.BadRequest;
             }
             return _response;
         }
@@ -112,15 +114,42 @@ namespace App.Services.ShoppingCartAPI.Controllers
             try
             {
                 CartDetails cartDetails = _dbContext.CartDetails.First(u => u.Id == cartDetailsId);
+                int countCartItem = _dbContext.CartDetails.Where(u => u.CartHeaderId == cartDetails.CartHeaderId).Count();
 
+                _dbContext.CartDetails.Remove(cartDetails);
+
+
+                await _dbContext.SaveChangesAsync();
+                _response.Result = true;
+                _response.StatusCode = HttpStatusCode.OK;
             }
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
                 _response.Message = ex.Message;
+                _response.StatusCode = HttpStatusCode.BadRequest;
             }
             return _response;
         }
 
+        [HttpPost]
+        public async Task<Response> ApplyCoupon([FromBody] Cart cart)
+        {
+            try
+            {
+
+
+
+                _response.IsSuccess = true;
+                _response.StatusCode = HttpStatusCode.OK;
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
+                _response.StatusCode = HttpStatusCode.BadRequest;
+            }
+            return _response;
+        }
     }
 }

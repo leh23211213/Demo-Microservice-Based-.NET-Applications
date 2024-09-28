@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace App.Services.ProductAPI.Controllers.v1
 {
     [Route("api/v{version:apiVersion}/product")]
+    //[Route("api/v{major:apiVersion}.{minor:apiVersion}.{patch:int}/products")]
     [ApiController]
     [ApiVersion("1.0")]
     public class ProductAPIController : Controller
@@ -20,7 +21,6 @@ namespace App.Services.ProductAPI.Controllers.v1
             _dbContext = dbContext;
             _response = new Response();
         }
-
 
         [HttpGet]
         // [ResponseCache(CacheProfileName = "Default10")]

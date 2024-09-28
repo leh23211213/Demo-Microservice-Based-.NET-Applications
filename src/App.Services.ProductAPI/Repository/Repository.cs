@@ -1,9 +1,8 @@
 ﻿using App.Services.ProductAPI.Data;
 using App.Services.ProductAPI.Repository.IRepostiory;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 
-namespace MagicVilla_VillaAPI.Repository
+namespace App.Services.ProductAPI.Repository
 {
     public class Repository<T> : IRepository<T> where T : class
     {
