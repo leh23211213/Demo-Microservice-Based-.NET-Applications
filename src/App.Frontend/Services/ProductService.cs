@@ -13,7 +13,7 @@ namespace App.Frontend.Services
             _baseService = baseService;
         }
 
-        public async Task<Response?> GetAllProductsAsync()
+        public async Task<Response?> GetAllAsync()
         {
             return await _baseService.SendAsync(new Request()
             {
@@ -62,7 +62,7 @@ namespace App.Frontend.Services
             });
         }
 
-        public async Task<Response?> Delete(string id, string token)
+        public async Task<Response?> DeleteAsync(string id, string token)
         {
             return await _baseService.SendAsync(new Request
             {
