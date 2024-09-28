@@ -52,7 +52,7 @@ namespace App.Frontend.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> addToCart(Product product)
+        public async Task<IActionResult> AddToCart(Product product)
         {
             Cart cart = new()
             {
@@ -85,7 +85,7 @@ namespace App.Frontend.Controllers
             return View(product);
         }
 
-        public async Task<IActionResult> coverPage()
+        public async Task<IActionResult> CoverPage()
         {
             return View();
         }

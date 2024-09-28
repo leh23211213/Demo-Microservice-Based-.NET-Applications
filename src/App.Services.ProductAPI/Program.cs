@@ -3,6 +3,7 @@ using App.Services.ProductAPI.Extensions;
 using App.Services.ShoppingCartAPI.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -13,11 +14,12 @@ builder.Services.AppServiceCollection(builder.Configuration);
 
 // Configure the HTTP request pipeline.
 builder.Services.AddApiVersioning(options =>
-{
-    options.AssumeDefaultVersionWhenUnspecified = true;
-    options.DefaultApiVersion = new ApiVersion(1, 0);
-    options.ReportApiVersions = true;
-});
+    {
+        options.ReportApiVersions = true;
+        options.AssumeDefaultVersionWhenUnspecified = true;
+        options.DefaultApiVersion = new ApiVersion(1, 0);
+        // options.ApiVersionReader = new UrlSegmentApiVersionReader();  // Read version from URL
+    });
 
 builder.Services.AddVersionedApiExplorer(options =>
 {
