@@ -3,8 +3,8 @@ using App.Frontend.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Diagnostics;
-using IdentityModel;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 namespace App.Frontend.Controllers
 {
     public class HomeController : Controller
@@ -12,6 +12,7 @@ namespace App.Frontend.Controllers
 
         private readonly ICartService _cartService;
         private readonly IProductService _productService;
+        private readonly string accessToken;
 
         public HomeController(ICartService cartService, IProductService productService)
         {
@@ -21,7 +22,7 @@ namespace App.Frontend.Controllers
 
         public async Task<IActionResult> Index([FromQuery] string? search = null, [FromQuery] int curentPage = 1)
         {
-            Response? response = await _productService.GetAsync(search, curentPage);
+            Response? response = await _productService.Get(search, curentPage);
             Pagination pagination = new();
             if (response.IsSuccess && response != null && response.Result != null)
             {
@@ -34,9 +35,10 @@ namespace App.Frontend.Controllers
             return View(pagination);
         }
 
+
         public async Task<IActionResult> Details(string id)
         {
-            Response? response = await _productService.GetAsync(id);
+            Response? response = await _productService.Get(id);
             Product? product = new();
             if (response != null && response.IsSuccess)
             {
@@ -52,13 +54,15 @@ namespace App.Frontend.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddToCart(Product product)
+        public async Task<IActionResult> Details(Product product)
         {
+            #region CART
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
             Cart cart = new()
             {
                 CartHeader = new CartHeader()
                 {
-                    UserId = User.Claims.Where(u => u.Type == JwtClaimTypes.Subject)?.FirstOrDefault()?.Value
+                    UserId = User.Claims.Where(u => u.Type == ClaimTypes.NameIdentifier)?.FirstOrDefault()?.Value
                 }
             };
 
@@ -70,8 +74,9 @@ namespace App.Frontend.Controllers
             List<CartDetails> cartDetailsList = new() { cartDetails };
             cart.CartDetails = cartDetailsList;
 
-            var accessToken = Request.Cookies["JWTToken"];
+            #endregion
 
+            string accessToken = Request.Cookies["JWTToken"];
             Response response = await _cartService.AddAsync(cart, accessToken);
             if (response != null && response.IsSuccess)
             {

@@ -1,7 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using App.Frontend.Models;
 using App.Frontend.Services.IServices;
-using App.Frontend.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -21,19 +20,33 @@ namespace App.Frontend.Controllers
         [Authorize]
         public async Task<ActionResult<Cart>> Index()
         {
-            var userId = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
-            var accessToken = Request.Cookies["JWTToken"];
-
-            Response responses = await _cartService.GetAsync(userId, accessToken);
-            if (responses.Result != null && responses.IsSuccess)
-            {
-                Cart cart = JsonConvert.DeserializeObject<Cart>(responses.Result.ToString());
-                return View(cart);
-            }
-            return View(new Cart());
+            return View(LoadCartDtoBasedOnLoggedInUser());
         }
 
+        [Authorize]
+        public async Task<IActionResult> Checkout()
+        {
+            return View(await LoadCartDtoBasedOnLoggedInUser());
+        }
 
+        [HttpPost]
+        [ActionName("Checkout")]
+        public async Task<IActionResult> Checkout(Cart cart)
+        {
+            return View(await LoadCartDtoBasedOnLoggedInUser());
+        }
 
+        private async Task<Cart> LoadCartDtoBasedOnLoggedInUser()
+        {
+            var accessToken = Request.Cookies["JWTToken"];
+            var userId = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
+            Response? response = await _cartService.GetAsync(userId, accessToken);
+            if (response != null & response.IsSuccess)
+            {
+                Cart cartDto = JsonConvert.DeserializeObject<Cart>(Convert.ToString(response.Result));
+                return cartDto;
+            }
+            return new Cart();
+        }
     }
 }

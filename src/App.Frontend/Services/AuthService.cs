@@ -19,7 +19,7 @@ namespace App.Frontend.Services
             {
                 ApiType = StaticDetail.ApiType.POST,
                 Data = loginRequest,
-                Url = StaticDetail.AuthAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/auth/login"
+                Url = StaticDetail.AuthAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/auth/Login"
             });
         }
 
@@ -29,7 +29,7 @@ namespace App.Frontend.Services
             {
                 ApiType = StaticDetail.ApiType.POST,
                 Data = registerRequest,
-                Url = StaticDetail.AuthAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/auth/register"
+                Url = StaticDetail.AuthAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/auth/Register"
             }, withBearer: false);
         }
 
@@ -39,7 +39,7 @@ namespace App.Frontend.Services
             {
                 ApiType = StaticDetail.ApiType.POST,
                 Data = token,
-                Url = StaticDetail.AuthAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/auth/revoke"
+                Url = StaticDetail.AuthAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/auth/Revoke"
             });
         }
     }

@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 using App.Services.ProductAPI.Extensions;
 
 namespace App.Services.ProductAPI.Models;
-public class Product
+public class ProductDetail
 {
     public string Id { get; set; } = null!;
     public string Name { get; set; } = null!;

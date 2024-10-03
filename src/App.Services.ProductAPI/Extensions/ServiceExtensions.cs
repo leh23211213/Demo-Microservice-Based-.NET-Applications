@@ -12,16 +12,16 @@ namespace App.Services.ProductAPI.Extensions
         {
             // Add services to the container. 
             services.AddResponseCaching();
-            services.AddControllers(option =>
-             {
-                 option.CacheProfiles.Add("Default10",
-                    new CacheProfile()
-                    {
-                        Duration = 10
-                    });
-                 //option.ReturnHttpNotAcceptable=true;
-             }).AddNewtonsoftJson().AddXmlDataContractSerializerFormatters();
-
+            // services.AddControllers(option =>
+            //  {
+            //      option.CacheProfiles.Add("Default10",
+            //         new CacheProfile()
+            //         {
+            //             Duration = 10
+            //         });
+            //      //option.ReturnHttpNotAcceptable=true;
+            //  }).AddNewtonsoftJson().AddXmlDataContractSerializerFormatters();
+            services.AddControllers();
             return services;
         }
     }

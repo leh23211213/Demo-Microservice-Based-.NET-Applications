@@ -13,8 +13,8 @@ builder.Services.AppServiceCollection(builder.Configuration);
 // Configure the HTTP request pipeline.
 builder.Services.AddApiVersioning(options =>
 {
-    options.AssumeDefaultVersionWhenUnspecified = true;
     options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.AssumeDefaultVersionWhenUnspecified = true;
     options.ReportApiVersions = true;
 });
 

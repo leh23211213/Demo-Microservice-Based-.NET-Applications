@@ -13,16 +13,25 @@ namespace App.Frontend.Services
             _baseService = baseService;
         }
 
-        public async Task<Response?> GetAllAsync()
+        public async Task<Response?> GetAllProduct()
         {
             return await _baseService.SendAsync(new Request()
             {
                 ApiType = StaticDetail.ApiType.GET,
-                Url = StaticDetail.ProductAPIBase + "/api/product"
+                Url = StaticDetail.ProductAPIBase + "/api/product/GetAllProduct"
             });
         }
 
-        public async Task<Response?> GetAsync(string? search, int currentPage)
+        public async Task<Response?> Get(string id)
+        {
+            return await _baseService.SendAsync(new Request
+            {
+                ApiType = StaticDetail.ApiType.GET,
+                Url = StaticDetail.ProductAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/product/" + id,
+            });
+        }
+
+        public async Task<Response?> Get(string? search, int currentPage)
         {
             return await _baseService.SendAsync(new Request
             {
@@ -31,14 +40,6 @@ namespace App.Frontend.Services
             });
         }
 
-        public async Task<Response?> GetAsync(string id)
-        {
-            return await _baseService.SendAsync(new Request
-            {
-                ApiType = StaticDetail.ApiType.GET,
-                Url = StaticDetail.ProductAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/product/" + id,
-            });
-        }
 
         public async Task<Response?> CreateAsync(Product product, string token)
         {
