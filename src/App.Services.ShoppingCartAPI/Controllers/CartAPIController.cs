@@ -25,7 +25,7 @@ namespace App.Services.ShoppingCartAPI.Controllers
             _dbContext = _dbContext;
         }
 
-        [HttpGet]
+        [HttpGet("Get")]
         public async Task<Response> Checkout(string userId)
         {
             try
@@ -60,7 +60,7 @@ namespace App.Services.ShoppingCartAPI.Controllers
             return _response;
         }
 
-        [HttpPost]
+        [HttpPost("Add")]
         public async Task<Response> Add(Cart cart)
         {
             try
@@ -108,7 +108,7 @@ namespace App.Services.ShoppingCartAPI.Controllers
             return _response;
         }
 
-        [HttpDelete]
+        [HttpDelete("RemoveItem")]
         public async Task<Response> Remove([FromBody] string cartDetailsId)
         {
             try
@@ -132,13 +132,11 @@ namespace App.Services.ShoppingCartAPI.Controllers
             return _response;
         }
 
-        [HttpPost]
+        [HttpPost("ApplyCoupon")]
         public async Task<Response> ApplyCoupon([FromBody] Cart cart)
         {
             try
             {
-
-
 
                 _response.IsSuccess = true;
                 _response.StatusCode = HttpStatusCode.OK;

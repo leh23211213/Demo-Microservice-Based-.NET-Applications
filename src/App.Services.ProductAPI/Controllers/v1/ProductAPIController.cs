@@ -22,6 +22,52 @@ namespace App.Services.ProductAPI.Controllers.v1
             _response = new Response();
         }
 
+        [HttpGet("GetAllProduct")]
+        public async Task<ActionResult<Response>> GetAllProduct()
+        {
+            try
+            {
+                IEnumerable<Product> product = await _dbContext.Products
+                                                            // .Include(p => p.Category)
+                                                            // .Include(p => p.Size)
+                                                            // .Include(p => p.Color)
+                                                            // .Include(p => p.Brand)
+                                                            .ToListAsync();
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.Result = product;
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
+                _response.StatusCode = HttpStatusCode.NotFound;
+            }
+            return _response;
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Response>> Get(string id)
+        {
+            try
+            {
+                var product = await _dbContext.Products
+                                                .Include(p => p.Category)
+                                                .Include(p => p.Size)
+                                                .Include(p => p.Color)
+                                                .Include(p => p.Brand)
+                                                .FirstOrDefaultAsync(p => p.Id == id);
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.Result = product;
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
+                _response.StatusCode = HttpStatusCode.NotFound;
+            }
+            return _response;
+        }
+
         [HttpGet]
         // [ResponseCache(CacheProfileName = "Default10")]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -35,7 +81,6 @@ namespace App.Services.ProductAPI.Controllers.v1
             {
                 const int pageSize = 6;
                 IEnumerable<Product> products = null;
-
                 products = await _dbContext.Products.ToListAsync();
 
                 if (!string.IsNullOrEmpty(search))
@@ -82,24 +127,6 @@ namespace App.Services.ProductAPI.Controllers.v1
                 _response.IsSuccess = false;
                 _response.StatusCode = HttpStatusCode.NotFound;
                 _response.Message = ex.Message;
-            }
-            return _response;
-        }
-
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Response>> Get(string id)
-        {
-            try
-            {
-                Product product = _dbContext.Products.First(u => u.Id == id);
-                _response.StatusCode = HttpStatusCode.OK;
-                _response.Result = product;
-            }
-            catch (Exception ex)
-            {
-                _response.IsSuccess = false;
-                _response.Message = ex.Message;
-                _response.StatusCode = HttpStatusCode.NotFound;
             }
             return _response;
         }

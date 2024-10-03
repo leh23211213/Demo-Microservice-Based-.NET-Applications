@@ -48,7 +48,7 @@
                                 </div>
                                 <div class="Product-Info">
                                     <h3>@item.Name</h3>
-                                    <strong class="price">@item.Price<sup>đ</sup></strong>
+                                    <strong class="price"> @string.Format("{0:c}", @item.Price)</strong>
                                 </div>
                                 <div>
                                     <a asp-action="Details" asp-route-Id="@item.Id"

@@ -3,9 +3,21 @@ namespace App.Frontend.Services.IServices
 {
     public interface IProductService
     {
-        Task<Response?> GetAllAsync();
-        Task<Response?> GetAsync(string search, int currentPage);
-        Task<Response?> GetAsync(string id);
+        /// <summary>
+        /// Get all product
+        /// </summary>
+        Task<Response?> GetAllProduct();
+
+        /// <summary>
+        /// Get product by Id
+        /// </summary>
+        Task<Response?> Get(string id);
+
+        /// <summary>
+        /// $"?search={search}+currentPage={currentPage}"
+        /// </summary>
+        Task<Response?> Get(string search, int currentPage);
+
         Task<Response?> CreateAsync(Product product, string token);
         Task<Response?> UpdateAsync(Product product, string token);
         Task<Response?> DeleteAsync(string id, string token);

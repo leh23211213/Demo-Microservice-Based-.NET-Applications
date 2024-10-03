@@ -15,11 +15,11 @@ namespace App.Frontend.Controllers
             _productService = productService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index([FromQuery] string? search = null, [FromQuery] int curentPage = 1)
         {
             List<Product>? products = new();
+            Response? response = await _productService.Get(search, curentPage);
 
-            Response? response = await _productService.GetAllAsync();
             if (response.IsSuccess && response.Result != null)
             {
                 products = JsonConvert.DeserializeObject<List<Product>>(Convert.ToString(response.Result));
@@ -36,6 +36,7 @@ namespace App.Frontend.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> CreateAsync(Product product)
         {
@@ -55,9 +56,10 @@ namespace App.Frontend.Controllers
             }
             return View(product);
         }
+
         public async Task<IActionResult> Update(string productId)
         {
-            Response? response = await _productService.GetAsync(productId);
+            Response? response = await _productService.Get(productId);
             if (response.IsSuccess && response.Result != null)
             {
                 Product product = JsonConvert.DeserializeObject<Product>(Convert.ToString(response.Result));
@@ -69,6 +71,7 @@ namespace App.Frontend.Controllers
             }
             return NotFound();
         }
+
         [HttpPost]
         public async Task<IActionResult> UpdateAsync(Product product)
         {
@@ -88,7 +91,7 @@ namespace App.Frontend.Controllers
 
         public async Task<IActionResult> Delete(string productId)
         {
-            Response? response = await _productService.GetAsync(productId);
+            Response? response = await _productService.Get(productId);
             if (!response.IsSuccess && response.Result != null)
             {
                 Product product = JsonConvert.DeserializeObject<Product>(Convert.ToString(response.Result));
@@ -100,6 +103,7 @@ namespace App.Frontend.Controllers
             }
             return NotFound();
         }
+
         [HttpPost]
         public async Task<IActionResult> DeleteAsync(Product product)
         {
