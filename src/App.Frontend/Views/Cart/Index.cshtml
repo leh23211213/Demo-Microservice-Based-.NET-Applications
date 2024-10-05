@@ -1,7 +1,4 @@
 @model Cart
-@{
-    ViewData["Title"] = "Cart";
-}
 
 <head>
     <meta charset="utf-8" />
@@ -32,122 +29,132 @@
     </script>
 </head>
 
-<div class="page-content">
-    <div class="main-title">
-        <h4>Cart</h4>
-    </div>
-    <div class="content">
-        <div class="left-content">
-            <div class="row-heading">
-                <label class="checkBox">
-                    <input type="checkbox" onclick="togglecheckboxes('cb')" value="Toggle all" />
-                    <span class="checkbox-fake">
-                        <svg class="checkbox-mark" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                        </svg>
-                    </span>
-                    <span class="label">All 0 product</span>
-                </label>
-                <span>Price</span>
-                <span>Amount</span>
-                <span>Total</span>
-                <form asp-area="Customer" asp-action="DeleteAll" asp-controller="Cart">
-                    <input type="hidden" name="id" />
-                    <img src="https://frontend.tikicdn.com/_desktop-next/static/img/icons/trash.svg" alt="deleted"
-                        class="delete-button" style="cursor: pointer;" onclick="submitDeleteForm(this)">
-                </form>
-            </div>
-            <div class="infinite-scroll-component">
-                @foreach (var item in Model.CartDetails)
-                {
-                    <div class="Seller">
-                        <div class="List-Intended">
-                            <div class="Row">
-                                <div class="Item-Info">
-                                    <label class="checkbox">
-                                        <input type="checkbox" name="cb" />
-                                    </label>
-                                    <a href="#">
-                                        <img src="@Url.Content(item.Product.ImageUrl)" width="80" height="60">
-                                    </a>
-                                    <div class="Item-Content">
-                                        <a href="">@item.Product.Name</a>
+@if (Model.CartHeader != null && Model.CartDetails?.Count() > 0)
+{
+
+    <div class="page-content">
+        <div class="main-title">
+            <h4>Cart</h4>
+        </div>
+        <div class="content">
+            <div class="left-content">
+                <div class="row-heading">
+                    <label class="checkBox">
+                        <input type="checkbox" onclick="togglecheckboxes('cb')" value="Toggle all" />
+                        <span class="checkbox-fake">
+                            <svg class="checkbox-mark" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                            </svg>
+                        </span>
+                        <span class="label">All 0 product</span>
+                    </label>
+                    <span>Price</span>
+                    <span>Amount</span>
+                    <span>Total</span>
+                    <form asp-area="Customer" asp-action="DeleteAll" asp-controller="Cart">
+                        <input type="hidden" name="id" />
+                        <img src="https://frontend.tikicdn.com/_desktop-next/static/img/icons/trash.svg" alt="deleted"
+                            class="delete-button" style="cursor: pointer;" onclick="submitDeleteForm(this)">
+                    </form>
+                </div>
+                <div class="infinite-scroll-component">
+                    @foreach (var item in Model.CartDetails)
+                    {
+                        <div class="Seller">
+                            <div class="List-Intended">
+                                <div class="Row">
+                                    <div class="Item-Info">
+                                        <label class="checkbox">
+                                            <input type="checkbox" name="cb" />
+                                        </label>
+                                        <a href="#">
+                                            <img src="@Url.Content(item.Product.ImageUrl)" width="80" height="60">
+                                        </a>
+                                        <div class="Item-Content">
+                                            <a href="">@item.Product.Name</a>
+                                        </div>
+                                    </div>
+                                    <div class="Item-Price">
+                                        <div type="normal" class="Price">@item.Product.Price <sup>đ</sup></div>
+                                    </div>
+                                    <div class="Item-Quantity">
+                                        <form asp-area="Customer" asp-action="DecreaseQuantity" asp-controller="Cart"
+                                            method="post">
+                                            <input type="hidden" name="productId" value="@item.ProductId" />
+                                            <button type="submit" class="Substract">-</button>
+                                        </form>
+                                        <input id="product-@item.Id" class="base-stats" type="number" name="quantity"
+                                            value="@item.Count" readonly />
+                                        <form asp-area="Customer" asp-action="IncreaseQuantity" asp-controller="Cart"
+                                            method="post">
+                                            <input type="hidden" name="productId" value="@item.ProductId" />
+                                            <button type="submit" class="Add">+</button>
+                                        </form>
+                                    </div>
+                                    <div id="itemTotal-@item.Id" class="Item-Subtotal">
+                                        @item.Product.Price <sup>đ</sup>
+                                    </div>
+                                    <div class="Item-Action">
+                                        <form asp-area="Customer" asp-action="Delete" asp-controller="Cart">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@item.Id" />
+                                            <img src="https://frontend.tikicdn.com/_desktop-next/static/img/icons/trash.svg"
+                                                alt="deleted" class="delete-button" style="cursor: pointer;"
+                                                onclick="submitDeleteForm(this)">
+                                        </form>
                                     </div>
                                 </div>
-                                <div class="Item-Price">
-                                    <div type="normal" class="Price">@item.Product.Price <sup>đ</sup></div>
-                                </div>
-                                <div class="Item-Quantity">
-                                    <form asp-area="Customer" asp-action="DecreaseQuantity" asp-controller="Cart"
-                                        method="post">
-                                        <input type="hidden" name="productId" value="@item.ProductId" />
-                                        <button type="submit" class="Substract">-</button>
-                                    </form>
-                                    <input id="product-@item.Id" class="base-stats" type="number" name="quantity"
-                                        value="@item.Count" readonly />
-                                    <form asp-area="Customer" asp-action="IncreaseQuantity" asp-controller="Cart"
-                                        method="post">
-                                        <input type="hidden" name="productId" value="@item.ProductId" />
-                                        <button type="submit" class="Add">+</button>
-                                    </form>
-                                </div>
-                                <div id="itemTotal-@item.Id" class="Item-Subtotal">
-                                    @item.Product.Price <sup>đ</sup>
-                                </div>
-                                <div class="Item-Action">
-                                    <form asp-area="Customer" asp-action="Delete" asp-controller="Cart">
-                                        @Html.AntiForgeryToken()
-                                        <input type="hidden" name="id" value="@item.Id" />
-                                        <img src="https://frontend.tikicdn.com/_desktop-next/static/img/icons/trash.svg"
-                                            alt="deleted" class="delete-button" style="cursor: pointer;"
-                                            onclick="submitDeleteForm(this)">
-                                    </form>
-                                </div>
                             </div>
                         </div>
-                    </div>
-                }
-                <div class="right-content">
-                    <div class="Right-Inner" style="top: -270px;">
-                        <div>
-                            <div class="Address-Block">
-                                <div class="Customer-Info">
-                                    <p class="Customer-Info-Name">
-                                        UserName
-                                    </p>
-                                    <i></i>
+                    }
+                    <div class="right-content">
+                        <div class="Right-Inner" style="top: -270px;">
+                            <div>
+                                <div class="Address-Block">
+                                    <div class="Customer-Info">
+                                        <p class="Customer-Info-Name">
+                                            UserName
+                                        </p>
+                                        <i></i>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="Price-Summary">
-                            <ul class="Price-Items">
-                                <li class="Price-Item">
-                                    <div class="Prices-Text">temporary price</div>
-                                    <div class="Prices-Value"> @ViewBag.TotalTemporaryPrice <sup>đ</sup> </div>
-                                </li>
-                                <li class="Price-Item">
-                                    <div class="Prices-Text">discount</div>
-                                    <div class="Prices-Value"> 0 <sup>đ</sup> </div>
-                                </li>
-                            </ul>
-                            <i></i>
-                            <div class="Prices-Total">
-                                <span class="Prices-Text">Total</span>
-                                <div class="Prices-Content">
-                                    <span class="Prices-Value-Final"> @ViewBag.TotalPrice <sup>đ</sup> </span>
+                            <div class="Price-Summary">
+                                <ul class="Price-Items">
+                                    <li class="Price-Item">
+                                        <div class="Prices-Text">temporary price</div>
+                                        <div class="Prices-Value"> @ViewBag.TotalTemporaryPrice <sup>đ</sup> </div>
+                                    </li>
+                                    <li class="Price-Item">
+                                        <div class="Prices-Text">discount</div>
+                                        <div class="Prices-Value"> 0 <sup>đ</sup> </div>
+                                    </li>
+                                </ul>
+                                <i></i>
+                                <div class="Prices-Total">
+                                    <span class="Prices-Text">Total</span>
+                                    <div class="Prices-Content">
+                                        <span class="Prices-Value-Final"> @ViewBag.TotalPrice <sup>đ</sup> </span>
+                                    </div>
                                 </div>
                             </div>
+                            <form asp-area="Customer" asp-action="Buy" asp-controller="Order" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="UserId" />
+                                <button type="submit" class="button">BUY</button>
+                            </form>
                         </div>
-                        <form asp-area="Customer" asp-action="Buy" asp-controller="Order" method="post">
-                            @Html.AntiForgeryToken()
-                            <input type="hidden" name="UserId" />
-                            <button type="submit" class="button">BUY</button>
-                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="~/js/Cart.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="~/js/Cart.js"></script>
+}
+else
+{
+    <div>
+        <p>Please add items to cart.</p>
+    </div>
+}

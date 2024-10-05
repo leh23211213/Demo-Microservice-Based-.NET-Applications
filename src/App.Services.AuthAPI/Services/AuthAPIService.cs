@@ -169,16 +169,16 @@ namespace App.Services.AuthAPI.Services
 
             var claimList = new List<Claim>
             {
-                new Claim(ClaimTypes.Email, user.Email.ToString()),
-                new Claim(ClaimTypes.Role, roles.FirstOrDefault()),
-                new Claim(JwtRegisteredClaimNames.Jti, jwtTokenId),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id),
+                new Claim(JwtRegisteredClaimNames.Jti, jwtTokenId),
+                new Claim(ClaimTypes.Role, roles.FirstOrDefault()),
             };
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                //Issuer = "",
-                //Audience = "",
+                Issuer = "Issuer",
+                Audience = "Audience",
                 Subject = new ClaimsIdentity(claimList),
                 Expires = DateTime.UtcNow.AddDays(1),
                 SigningCredentials = new(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

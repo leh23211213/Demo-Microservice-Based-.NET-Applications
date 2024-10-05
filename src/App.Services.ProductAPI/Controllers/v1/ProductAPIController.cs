@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 namespace App.Services.ProductAPI.Controllers.v1
 {
-    [Route("api/v{version:apiVersion}/product")]
     //[Route("api/v{major:apiVersion}.{minor:apiVersion}.{patch:int}/products")]
+    [Route("api/v{version:apiVersion}/product")]
     [ApiController]
     [ApiVersion("1.0")]
     public class ProductAPIController : Controller
@@ -51,10 +51,10 @@ namespace App.Services.ProductAPI.Controllers.v1
             try
             {
                 var product = await _dbContext.Products
-                                                .Include(p => p.Category)
-                                                .Include(p => p.Size)
-                                                .Include(p => p.Color)
-                                                .Include(p => p.Brand)
+                                                // .Include(p => p.Category)
+                                                // .Include(p => p.Size)
+                                                // .Include(p => p.Color)
+                                                // .Include(p => p.Brand)
                                                 .FirstOrDefaultAsync(p => p.Id == id);
                 _response.StatusCode = HttpStatusCode.OK;
                 _response.Result = product;

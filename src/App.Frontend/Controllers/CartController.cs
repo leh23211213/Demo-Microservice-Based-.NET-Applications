@@ -38,13 +38,12 @@ namespace App.Frontend.Controllers
 
         private async Task<Cart> LoadCartDtoBasedOnLoggedInUser()
         {
-            var accessToken = Request.Cookies["JWTToken"];
             var userId = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
-            Response? response = await _cartService.GetAsync(userId, accessToken);
+            Response? response = await _cartService.GetAsync(userId);
             if (response != null & response.IsSuccess)
             {
-                Cart cartDto = JsonConvert.DeserializeObject<Cart>(Convert.ToString(response.Result));
-                return cartDto;
+                var cart = JsonConvert.DeserializeObject<Cart>(Convert.ToString(response.Result));
+                return cart;
             }
             return new Cart();
         }

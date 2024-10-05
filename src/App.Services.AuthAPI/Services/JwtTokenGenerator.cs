@@ -7,7 +7,7 @@
 // using System.Security.Claims;
 // using System.Text;
 
-// namespace Mango.Services.AuthAPI.Service
+// namespace App.Services.AuthAPI.Service
 // {
 //     public class JwtTokenGenerator : IJwtTokenGenerator
 //     {
