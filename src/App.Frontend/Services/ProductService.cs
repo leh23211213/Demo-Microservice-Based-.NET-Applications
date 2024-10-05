@@ -19,7 +19,7 @@ namespace App.Frontend.Services
             {
                 ApiType = StaticDetail.ApiType.GET,
                 Url = StaticDetail.ProductAPIBase + "/api/product/GetAllProduct"
-            });
+            }, withBearer: false);
         }
 
         public async Task<Response?> Get(string id)
@@ -28,7 +28,7 @@ namespace App.Frontend.Services
             {
                 ApiType = StaticDetail.ApiType.GET,
                 Url = StaticDetail.ProductAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/product/" + id,
-            });
+            }, withBearer: false);
         }
 
         public async Task<Response?> Get(string? search, int currentPage)
@@ -37,39 +37,36 @@ namespace App.Frontend.Services
             {
                 ApiType = StaticDetail.ApiType.GET,
                 Url = StaticDetail.ProductAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/product/" + $"?search={search}&currentPage={currentPage}",
-            });
+            }, withBearer: false);
         }
 
 
-        public async Task<Response?> CreateAsync(Product product, string token)
+        public async Task<Response?> CreateAsync(Product product)
         {
             return await _baseService.SendAsync(new Request
             {
                 ApiType = StaticDetail.ApiType.POST,
                 Data = product,
                 Url = StaticDetail.ProductAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/product",
-                Token = token
             });
         }
 
-        public async Task<Response?> UpdateAsync(Product product, string token)
+        public async Task<Response?> UpdateAsync(Product product)
         {
             return await _baseService.SendAsync(new Request
             {
                 ApiType = StaticDetail.ApiType.PUT,
                 Data = product,
                 Url = StaticDetail.ProductAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/product",
-                Token = token
             });
         }
 
-        public async Task<Response?> DeleteAsync(string id, string token)
+        public async Task<Response?> DeleteAsync(string id)
         {
             return await _baseService.SendAsync(new Request
             {
                 ApiType = StaticDetail.ApiType.DELETE,
                 Url = StaticDetail.ProductAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/product/" + id,
-                Token = token
             });
         }
     }

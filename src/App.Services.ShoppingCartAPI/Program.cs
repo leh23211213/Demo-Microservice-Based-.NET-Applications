@@ -1,5 +1,7 @@
+using App.Services.ShoppingCartAPI;
 using App.Services.ShoppingCartAPI.Data;
 using App.Services.ShoppingCartAPI.Extensions;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +11,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddAppAuthetication();
 builder.Services.ConfigureDatabase(builder.Configuration);
 builder.Services.AppServiceCollection(builder.Configuration);
+
+// IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
+// builder.Services.AddSingleton(mapper);
+// builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Configure the HTTP request pipeline.
 builder.Services.AddApiVersioning(options =>

@@ -4,15 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
+using IdentityModel;
 namespace App.Frontend.Controllers
 {
     public class HomeController : Controller
     {
-
         private readonly ICartService _cartService;
         private readonly IProductService _productService;
-        private readonly string accessToken;
 
         public HomeController(ICartService cartService, IProductService productService)
         {
@@ -35,7 +33,7 @@ namespace App.Frontend.Controllers
             return View(pagination);
         }
 
-
+        [Authorize]
         public async Task<IActionResult> Details(string id)
         {
             Response? response = await _productService.Get(id);
@@ -53,22 +51,23 @@ namespace App.Frontend.Controllers
 
         [Authorize]
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Details(Product product)
+        [ActionName("AddToCart")]
+        public async Task<IActionResult> AddToCart(Product product)
         {
             #region CART
-            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
             Cart cart = new()
             {
                 CartHeader = new CartHeader()
                 {
-                    UserId = User.Claims.Where(u => u.Type == ClaimTypes.NameIdentifier)?.FirstOrDefault()?.Value
+                    UserId = User.Claims.Where(u => u.Type == JwtClaimTypes.Subject)?.FirstOrDefault()?.Value
                 }
             };
 
             CartDetails cartDetails = new CartDetails()
             {
-                ProductId = product.Id
+                ProductId = product.Id,
+                Count = 1
             };
 
             List<CartDetails> cartDetailsList = new() { cartDetails };
@@ -76,18 +75,17 @@ namespace App.Frontend.Controllers
 
             #endregion
 
-            string accessToken = Request.Cookies["JWTToken"];
-            Response response = await _cartService.AddAsync(cart, accessToken);
+            Response response = await _cartService.AddAsync(cart);
             if (response != null && response.IsSuccess)
             {
                 TempData["success"] = "Item has been added to Cart.";
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details));
             }
             else
             {
                 TempData["error"] = response?.Message;
             }
-            return View(product);
+            return Ok();
         }
 
         public async Task<IActionResult> CoverPage()

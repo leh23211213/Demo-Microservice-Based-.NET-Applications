@@ -18,8 +18,8 @@ namespace App.Frontend.Services.IServices
         /// </summary>
         Task<Response?> Get(string search, int currentPage);
 
-        Task<Response?> CreateAsync(Product product, string token);
-        Task<Response?> UpdateAsync(Product product, string token);
-        Task<Response?> DeleteAsync(string id, string token);
+        Task<Response?> CreateAsync(Product product);
+        Task<Response?> UpdateAsync(Product product);
+        Task<Response?> DeleteAsync(string id);
     }
 }

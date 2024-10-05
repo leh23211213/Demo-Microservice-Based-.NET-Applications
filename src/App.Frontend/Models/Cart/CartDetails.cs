@@ -7,4 +7,9 @@ public class CartDetails
     public virtual CartHeader CartHeader { get; set; } = null!;
     public string ProductId { get; set; } = null!;
     public virtual Product Product { get; set; } = null!;
+
+    public CartDetails()
+    {
+        Id = Guid.NewGuid().ToString();
+    }
 }

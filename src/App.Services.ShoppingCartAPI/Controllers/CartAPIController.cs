@@ -18,11 +18,11 @@ namespace App.Services.ShoppingCartAPI.Controllers
 
         public CartAPIController(Response response,
                                  IProductService productService,
-                                ApplicationDbContext _dbContext)
+                                ApplicationDbContext dbContext)
         {
             _response = response;
             _productService = productService;
-            _dbContext = _dbContext;
+            _dbContext = dbContext;
         }
 
         [HttpGet("Get")]
@@ -44,17 +44,19 @@ namespace App.Services.ShoppingCartAPI.Controllers
                     cart.CartHeader.Total += (item.Count * item.Product.Price);
                 }
 
-                if (!string.IsNullOrEmpty(cart.CartHeader.CouponCode))
-                {
+                // if (!string.IsNullOrEmpty(cart.CartHeader.CouponCode))
+                // {
 
-                }
+                // }
 
                 _response.Result = cart;
+                _response.IsSuccess = true;
+                _response.StatusCode = HttpStatusCode.OK;
             }
             catch (Exception ex)
             {
-                _response.IsSuccess = false;
                 _response.Message = ex.Message;
+                _response.IsSuccess = false;
                 _response.StatusCode = HttpStatusCode.NotFound;
             }
             return _response;
@@ -65,10 +67,12 @@ namespace App.Services.ShoppingCartAPI.Controllers
         {
             try
             {
-                var cartHeaderFromDb = await _dbContext.CartHeaders.AsNoTracking().FirstOrDefaultAsync(u => u.UserId == cart.CartHeader.Id);
+                var cartHeaderFromDb = await _dbContext.CartHeaders.FirstOrDefaultAsync(u => u.UserId == cart.CartHeader.UserId);
+
                 if (cartHeaderFromDb == null)
                 {
-                    CartHeader cartHeader = cartHeaderFromDb;
+                    //create header and details
+                    var cartHeader = cart.CartHeader;
                     _dbContext.Add(cartHeader);
                     await _dbContext.SaveChangesAsync();
 
@@ -91,6 +95,7 @@ namespace App.Services.ShoppingCartAPI.Controllers
                     }
                     else
                     {
+                        //update count in cart details
                         cart.CartDetails.First().Count += cartDetailsFromDb.Count;
                         cart.CartDetails.First().CartHeaderId = cartDetailsFromDb.CartHeaderId;
                         cart.CartDetails.First().Id = cartDetailsFromDb.Id;
@@ -98,11 +103,15 @@ namespace App.Services.ShoppingCartAPI.Controllers
                         await _dbContext.SaveChangesAsync();
                     }
                 }
+
+                _response.IsSuccess = true;
+                _response.Result = cart;
+                _response.StatusCode = HttpStatusCode.OK;
             }
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
-                _response.Message = ex.Message;
+                _response.Message = ex.Message.ToString();
                 _response.StatusCode = HttpStatusCode.BadRequest;
             }
             return _response;

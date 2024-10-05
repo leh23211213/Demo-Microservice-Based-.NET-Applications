@@ -1,6 +1,5 @@
 ﻿
 using App.Frontend.Models;
-using App.Frontend.Services;
 using App.Frontend.Services.IServices;
 using App.Frontend.Utility;
 using Microsoft.AspNetCore.Authentication;
@@ -96,7 +95,6 @@ namespace App.Frontend.Services
                 var Response = JsonConvert.DeserializeObject<Response>(res);
                 return Response;
             }
-
         }
 
         private async Task<HttpResponseMessage> SendWithRefreshTokenAsync(HttpClient httpClient,
@@ -135,7 +133,7 @@ namespace App.Frontend.Services
                 }
                 catch (HttpRequestException httpRequestException)
                 {
-                    if (httpRequestException.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                    if (httpRequestException.StatusCode == HttpStatusCode.Unauthorized)
                     {
                         // refresh token and retry the request
                         await InvokeRefreshTokenEndpoint(httpClient, token.AccessToken, token.RefreshToken);

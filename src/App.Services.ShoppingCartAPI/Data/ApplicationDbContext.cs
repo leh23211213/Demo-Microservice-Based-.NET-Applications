@@ -17,26 +17,20 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<CartDetails>(entity =>
         {
             entity.HasKey(e => e.Id);
-            entity.Property(e => e.Id).IsRequired().HasMaxLength(50);
-
+            entity.Property(e => e.Id).IsRequired();
             entity.Property(e => e.Count).IsRequired();
 
-            entity.HasOne(e => e.CartHeader)
-                  .WithMany()
-                  .HasForeignKey(e => e.CartHeaderId)
-                  .IsRequired()
-                  .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<CartHeader>(entity =>
         {
             entity.HasKey(e => e.Id);
-            entity.Property(e => e.Id).IsRequired().HasMaxLength(50);
+            entity.Property(e => e.Id).IsRequired();
 
             entity.Property(e => e.UserId).IsRequired();
-            entity.Property(e => e.Name).HasMaxLength(100);
-            entity.Property(e => e.Phone).HasMaxLength(15);
-            entity.Property(e => e.Email).HasMaxLength(100);
+            entity.Property(e => e.Name).HasMaxLength(100).IsRequired(false); ;
+            entity.Property(e => e.Phone).HasMaxLength(15).IsRequired(false); ;
+            entity.Property(e => e.Email).HasMaxLength(100).IsRequired(false); ;
         });
     }
 }
