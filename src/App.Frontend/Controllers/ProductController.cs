@@ -1,10 +1,12 @@
 using App.Frontend.Models;
 using App.Frontend.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace App.Frontend.Controllers
 {
+    [Authorize(Roles = "ADMIN")]
     public class ProductController : Controller
     {
 
@@ -15,34 +17,34 @@ namespace App.Frontend.Controllers
             _productService = productService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index([FromQuery] string? search = null, [FromQuery] int curentPage = 1)
         {
-            List<Product>? products = new();
+            Pagination pagination = new();
+            Response? response = await _productService.Get(search, curentPage);
 
-            Response? response = await _productService.GetAllAsync();
             if (response.IsSuccess && response.Result != null)
             {
-                products = JsonConvert.DeserializeObject<List<Product>>(Convert.ToString(response.Result));
+                pagination = JsonConvert.DeserializeObject<Pagination>(Convert.ToString(response.Result));
             }
             else
             {
                 TempData["error"] = response?.Message;
             }
 
-            return View(products);
+            return View(pagination);
         }
 
         public async Task<IActionResult> Create()
         {
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> CreateAsync(Product product)
         {
             if (ModelState.IsValid)
             {
-                var accessToken = Request.Cookies["JWTToken"];
-                Response? response = await _productService.CreateAsync(product, accessToken);
+                Response? response = await _productService.CreateAsync(product);
                 if (response.IsSuccess && response.Result != null)
                 {
                     TempData["success"] = "Product create successfully";
@@ -55,9 +57,10 @@ namespace App.Frontend.Controllers
             }
             return View(product);
         }
+
         public async Task<IActionResult> Update(string productId)
         {
-            Response? response = await _productService.GetAsync(productId);
+            Response? response = await _productService.Get(productId);
             if (response.IsSuccess && response.Result != null)
             {
                 Product product = JsonConvert.DeserializeObject<Product>(Convert.ToString(response.Result));
@@ -69,11 +72,11 @@ namespace App.Frontend.Controllers
             }
             return NotFound();
         }
+
         [HttpPost]
         public async Task<IActionResult> UpdateAsync(Product product)
         {
-            var accessToken = Request.Cookies["JWTToken"];
-            Response? response = await _productService.UpdateAsync(product, accessToken);
+            Response? response = await _productService.UpdateAsync(product);
             if (!response.IsSuccess && response.Result != null)
             {
                 TempData["success"] = "Product deleted successfully";
@@ -88,7 +91,7 @@ namespace App.Frontend.Controllers
 
         public async Task<IActionResult> Delete(string productId)
         {
-            Response? response = await _productService.GetAsync(productId);
+            Response? response = await _productService.Get(productId);
             if (!response.IsSuccess && response.Result != null)
             {
                 Product product = JsonConvert.DeserializeObject<Product>(Convert.ToString(response.Result));
@@ -100,11 +103,11 @@ namespace App.Frontend.Controllers
             }
             return NotFound();
         }
+
         [HttpPost]
         public async Task<IActionResult> DeleteAsync(Product product)
         {
-            var accessToken = Request.Cookies["JWTToken"];
-            Response? response = await _productService.DeleteAsync(product.Id, accessToken);
+            Response? response = await _productService.DeleteAsync(product.Id);
             if (!response.IsSuccess && response.Result != null)
             {
                 TempData["success"] = "Product deleted successfully";

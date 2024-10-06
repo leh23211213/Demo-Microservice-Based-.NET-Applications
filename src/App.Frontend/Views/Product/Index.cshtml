@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Product>
+﻿@model Pagination
 <div class="card shadow border-0 mt-4">
 	<div class="card-header bg-secondary bg-gradient ml-0 py-3">
 		<div class="row">
@@ -23,6 +23,9 @@
 						Name
 					</th>
 					<th>
+						Picture
+					</th>
+					<th>
 						Category Name
 					</th>
 					<th>
@@ -32,11 +35,14 @@
 				</tr>
 			</thead>
 			<tbody>
-				@foreach (var item in Model)
+				@foreach (var item in Model.Products)
 				{
 					<tr>
 						<td>
 							@item.Name
+						</td>
+						<td>
+							@Url.Content(item.ImageUrl)
 						</td>
 						<td>
 							@item.Category
@@ -55,6 +61,15 @@
 					</tr>
 				}
 			</tbody>
+			<div class="pagination">
+				@for (int i = 1; i <= Model.totalPages; i++)
+				{
+					<a asp-controller="Product" asp-action="Index" asp-route-curentPage="@i"
+						class="@(i == Model.currentPage ? "active" : "")">
+						@i
+					</a>
+				}
+			</div>
 		</table>
 	</div>
 </div>
