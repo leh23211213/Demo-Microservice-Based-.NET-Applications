@@ -1,28 +1,26 @@
-﻿
-
-    <div class="sidebar__profile">
-        <div class="avatar__wrapper">
-            <img src="~/lib/image/profile-icon.png" class="avatar">
-            <div class="online__status"></div>
-        </div>
-
-        <div class="avatar__name hide">
-            <span key="t-fullname" class="user-name">@User.Identity.Name</span>
-            <span class="email">
-                <div class="">. </div>
-            </span>
-        </div>
-
-        <div class="menu hide">
-            <form asp-area="Account" asp-controller="Login" asp-action="Logout" method="post" id="logoutForm">
-                <img id="logoutImage" src="~/lib/image/logout-icon.png" alt="Logout" style="border-radius: 4px;" width="40"
-                    height="40">
-            </form>
-        </div>
-
-        <script>
-            document.getElementById("logoutImage").addEventListener("click", function () {
-                document.getElementById("logoutForm").submit();
-            });
-        </script>
+﻿<div class="sidebar__profile">
+    <div class="avatar__wrapper">
+        <img src="~/lib/image/profile-icon.png" class="avatar">
+        <div class="online__status"></div>
     </div>
+
+    <div class="avatar__name hide">
+        <span key="t-fullname" class="user-name">@User.Identity.Name</span>
+        <span class="email">
+            <div class="">email</div>
+        </span>
+    </div>
+
+    <div class="menu hide">
+        <form asp-area="Account" asp-controller="Login" asp-action="Logout" method="post" id="logoutForm">
+            <img id="logoutImage" src="~/lib/image/logout-icon.png" alt="Logout" style="border-radius: 4px;" width="40"
+                height="40">
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("logoutImage").addEventListener("click", function () {
+            document.getElementById("logoutForm").submit();
+        });
+    </script>
+</div>
