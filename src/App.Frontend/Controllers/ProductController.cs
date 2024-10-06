@@ -1,10 +1,12 @@
 using App.Frontend.Models;
 using App.Frontend.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace App.Frontend.Controllers
 {
+    [Authorize(Roles = "ADMIN")]
     public class ProductController : Controller
     {
 

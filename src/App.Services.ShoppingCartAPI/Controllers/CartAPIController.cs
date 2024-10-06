@@ -57,7 +57,7 @@ namespace App.Services.ShoppingCartAPI.Controllers
             {
                 _response.Message = ex.Message;
                 _response.IsSuccess = false;
-                _response.StatusCode = HttpStatusCode.NotFound;
+                _response.StatusCode = HttpStatusCode.BadRequest;
             }
             return _response;
         }
@@ -82,6 +82,7 @@ namespace App.Services.ShoppingCartAPI.Controllers
                 }
                 else
                 {
+                    //check if details has same product
                     var cartDetailsFromDb = await _dbContext.CartDetails.AsNoTracking().FirstOrDefaultAsync(
                         u => u.ProductId == cart.CartDetails.First().ProductId &&
                         u.CartHeaderId == cartHeaderFromDb.Id
@@ -89,6 +90,7 @@ namespace App.Services.ShoppingCartAPI.Controllers
 
                     if (cartDetailsFromDb == null)
                     {
+                        //create cartdetails
                         cart.CartDetails.First().CartHeaderId = cartHeaderFromDb.Id;
                         _dbContext.CartDetails.Add(cart.CartDetails.First());
                         await _dbContext.SaveChangesAsync();
@@ -96,11 +98,7 @@ namespace App.Services.ShoppingCartAPI.Controllers
                     else
                     {
                         //update count in cart details
-                        cart.CartDetails.First().Count += cartDetailsFromDb.Count;
-                        cart.CartDetails.First().CartHeaderId = cartDetailsFromDb.CartHeaderId;
-                        cart.CartDetails.First().Id = cartDetailsFromDb.Id;
-                        _dbContext.CartDetails.Update(cart.CartDetails.First());
-                        await _dbContext.SaveChangesAsync();
+                        _response.Message = "Product are ready exists in your cart!";
                     }
                 }
 

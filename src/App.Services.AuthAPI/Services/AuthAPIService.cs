@@ -169,9 +169,10 @@ namespace App.Services.AuthAPI.Services
 
             var claimList = new List<Claim>
             {
+                new Claim(JwtRegisteredClaimNames.Jti, jwtTokenId),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id),
-                new Claim(JwtRegisteredClaimNames.Jti, jwtTokenId),
+                new Claim(JwtRegisteredClaimNames.Name, user.Name),
                 new Claim(ClaimTypes.Role, roles.FirstOrDefault()),
             };
 

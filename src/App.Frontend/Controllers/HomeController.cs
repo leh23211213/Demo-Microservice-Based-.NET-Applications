@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
 using IdentityModel;
+using System.IdentityModel.Tokens.Jwt;
 namespace App.Frontend.Controllers
 {
     public class HomeController : Controller
@@ -51,7 +52,6 @@ namespace App.Frontend.Controllers
 
         [Authorize]
         [HttpPost]
-        [ActionName("AddToCart")]
         public async Task<IActionResult> AddToCart(Product product)
         {
             #region CART
@@ -60,14 +60,13 @@ namespace App.Frontend.Controllers
             {
                 CartHeader = new CartHeader()
                 {
-                    UserId = User.Claims.Where(u => u.Type == JwtClaimTypes.Subject)?.FirstOrDefault()?.Value
+                    UserId = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value
                 }
             };
 
             CartDetails cartDetails = new CartDetails()
             {
                 ProductId = product.Id,
-                Count = 1
             };
 
             List<CartDetails> cartDetailsList = new() { cartDetails };
@@ -79,13 +78,13 @@ namespace App.Frontend.Controllers
             if (response != null && response.IsSuccess)
             {
                 TempData["success"] = "Item has been added to Cart.";
-                return RedirectToAction(nameof(Details));
+                return RedirectToAction("Details", "Home", new { Id = product.Id });
             }
             else
             {
                 TempData["error"] = response?.Message;
             }
-            return Ok();
+            return View(product);
         }
 
         public async Task<IActionResult> CoverPage()
