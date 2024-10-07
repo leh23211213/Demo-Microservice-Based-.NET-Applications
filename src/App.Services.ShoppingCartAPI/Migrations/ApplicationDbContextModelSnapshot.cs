@@ -24,12 +24,11 @@ namespace App.Services.ShoppingCartAPI.Migrations
             modelBuilder.Entity("App.Services.ShoppingCartAPI.Models.CartDetails", b =>
                 {
                     b.Property<string>("Id")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CartHeaderId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Count")
                         .HasColumnType("int");
@@ -40,19 +39,13 @@ namespace App.Services.ShoppingCartAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CartHeaderId");
-
                     b.ToTable("CartDetails");
                 });
 
             modelBuilder.Entity("App.Services.ShoppingCartAPI.Models.CartHeader", b =>
                 {
                     b.Property<string>("Id")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<double>("CartTotal")
-                        .HasColumnType("float");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(100)
@@ -73,17 +66,6 @@ namespace App.Services.ShoppingCartAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("CartHeaders");
-                });
-
-            modelBuilder.Entity("App.Services.ShoppingCartAPI.Models.CartDetails", b =>
-                {
-                    b.HasOne("App.Services.ShoppingCartAPI.Models.CartHeader", "CartHeader")
-                        .WithMany()
-                        .HasForeignKey("CartHeaderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CartHeader");
                 });
 #pragma warning restore 612, 618
         }

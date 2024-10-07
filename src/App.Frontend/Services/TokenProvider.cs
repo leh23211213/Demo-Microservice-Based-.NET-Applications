@@ -5,9 +5,11 @@ using App.Frontend.Utility;
 
 namespace App.Frontend.Services
 {
+    /// <summary>
+    ///  working with cookies
+    /// </summary>
     public class TokenProvider : ITokenProvider
     {
-        // working with cookies
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public TokenProvider(IHttpContextAccessor httpContextAccessor)
@@ -43,7 +45,7 @@ namespace App.Frontend.Services
 
         public void SetToken(Token token)
         {
-            var cookieOptions = new CookieOptions { Expires = DateTime.UtcNow.AddDays(60) };
+            var cookieOptions = new CookieOptions { Expires = DateTime.UtcNow.AddDays(1) };
             _httpContextAccessor.HttpContext?.Response.Cookies.Append(StaticDetail.AccessToken, token.AccessToken, cookieOptions);
             _httpContextAccessor.HttpContext?.Response.Cookies.Append(StaticDetail.RefreshToken, token.RefreshToken, cookieOptions);
         }

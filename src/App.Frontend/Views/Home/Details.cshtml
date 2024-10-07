@@ -4,8 +4,16 @@
     <link rel="stylesheet" href="~/css/Product/Detail.css" asp-append-version="true">
 </head>
 
-<form method="post">
+<form method="post" asp-action="AddToCart">
     <input asp-for="Id" hidden />
+    <input asp-for="Name" hidden />
+    <input asp-for="ImageUrl" hidden />
+    <input asp-for="Price" hidden />
+    <input asp-for="Description" hidden />
+    <input asp-for="Size" hidden />
+    <input asp-for="Color" hidden />
+    <input asp-for="Brand" hidden />
+    <input asp-for="Category" hidden />
     <div class="page-content">
         <section class="landing-page-section">
             <div class="top">
@@ -25,6 +33,11 @@
                                 <div class="col-12">
                                     <span class="badge bg-primary text-success p-3 border">@Model.Category</span>
                                     <p class="text-secondary pt-3">@Html.Raw(Model.Description)</p>
+                                    <h2>@Model.Name</h2>
+                                    <p>Category: @(Model.Category != null ? Model.Category.Name : "N/A")</p>
+                                    <p>Size: @(Model.Size != null ? Model.Size.RAM : "N/A")</p>
+                                    <p>Color: @(Model.Color != null ? Model.Color.Name : "N/A")</p>
+                                    <p>Brand: @(Model.Brand != null ? Model.Brand.Name : "N/A")</p>
                                 </div>
                             </div>
                         </li>
@@ -32,7 +45,7 @@
                 </div>
                 <div class="pricing-card pricing-card--primary">
                     <div class="pricing-card__price">
-                        @Model.Price
+                        @string.Format("{0:c}", Model.Price)
                     </div>
                     <div class="divider"></div>
                     <div class="group-button">

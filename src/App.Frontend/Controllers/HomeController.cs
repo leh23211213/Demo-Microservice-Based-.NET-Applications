@@ -3,13 +3,13 @@ using App.Frontend.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Diagnostics;
-using IdentityModel;
 using Microsoft.AspNetCore.Authorization;
+using IdentityModel;
+using System.IdentityModel.Tokens.Jwt;
 namespace App.Frontend.Controllers
 {
     public class HomeController : Controller
     {
-
         private readonly ICartService _cartService;
         private readonly IProductService _productService;
 
@@ -21,7 +21,7 @@ namespace App.Frontend.Controllers
 
         public async Task<IActionResult> Index([FromQuery] string? search = null, [FromQuery] int curentPage = 1)
         {
-            Response? response = await _productService.GetAsync(search, curentPage);
+            Response? response = await _productService.Get(search, curentPage);
             Pagination pagination = new();
             if (response.IsSuccess && response != null && response.Result != null)
             {
@@ -34,9 +34,10 @@ namespace App.Frontend.Controllers
             return View(pagination);
         }
 
+        [Authorize]
         public async Task<IActionResult> Details(string id)
         {
-            Response? response = await _productService.GetAsync(id);
+            Response? response = await _productService.Get(id);
             Product? product = new();
             if (response != null && response.IsSuccess)
             {
@@ -51,32 +52,33 @@ namespace App.Frontend.Controllers
 
         [Authorize]
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddToCart(Product product)
         {
+            #region CART
+
             Cart cart = new()
             {
                 CartHeader = new CartHeader()
                 {
-                    UserId = User.Claims.Where(u => u.Type == JwtClaimTypes.Subject)?.FirstOrDefault()?.Value
+                    UserId = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value
                 }
             };
 
             CartDetails cartDetails = new CartDetails()
             {
-                ProductId = product.Id
+                ProductId = product.Id,
             };
 
             List<CartDetails> cartDetailsList = new() { cartDetails };
             cart.CartDetails = cartDetailsList;
 
-            var accessToken = Request.Cookies["JWTToken"];
+            #endregion
 
-            Response response = await _cartService.AddAsync(cart, accessToken);
+            Response response = await _cartService.AddAsync(cart);
             if (response != null && response.IsSuccess)
             {
                 TempData["success"] = "Item has been added to Cart.";
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Home", new { Id = product.Id });
             }
             else
             {

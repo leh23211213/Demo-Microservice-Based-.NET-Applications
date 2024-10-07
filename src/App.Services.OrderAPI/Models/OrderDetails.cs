@@ -6,6 +6,6 @@ public class OrderDetail
     public string ProductId { get; set; } = null!;
     public int Count { get; set; }
     public decimal Price { get; set; }
-    public string ProductName { get; set; }
-    public Product product { get; set; }
+    public string ProductName { get; set; } = "";
+    public Product product { get; set; } = null!;
 }

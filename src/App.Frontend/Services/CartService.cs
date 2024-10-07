@@ -14,36 +14,32 @@ namespace App.Frontend.Services
             _baseService = baseService;
         }
 
-        public async Task<Response> GetAsync(string userId, string token)
+        public async Task<Response?> GetAsync(string userId)
         {
             return await _baseService.SendAsync(new Request()
             {
                 ApiType = StaticDetail.ApiType.GET,
-                Url = StaticDetail.ShoppingCartAPIBase + "/api/cart/Checkout/" + userId,
-                Token = token
+                Url = StaticDetail.ShoppingCartAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/cart/Checkout/" + userId,
             });
         }
 
-        public async Task<Response> RemoveAsync(int cartDetailsId, string token)
+        public async Task<Response?> RemoveAsync(int cartDetailsId)
         {
             return await _baseService.SendAsync(new Request()
             {
                 ApiType = StaticDetail.ApiType.POST,
                 Data = cartDetailsId,
-                Url = StaticDetail.ShoppingCartAPIBase + "/api/cart/Remove",
-                Token = token
+                Url = StaticDetail.ShoppingCartAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/cart/Remove",
             });
         }
 
-        public async Task<Response> AddAsync(Cart cart, string token)
+        public async Task<Response?> AddAsync(Cart cart)
         {
-
             return await _baseService.SendAsync(new Request()
             {
                 ApiType = StaticDetail.ApiType.POST,
                 Data = cart,
-                Url = StaticDetail.ShoppingCartAPIBase + "/api/cart/Add",
-                Token = token
+                Url = StaticDetail.ShoppingCartAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/cart/Add",
             });
         }
     }

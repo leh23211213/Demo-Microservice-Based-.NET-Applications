@@ -8,8 +8,12 @@ namespace App.Frontend.Services.IServices
 {
     public interface ICartService
     {
-        Task<Response> GetAsync(string userId, string token);
-        Task<Response> RemoveAsync(int cartDetailsId, string token);
-        Task<Response> AddAsync(Cart cart, string token);
+        Task<Response> GetAsync(string userId);
+        Task<Response> RemoveAsync(int cartDetailsIdken);
+
+        /// <summary>
+        /// StaticDetail.ShoppingCartAPIBase + "/api/cart/Add",
+        /// </summary>
+        Task<Response> AddAsync(Cart cart);
     }
 }
