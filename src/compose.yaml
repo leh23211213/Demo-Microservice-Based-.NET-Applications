@@ -1,0 +1,43 @@
+version: '4.0'
+
+services:
+  frontend:
+    image: app.frontend:latest
+    container_name: app_frontend
+
+    build:
+      context: ./App.Frontend
+      dockerfile: Dockerfile
+    ports:
+      - 7000:8080
+    networks:
+      - app-network
+
+  auth-api:
+    image: app.services.authapi:lastest
+    container_name: app_auth_api
+
+  product-api:
+    image: app.services.productapi:lastest
+    container_name: app_product_api
+
+    build:
+      context: ./App.Services.ProductAPI
+      dockerfile: Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__ProductDb=Server=product-db;Database=App_ProductAPI;User=sa;Password=YourStrongPassword;
+
+    ports:
+      - "7002:80"
+    networks:
+      - app-network
+    depends_on:
+      - product-db
+
+
+
+
+networks:
+  app-network:
+    driver: bridge
