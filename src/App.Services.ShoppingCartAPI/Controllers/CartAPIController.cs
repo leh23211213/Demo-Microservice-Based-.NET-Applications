@@ -16,16 +16,17 @@ namespace App.Services.ShoppingCartAPI.Controllers
         private IProductService _productService;
         private readonly ApplicationDbContext _dbContext;
 
-        public CartAPIController(Response response,
-                                 IProductService productService,
-                                ApplicationDbContext dbContext)
+        public CartAPIController(
+                                IProductService productService,
+                                ApplicationDbContext dbContext
+                                )
         {
-            _response = response;
+            this._response = new Response();
             _productService = productService;
             _dbContext = dbContext;
         }
 
-        [HttpGet("Get")]
+        [HttpGet("Checkout")]
         public async Task<Response> Checkout(string userId)
         {
             try
@@ -68,17 +69,18 @@ namespace App.Services.ShoppingCartAPI.Controllers
             try
             {
                 var cartHeaderFromDb = await _dbContext.CartHeaders.FirstOrDefaultAsync(u => u.UserId == cart.CartHeader.UserId);
-
+                _response.Message = "1";
                 if (cartHeaderFromDb == null)
                 {
                     //create header and details
                     var cartHeader = cart.CartHeader;
                     _dbContext.Add(cartHeader);
                     await _dbContext.SaveChangesAsync();
-
+                    _response.Message = "2";
                     cart.CartDetails.First().CartHeaderId = cartHeader.Id;
                     _dbContext.Add(cart.CartDetails.First());
                     await _dbContext.SaveChangesAsync();
+                    _response.Message = "3";
                 }
                 else
                 {
@@ -87,13 +89,14 @@ namespace App.Services.ShoppingCartAPI.Controllers
                         u => u.ProductId == cart.CartDetails.First().ProductId &&
                         u.CartHeaderId == cartHeaderFromDb.Id
                     );
-
+                    _response.Message = "4";
                     if (cartDetailsFromDb == null)
                     {
                         //create cartdetails
                         cart.CartDetails.First().CartHeaderId = cartHeaderFromDb.Id;
                         _dbContext.CartDetails.Add(cart.CartDetails.First());
                         await _dbContext.SaveChangesAsync();
+                        _response.Message = "5";
                     }
                     else
                     {
@@ -105,6 +108,7 @@ namespace App.Services.ShoppingCartAPI.Controllers
                 _response.IsSuccess = true;
                 _response.Result = cart;
                 _response.StatusCode = HttpStatusCode.OK;
+                _response.Message = "6";
             }
             catch (Exception ex)
             {
@@ -115,7 +119,7 @@ namespace App.Services.ShoppingCartAPI.Controllers
             return _response;
         }
 
-        [HttpDelete("RemoveItem")]
+        [HttpDelete("Remove")]
         public async Task<Response> Remove([FromBody] string cartDetailsId)
         {
             try
