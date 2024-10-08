@@ -1,3 +1,7 @@
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+using App.Services.ProductAPI.Extensions;
+
 namespace App.Services.ProductAPI.Models;
 
 public class Brand
@@ -7,5 +11,6 @@ public class Brand
     public string Name { get; set; } = null!;
 
     public string? ImageUrl { get; set; }
-    public ICollection<Product> Products { get; set; }
+    [NotMapped, SwaggerIgnore, JsonIgnore]
+    public ICollection<Product> Products { get; set; } = null!;
 }

@@ -135,6 +135,10 @@ namespace App.Services.ProductAPI.Migrations
                     b.Property<int>("ColorId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Description")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
                     b.Property<string>("ImageLocalPath")
                         .HasColumnType("nvarchar(max)");
 

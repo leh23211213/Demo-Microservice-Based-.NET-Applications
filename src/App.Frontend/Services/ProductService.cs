@@ -31,15 +31,14 @@ namespace App.Frontend.Services
             }, withBearer: false);
         }
 
-        public async Task<Response?> Get(string? search, int currentPage)
+        public async Task<Response?> Get(int pageSize, int currentPage, string? search)
         {
             return await _baseService.SendAsync(new Request
             {
                 ApiType = StaticDetail.ApiType.GET,
-                Url = StaticDetail.ProductAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/product/" + $"?search={search}&currentPage={currentPage}",
+                Url = StaticDetail.ProductAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/product/" + $"?pageSize={pageSize}&search={search}&currentPage={currentPage}",
             }, withBearer: false);
         }
-
 
         public async Task<Response?> CreateAsync(Product product)
         {

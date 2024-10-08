@@ -27,14 +27,15 @@ namespace App.Services.ProductAPI.Controllers.v1
         {
             try
             {
-                IEnumerable<Product> product = await _dbContext.Products
-                                                            // .Include(p => p.Category)
-                                                            // .Include(p => p.Size)
-                                                            // .Include(p => p.Color)
-                                                            // .Include(p => p.Brand)
+                IEnumerable<Product> products = await _dbContext.Products
+                                                            .Include(p => p.Category)
+                                                            .Include(p => p.Size)
+                                                            .Include(p => p.Color)
+                                                            .Include(p => p.Brand)
                                                             .ToListAsync();
                 _response.StatusCode = HttpStatusCode.OK;
-                _response.Result = product;
+                _response.Result = products;
+                _response.IsSuccess = true;
             }
             catch (Exception ex)
             {
@@ -51,13 +52,14 @@ namespace App.Services.ProductAPI.Controllers.v1
             try
             {
                 var product = await _dbContext.Products
-                                                // .Include(p => p.Category)
-                                                // .Include(p => p.Size)
-                                                // .Include(p => p.Color)
-                                                // .Include(p => p.Brand)
+                                                .Include(p => p.Category)
+                                                .Include(p => p.Size)
+                                                .Include(p => p.Color)
+                                                .Include(p => p.Brand)
                                                 .FirstOrDefaultAsync(p => p.Id == id);
                 _response.StatusCode = HttpStatusCode.OK;
                 _response.Result = product;
+                _response.IsSuccess = true;
             }
             catch (Exception ex)
             {
@@ -75,11 +77,14 @@ namespace App.Services.ProductAPI.Controllers.v1
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Response>> Get([FromQuery] string? search = "", [FromQuery] int currentPage = 1)
+        public async Task<ActionResult<Response>> Get(
+                                                    [FromQuery] int pageSize,
+                                                    [FromQuery] int currentPage,
+                                                    [FromQuery] string? search = ""
+                                                    )
         {
             try
             {
-                const int pageSize = 6;
                 IEnumerable<Product> products = null;
                 products = await _dbContext.Products.ToListAsync();
 
@@ -121,6 +126,7 @@ namespace App.Services.ProductAPI.Controllers.v1
 
                 _response.StatusCode = HttpStatusCode.OK;
                 _response.Result = pagination;
+                _response.IsSuccess = true;
             }
             catch (Exception ex)
             {
@@ -167,12 +173,16 @@ namespace App.Services.ProductAPI.Controllers.v1
                 }
                 _dbContext.Update(product);
                 _dbContext.SaveChanges();
+
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.IsSuccess = true;
                 _response.Result = product;
             }
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
                 _response.Message = ex.Message;
+                _response.StatusCode = HttpStatusCode.BadRequest;
             }
             return _response;
         }
@@ -208,12 +218,16 @@ namespace App.Services.ProductAPI.Controllers.v1
 
                 _dbContext.Update(product);
                 _dbContext.SaveChanges();
+
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.IsSuccess = true;
                 _response.Result = product;
             }
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
                 _response.Message = ex.Message;
+                _response.StatusCode = HttpStatusCode.BadRequest;
             }
             return _response;
         }
@@ -236,11 +250,15 @@ namespace App.Services.ProductAPI.Controllers.v1
                 }
                 _dbContext.Remove(product);
                 _dbContext.SaveChanges();
+
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.IsSuccess = true;
             }
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
                 _response.Message = ex.Message;
+                _response.StatusCode = HttpStatusCode.BadRequest;
             }
             return _response;
         }

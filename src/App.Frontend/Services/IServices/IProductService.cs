@@ -16,7 +16,7 @@ namespace App.Frontend.Services.IServices
         /// <summary>
         /// $"?search={search}+currentPage={currentPage}"
         /// </summary>
-        Task<Response?> Get(string search, int currentPage);
+        Task<Response?> Get(int pageSize, int currentPage, string? search);
 
         Task<Response?> CreateAsync(Product product);
         Task<Response?> UpdateAsync(Product product);

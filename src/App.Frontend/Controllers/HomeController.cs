@@ -19,9 +19,13 @@ namespace App.Frontend.Controllers
             _productService = productService;
         }
 
-        public async Task<IActionResult> Index([FromQuery] string? search = null, [FromQuery] int curentPage = 1)
+        public async Task<IActionResult> Index(
+                                                [FromQuery] int pageSize = 6,
+                                                [FromQuery] int currentPage = 1,
+                                                [FromQuery] string? search = ""
+                                            )
         {
-            Response? response = await _productService.Get(search, curentPage);
+            Response? response = await _productService.Get(pageSize, currentPage, search);
             Pagination pagination = new();
             if (response.IsSuccess && response != null && response.Result != null)
             {
@@ -52,7 +56,7 @@ namespace App.Frontend.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> AddToCart(Product product)
+        public async Task<IActionResult> Details(Product product)
         {
             #region CART
 
@@ -77,7 +81,8 @@ namespace App.Frontend.Controllers
             Response response = await _cartService.AddAsync(cart);
             if (response != null && response.IsSuccess)
             {
-                TempData["success"] = "Item has been added to Cart.";
+                //TempData["success"] = "Item has been added to Cart.";
+                TempData["success"] = response.Message;
                 return RedirectToAction("Details", "Home", new { Id = product.Id });
             }
             else
