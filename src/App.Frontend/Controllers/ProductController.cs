@@ -17,10 +17,14 @@ namespace App.Frontend.Controllers
             _productService = productService;
         }
 
-        public async Task<IActionResult> Index([FromQuery] string? search = null, [FromQuery] int curentPage = 1)
+        public async Task<IActionResult> Index(
+                                                [FromQuery] int pageSize = 10,
+                                                [FromQuery] int currentPage = 1,
+                                                [FromQuery] string? search = ""
+                                                )
         {
             Pagination pagination = new();
-            Response? response = await _productService.Get(search, curentPage);
+            Response? response = await _productService.Get(pageSize, currentPage, search);
 
             if (response.IsSuccess && response.Result != null)
             {
