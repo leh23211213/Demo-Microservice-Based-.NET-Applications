@@ -14,6 +14,7 @@ namespace App.Services.ProductAPI.Data.Configuration
                      builder.Property(e => e.Name).HasMaxLength(100).IsRequired();
                      builder.Property(e => e.Price).HasColumnType("decimal(18,2)").IsRequired();
                      builder.Property(e => e.ImageUrl).HasMaxLength(255).IsRequired(false);
+                     builder.Property(e => e.Description).HasMaxLength(255).IsRequired(false);
 
                      builder.HasOne(p => p.Size)
                             .WithMany(s => s.Products)
