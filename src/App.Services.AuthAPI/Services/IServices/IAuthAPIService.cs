@@ -6,5 +6,7 @@ namespace App.Services.AuthAPI.Services.IServices
     {
         Task<string> Register(RegistrationRequest RegistrationRequest);
         Task<Token> Login(LoginRequest loginRequest);
+        Task RevokeRefreshToken(Token token);
+        Task<Token> RefreshAccessToken(Token token);
     }
 }
