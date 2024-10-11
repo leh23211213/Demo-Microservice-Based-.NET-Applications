@@ -10,10 +10,10 @@ on:
 
 env:
   AZURE_WEBAPP_NAME: 409159cartapi
-  AZURE_WEBAPP_PACKAGE_PATH: App.Services.CartAPI\published
+  AZURE_WEBAPP_PACKAGE_PATH: App.Services.ShoppingCartAPI\published
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
-  WORKING_DIRECTORY: ./src/App.Services.CartAPI
+  WORKING_DIRECTORY: ./src/App.Services.ShoppingCartAPI
 
 
 
