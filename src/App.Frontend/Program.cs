@@ -8,14 +8,14 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
-
 builder.Services.AddHttpClient();
+
 builder.Services.AddSingleton<IApiMessageRequestBuilder, ApiMessageRequestBuilder>();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
 builder.Services.AddHttpClient<IAuthService, AuthService>();
 builder.Services.AddHttpClient<IProductService, ProductService>();
 builder.Services.AddHttpClient<ICartService, CartService>();
-
-builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 
 StaticDetail.AuthAPIBase = builder.Configuration["ServiceUrls:AuthAPI"];

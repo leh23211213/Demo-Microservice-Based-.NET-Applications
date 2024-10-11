@@ -16,33 +16,46 @@ namespace App.Frontend.Controllers
             _cartService = cartService;
         }
 
-        [HttpGet]
-        [Authorize]
-        public async Task<ActionResult<Cart>> Index()
+        public async Task<IActionResult> Index()
         {
-            return View(LoadCartDtoBasedOnLoggedInUser());
+            return View(await LoadCart());
         }
 
-        [Authorize]
+
         public async Task<IActionResult> Checkout()
         {
-            return View(await LoadCartDtoBasedOnLoggedInUser());
+            return View(await LoadCart());
         }
 
         [HttpPost]
-        [ActionName("Checkout")]
-        public async Task<IActionResult> Checkout(Cart cart)
+        public async Task<IActionResult> CheckoutAsync(Cart cart)
         {
-            return View(await LoadCartDtoBasedOnLoggedInUser());
+            return View(await LoadCart());
         }
 
-        private async Task<Cart> LoadCartDtoBasedOnLoggedInUser()
+        [HttpPost]
+        public async Task<IActionResult> Delete(string cartDetailsId)
+        {
+            Response? response = await _cartService.DeleteAsync(cartDetailsId);
+            if (response != null && response.IsSuccess)
+            {
+                TempData["success"] = response.Message;
+                return RedirectToAction(nameof(Checkout));
+            }
+            else
+            {
+                TempData["error"] = response?.Message;
+            }
+            return View();
+        }
+
+        private async Task<Cart> LoadCart()
         {
             var userId = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
             Response? response = await _cartService.GetAsync(userId);
             if (response != null & response.IsSuccess)
             {
-                var cart = JsonConvert.DeserializeObject<Cart>(Convert.ToString(response.Result));
+                Cart cart = JsonConvert.DeserializeObject<Cart>(Convert.ToString(response.Result));
                 return cart;
             }
             return new Cart();

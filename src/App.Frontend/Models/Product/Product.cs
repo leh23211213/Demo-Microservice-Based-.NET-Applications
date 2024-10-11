@@ -13,14 +13,18 @@ namespace App.Frontend.Models
 
         [MaxFileSize(1)]
         [AllowedExtensions(new string[] { ".jpg", ".png" })]
-        public IFormFile? Image { get; set; } = null!;
+        public IFormFile? Image { get; set; }
 
-        public virtual Size Size { get; set; } = null!;
+        public virtual Size? Size { get; set; }
+        public virtual Color? Color { get; set; }
 
-        public virtual Color Color { get; set; } = null!;
+        public virtual Category? Category { get; set; }
 
-        public virtual Category Category { get; set; } = null!;
+        public virtual Brand? Brand { get; set; }
 
-        public virtual Brand Brand { get; set; } = null!;
+        public Product()
+        {
+            Id = Guid.NewGuid().ToString();
+        }
     }
 }

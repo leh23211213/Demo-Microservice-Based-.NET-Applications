@@ -1,10 +1,7 @@
-using System.Text;
 using App.Services.ShoppingCartAPI.Models;
 using App.Services.ShoppingCartAPI.Services;
 using App.Services.ShoppingCartAPI.Services.IServices;
 using App.Services.ShoppingCartAPI.Utility;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 
 namespace App.Services.ShoppingCartAPI.Extensions
 {

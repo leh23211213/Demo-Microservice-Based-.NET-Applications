@@ -3,8 +3,6 @@ using App.Frontend.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Diagnostics;
-using Microsoft.AspNetCore.Authorization;
-using IdentityModel;
 using System.IdentityModel.Tokens.Jwt;
 namespace App.Frontend.Controllers
 {
@@ -38,7 +36,7 @@ namespace App.Frontend.Controllers
             return View(pagination);
         }
 
-        [Authorize]
+        // [Authorize]
         public async Task<IActionResult> Details(string id)
         {
             Response? response = await _productService.Get(id);
@@ -54,7 +52,7 @@ namespace App.Frontend.Controllers
             return View(product);
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPost]
         public async Task<IActionResult> Details(Product product)
         {
@@ -70,6 +68,7 @@ namespace App.Frontend.Controllers
 
             CartDetails cartDetails = new CartDetails()
             {
+                Id = Guid.NewGuid().ToString(),
                 ProductId = product.Id,
             };
 
@@ -81,15 +80,14 @@ namespace App.Frontend.Controllers
             Response response = await _cartService.AddAsync(cart);
             if (response != null && response.IsSuccess)
             {
-                //TempData["success"] = "Item has been added to Cart.";
-                TempData["success"] = response.Message;
-                return RedirectToAction("Details", "Home", new { Id = product.Id });
+                TempData["success"] = response?.Message;
+                return RedirectToAction(nameof(Index));
             }
             else
             {
                 TempData["error"] = response?.Message;
             }
-            return View(product);
+            return RedirectToAction("Details", "Home", new { Id = product.Id });
         }
 
         public async Task<IActionResult> CoverPage()

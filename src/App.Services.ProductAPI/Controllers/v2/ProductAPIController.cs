@@ -27,14 +27,7 @@ namespace App.Services.ProductAPI.Controllers.v2
         {
             try
             {
-                IEnumerable<Product> product = await _dbContext.Products
-                                                            // .Include(p => p.Category)
-                                                            // .Include(p => p.Size)
-                                                            // .Include(p => p.Color)
-                                                            // .Include(p => p.Brand)
-                                                            .ToListAsync();
                 _response.StatusCode = HttpStatusCode.OK;
-                _response.Result = product;
             }
             catch (Exception ex)
             {
@@ -50,14 +43,8 @@ namespace App.Services.ProductAPI.Controllers.v2
         {
             try
             {
-                var product = await _dbContext.Products
-                                                // .Include(p => p.Category)
-                                                // .Include(p => p.Size)
-                                                // .Include(p => p.Color)
-                                                // .Include(p => p.Brand)
-                                                .FirstOrDefaultAsync(p => p.Id == id);
+
                 _response.StatusCode = HttpStatusCode.OK;
-                _response.Result = product;
             }
             catch (Exception ex)
             {
@@ -83,47 +70,9 @@ namespace App.Services.ProductAPI.Controllers.v2
         {
             try
             {
-                IEnumerable<Product> products = null;
-                products = await _dbContext.Products.ToListAsync();
 
-                if (!string.IsNullOrEmpty(search))
-                {
-                    products = _dbContext.Products.Where(p => p.Name.ToLower().Contains(search.ToLower()));
-                }
-
-                var totalItems = products.Count();
-                var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
-
-                if (currentPage < 0)
-                {
-                    return BadRequest("Not Found");
-                }
-                else
-                {
-                    if (currentPage > totalPages)
-                    {
-                        currentPage = totalPages;
-                    }
-                    products = products.Skip((currentPage - 1) * pageSize).Take(pageSize)
-                                                    .Select(p => new Product
-                                                    {
-                                                        Id = p.Id,
-                                                        Name = p.Name,
-                                                        Price = p.Price,
-                                                        ImageUrl = p.ImageUrl,
-                                                        ImageLocalPath = p.ImageLocalPath
-                                                    });
-                }
-
-                Pagination pagination = new()
-                {
-                    Products = products,
-                    totalPages = totalPages,
-                    currentPage = currentPage
-                };
 
                 _response.StatusCode = HttpStatusCode.OK;
-                _response.Result = pagination;
             }
             catch (Exception ex)
             {
@@ -140,34 +89,7 @@ namespace App.Services.ProductAPI.Controllers.v2
         {
             try
             {
-                _dbContext.Add(product);
-                _dbContext.SaveChanges();
 
-                if (product.Image != null)
-                {
-                    string fileName = product.Id + Path.GetExtension(product.Image.FileName);
-                    string filePath = @"wwwroot\lib\Product\SmartPhone\" + fileName;
-
-                    var directoryLocation = Path.Combine(Directory.GetCurrentDirectory(), filePath);
-                    FileInfo fileInfo = new FileInfo(directoryLocation);
-                    if (fileInfo.Exists)
-                    {
-                        fileInfo.Delete();
-                    }
-
-                    var filePathDirectory = Path.Combine(Directory.GetCurrentDirectory(), filePath);
-                    using (var fileStream = new FileStream(filePathDirectory, FileMode.Create))
-                    {
-                        product.Image.CopyTo(fileStream);
-                    }
-                    var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.Value}{HttpContext.Request.PathBase.Value}";
-                    product.ImageUrl = baseUrl + "/SmartPhone/" + fileName;
-                    product.ImageLocalPath = filePath;
-                }
-                else
-                {
-                    product.ImageUrl = "https://placehold.co/600x400";
-                }
                 _dbContext.Update(product);
                 _dbContext.SaveChanges();
                 _response.Result = product;
@@ -186,31 +108,7 @@ namespace App.Services.ProductAPI.Controllers.v2
         {
             try
             {
-                if (product.Image != null)
-                {
-                    if (!string.IsNullOrEmpty(product.ImageLocalPath))
-                    {
-                        var oldFilePathDirectory = Path.Combine(Directory.GetCurrentDirectory(), product.ImageLocalPath);
-                        FileInfo file = new FileInfo(oldFilePathDirectory);
-                        if (file.Exists)
-                        {
-                            file.Delete();
-                        }
-                    }
-                    string fileName = product.Id + Path.GetExtension(product.Image.FileName);
-                    string filePath = @"wwwroot\ProductImages\" + fileName;
-                    var filePathDirectory = Path.Combine(Directory.GetCurrentDirectory(), filePath);
-                    using (var fileStream = new FileStream(filePathDirectory, FileMode.Create))
-                    {
-                        product.Image.CopyTo(fileStream);
-                    }
-                    var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.Value}{HttpContext.Request.PathBase.Value}";
-                    product.ImageUrl = baseUrl + "/ProductImages/" + fileName;
-                    product.ImageLocalPath = filePath;
-                }
 
-                _dbContext.Update(product);
-                _dbContext.SaveChanges();
                 _response.Result = product;
             }
             catch (Exception ex)
@@ -227,18 +125,7 @@ namespace App.Services.ProductAPI.Controllers.v2
         {
             try
             {
-                Product product = _dbContext.Products.First(u => u.Id == id);
-                if (!string.IsNullOrEmpty(product.ImageLocalPath))
-                {
-                    var oldFilePathDirectory = Path.Combine(Directory.GetCurrentDirectory(), product.ImageLocalPath);
-                    FileInfo file = new FileInfo(oldFilePathDirectory);
-                    if (file.Exists)
-                    {
-                        file.Delete();
-                    }
-                }
-                _dbContext.Remove(product);
-                _dbContext.SaveChanges();
+
             }
             catch (Exception ex)
             {

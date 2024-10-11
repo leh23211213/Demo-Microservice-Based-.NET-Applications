@@ -12,21 +12,21 @@ public class Product
     public string? ImageLocalPath { get; set; }
     public string? Description { get; set; } = null!;
 
-    [NotMapped, SwaggerIgnore, JsonIgnore]
+    [NotMapped, SwaggerIgnore]
     public IFormFile? Image { get; set; } = null!;
 
     public int SizeId { get; set; }
     public int ColorId { get; set; }
     public int CategoryId { get; set; }
     public int BrandId { get; set; }
-    
-    [NotMapped]
-    public virtual Size Size { get; set; } = null!;
-    [NotMapped]
-    public virtual Color Color { get; set; } = null!;
-    [NotMapped]
-    public virtual Category Category { get; set; } = null!;
-    [NotMapped]
-    public virtual Brand Brand { get; set; } = null!;
+
+    [NotMapped, SwaggerIgnore]
+    public virtual Size? Size { get; set; }
+    [NotMapped, SwaggerIgnore]
+    public virtual Color? Color { get; set; }
+    [NotMapped, SwaggerIgnore]
+    public virtual Category? Category { get; set; }
+    [NotMapped, SwaggerIgnore]
+    public virtual Brand? Brand { get; set; }
 
 }

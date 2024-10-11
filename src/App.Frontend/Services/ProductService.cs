@@ -13,12 +13,12 @@ namespace App.Frontend.Services
             _baseService = baseService;
         }
 
-        public async Task<Response?> GetAllProduct()
+        public async Task<Response?> Get()
         {
             return await _baseService.SendAsync(new Request()
             {
                 ApiType = StaticDetail.ApiType.GET,
-                Url = StaticDetail.ProductAPIBase + "/api/product/GetAllProduct"
+                Url = StaticDetail.ProductAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/product"
             }, withBearer: false);
         }
 
@@ -36,7 +36,7 @@ namespace App.Frontend.Services
             return await _baseService.SendAsync(new Request
             {
                 ApiType = StaticDetail.ApiType.GET,
-                Url = StaticDetail.ProductAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/product/" + $"?pageSize={pageSize}&search={search}&currentPage={currentPage}",
+                Url = StaticDetail.ProductAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/product/Pagination/" + $"?pageSize={pageSize}&search={search}&currentPage={currentPage}",
             }, withBearer: false);
         }
 
@@ -46,7 +46,8 @@ namespace App.Frontend.Services
             {
                 ApiType = StaticDetail.ApiType.POST,
                 Data = product,
-                Url = StaticDetail.ProductAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/product",
+                Url = StaticDetail.ProductAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/product/Create",
+                ContentType = StaticDetail.ContentType.MultipartFormData
             });
         }
 
@@ -56,7 +57,8 @@ namespace App.Frontend.Services
             {
                 ApiType = StaticDetail.ApiType.PUT,
                 Data = product,
-                Url = StaticDetail.ProductAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/product",
+                Url = StaticDetail.ProductAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/product/Update",
+                ContentType = StaticDetail.ContentType.MultipartFormData
             });
         }
 
@@ -65,7 +67,7 @@ namespace App.Frontend.Services
             return await _baseService.SendAsync(new Request
             {
                 ApiType = StaticDetail.ApiType.DELETE,
-                Url = StaticDetail.ProductAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/product/" + id,
+                Url = StaticDetail.ProductAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/product/Delete/" + id
             });
         }
     }

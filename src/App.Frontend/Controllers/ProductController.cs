@@ -26,7 +26,7 @@ namespace App.Frontend.Controllers
             Pagination pagination = new();
             Response? response = await _productService.Get(pageSize, currentPage, search);
 
-            if (response.IsSuccess && response.Result != null)
+            if (response.IsSuccess && response != null)
             {
                 pagination = JsonConvert.DeserializeObject<Pagination>(Convert.ToString(response.Result));
             }
@@ -46,26 +46,24 @@ namespace App.Frontend.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAsync(Product product)
         {
-            if (ModelState.IsValid)
+
+            Response? response = await _productService.CreateAsync(product);
+            if (response.IsSuccess && response != null)
             {
-                Response? response = await _productService.CreateAsync(product);
-                if (response.IsSuccess && response.Result != null)
-                {
-                    TempData["success"] = "Product create successfully";
-                    return RedirectToAction(nameof(Index));
-                }
-                else
-                {
-                    TempData["error"] = response?.Message;
-                }
+                TempData["success"] = response?.Message;
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                TempData["error"] = response?.Message;
             }
             return View(product);
         }
 
-        public async Task<IActionResult> Update(string productId)
+        public async Task<IActionResult> Update(string Id)
         {
-            Response? response = await _productService.Get(productId);
-            if (response.IsSuccess && response.Result != null)
+            Response? response = await _productService.Get(Id);
+            if (response.IsSuccess && response != null)
             {
                 Product product = JsonConvert.DeserializeObject<Product>(Convert.ToString(response.Result));
                 return View(product);
@@ -74,16 +72,16 @@ namespace App.Frontend.Controllers
             {
                 TempData["error"] = response?.Message;
             }
-            return NotFound();
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
         public async Task<IActionResult> UpdateAsync(Product product)
         {
             Response? response = await _productService.UpdateAsync(product);
-            if (!response.IsSuccess && response.Result != null)
+            if (response.IsSuccess && response != null)
             {
-                TempData["success"] = "Product deleted successfully";
+                TempData["success"] = response?.Message;
                 return RedirectToAction(nameof(Index));
             }
             else
@@ -93,10 +91,10 @@ namespace App.Frontend.Controllers
             return View(product);
         }
 
-        public async Task<IActionResult> Delete(string productId)
+        public async Task<IActionResult> Delete(string Id)
         {
-            Response? response = await _productService.Get(productId);
-            if (!response.IsSuccess && response.Result != null)
+            Response? response = await _productService.Get(Id);
+            if (response.IsSuccess && response != null)
             {
                 Product product = JsonConvert.DeserializeObject<Product>(Convert.ToString(response.Result));
                 return View(product);
@@ -105,23 +103,23 @@ namespace App.Frontend.Controllers
             {
                 TempData["error"] = response?.Message;
             }
-            return NotFound();
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
         public async Task<IActionResult> DeleteAsync(Product product)
         {
             Response? response = await _productService.DeleteAsync(product.Id);
-            if (!response.IsSuccess && response.Result != null)
+            if (response.IsSuccess && response != null)
             {
-                TempData["success"] = "Product deleted successfully";
+                TempData["success"] = response?.Message;
                 return RedirectToAction(nameof(Index));
             }
             else
             {
                 TempData["error"] = response?.Message;
             }
-            return View(product);
+            return RedirectToAction("Delete", "Product", new { Id = product.Id });
         }
     }
 }
