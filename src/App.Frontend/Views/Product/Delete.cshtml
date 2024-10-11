@@ -1,46 +1,85 @@
 ﻿@model Product
 
-<form asp-action="ProductDelete">
+<form asp-action="Delete" method="post">
     <br />
     <div class="container border p-3">
         <h1 class="text-white text-center">Delete Product</h1>
         <input hidden asp-for="Id" />
         <hr />
         <div class="row">
-            <div class="col-2">
-                <label class="control-label pt-2" style="font-size:20px;"> Name</label>
-            </div>
-            <div class="col-10 pb-3">
-                <input asp-for="Name" disabled class="form-control" />
-            </div>
-            <div class="col-2">
-                <label class="control-label pt-2" style="font-size:20px;">Category Name</label>
-            </div>
-            <div class="col-10 pb-3">
-                <input asp-for="Category" disabled class="form-control" />
-            </div>
-            <div class="col-2">
-                <label class="control-label pt-2" style="font-size:20px;">Description</label>
-            </div>
-            <div class="col-2">
-                <label class="control-label pt-2" style="font-size:20px;">Price</label>
-            </div>
-            <div class="col-10 pb-3">
-                <input asp-for="Price" disabled class="form-control" />
-            </div>
-            <div class="col-2">
-                <label class="control-label pt-2" style="font-size:20px;">ImageUrl</label>
-            </div>
-            <div class="col-10 pb-3">
-                <input asp-for="ImageUrl" disabled class="form-control" />
-            </div>
+            <div class="col-10">
+                <div class="row">
+                    <!-- Product Name -->
+                    <div class="col-2">
+                        <label class="control-label pt-2" style="font-size:20px;">Product Name</label>
+                    </div>
+                    <div class="col-10 pb-3">
+                        <input asp-for="Name" disabled class="form-control" />
+                    </div>
 
-            <div class="col-5 offset-2">
+                    <!-- Description -->
+                    <div class="col-2">
+                        <label class="control-label pt-2" style="font-size:20px;">Description</label>
+                    </div>
+                    <div class="col-10 pb-3">
+                        <input asp-for="@Model.Description" disabled class="form-control" />
+                    </div>
 
-                <a asp-action="Index" class="btn-primary btn form-control ">Back to List</a>
+                    <!-- Brand -->
+                    <div class="col-2">
+                        <label class="control-label pt-2" style="font-size:20px;">Brand</label>
+                    </div>
+                    <div class="col-10 pb-3">
+                        <input asp-for="@Model.Brand.Name" disabled class="form-control" />
+                    </div>
+                    <!-- Color -->
+                    <div class="col-2">
+                        <label class="control-label pt-2" style="font-size:20px;">Color</label>
+                    </div>
+                    <div class="col-10 pb-3">
+                        <input asp-for="@Model.Color.Name" disabled class="form-control" />
+                    </div>
+                    <!-- Category -->
+                    <div class="col-2">
+                        <label class="control-label pt-2" style="font-size:20px;">Category</label>
+                    </div>
+                    <div class="col-10 pb-3">
+                        <input asp-for="@Model.Category.Name" disabled class="form-control" />
+                    </div>
+                    <!-- Size -->
+                    <div class="col-2">
+                        <label class="control-label pt-2" style="font-size:20px;">Size</label>
+                    </div>
+                    <div class="col-10 pb-3">
+                        <input asp-for="@Model.Size.RAM" disabled class="form-control" />
+                    </div>
+
+                    <!-- Price -->
+                    <div class="col-2">
+                        <label class="control-label pt-2" style="font-size:20px;">Price</label>
+                    </div>
+                    <div class="col-10 pb-3">
+                        <input asp-for="Price" disabled class="form-control" />
+                    </div>
+
+                    <!-- ImageUrl -->
+                    <div class="col-2">
+                        <label class="control-label pt-2" style="font-size:20px;">ImageUrl</label>
+                    </div>
+                    <div class="col-10 pb-3">
+                        <input asp-for="ImageUrl" disabled class="form-control" />
+                    </div>
+
+                    <div class="col-5 offset-2">
+                        <a asp-action="Index" class="btn-primary btn form-control ">Back to List</a>
+                    </div>
+                    <div class="col-5">
+                        <input type="submit" value="Delete" class="btn btn-danger form-control" />
+                    </div>
+                </div>
             </div>
-            <div class="col-5">
-                <input type="submit" value="Delete" class="btn btn-danger form-control" />
+            <div class="col-2">
+                <img src="@Model.ImageUrl" class="w-100" alt="" />
             </div>
         </div>
         <div>

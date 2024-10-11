@@ -12,9 +12,6 @@ builder.AddAppAuthetication();
 builder.Services.ConfigureDatabase(builder.Configuration);
 builder.Services.AppServiceCollection(builder.Configuration);
 
-// IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
-// builder.Services.AddSingleton(mapper);
-// builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Configure the HTTP request pipeline.
 builder.Services.AddApiVersioning(options =>
@@ -58,7 +55,7 @@ builder.Services.AddSwaggerGen(option =>
     option.SwaggerDoc("v1", new OpenApiInfo
     {
         Version = "v1.0",
-        Title = "App.Services.ProductAPI",
+        Title = "App.Services.ShoppingCartAPI",
     });
 });
 

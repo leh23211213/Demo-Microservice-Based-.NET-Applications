@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
-using App.Services.ProductAPI.Extensions;
-namespace App.Services.ProductAPI.Models;
+using App.Services.ShoppingCartAPI.Extensions;
+namespace App.Services.ShoppingCartAPI.Models;
 
-public class Category
+public class Color
 {
     public int Id { get; set; }
     public string? Name { get; set; }

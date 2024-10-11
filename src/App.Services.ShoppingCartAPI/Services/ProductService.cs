@@ -16,7 +16,7 @@ namespace App.Services.ShoppingCartAPI.Services
         public async Task<IEnumerable<Product>> GetAsync()
         {
             var client = _httpClientFactory.CreateClient("Product");
-            var response = await client.GetAsync($"/api/product");
+            var response = await client.GetAsync($"/api/v1/product");
             var apiContent = await response.Content.ReadAsStringAsync();
             var resp = JsonConvert.DeserializeObject<Response>(apiContent);
             if (resp.Result != null && resp.IsSuccess)

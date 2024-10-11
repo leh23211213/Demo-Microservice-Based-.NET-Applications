@@ -1,18 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using App.Frontend.Models;
 
 namespace App.Frontend.Services.IServices
 {
     public interface ICartService
     {
+        /// <summary>
+        /// StaticDetail.ShoppingCartAPIBase + "/api/version/cart/Get" + userId,
+        /// </summary>
         Task<Response> GetAsync(string userId);
-        Task<Response> RemoveAsync(int cartDetailsIdken);
+        /// <summary>
+        /// StaticDetail.ShoppingCartAPIBase + "/api/version/cart/Delete" + cartDetailsId,
+        /// </summary>
+        Task<Response> DeleteAsync(string cartDetailsId);
 
         /// <summary>
-        /// StaticDetail.ShoppingCartAPIBase + "/api/cart/Add",
+        /// StaticDetail.ShoppingCartAPIBase + "/api/version/cart/Add",
         /// </summary>
         Task<Response> AddAsync(Cart cart);
     }

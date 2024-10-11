@@ -7,13 +7,13 @@ public class Product
     public string Id { get; set; } = null!;
     public string Name { get; set; } = null!;
     public double Price { get; set; }
-    public string? Description { get; set; }
-    public string ImageUrl { get; set; } = null!;
+    public string? ImageUrl { get; set; }
+    public string? ImageLocalPath { get; set; }
+    public string? Description { get; set; } = null!;
 
-    //public string? ImageLocalPath { get; set; }
-    // public IFormFile? Image { get; set; }
-    // public string? Size { get; set; }
-    // public string? Color { get; set; }
-    // public string? Category { get; set; }
-    // public string? Brand { get; set; }
+    public IFormFile? Image { get; set; } = null!;
+    public virtual Size? Size { get; set; }
+    public virtual Color? Color { get; set; }
+    public virtual Category? Category { get; set; }
+    public virtual Brand? Brand { get; set; }
 }

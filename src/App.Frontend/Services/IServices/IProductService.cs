@@ -4,9 +4,9 @@ namespace App.Frontend.Services.IServices
     public interface IProductService
     {
         /// <summary>
-        /// Get all product
+        /// Get
         /// </summary>
-        Task<Response?> GetAllProduct();
+        Task<Response?> Get();
 
         /// <summary>
         /// Get product by Id
@@ -14,7 +14,7 @@ namespace App.Frontend.Services.IServices
         Task<Response?> Get(string id);
 
         /// <summary>
-        /// $"?search={search}+currentPage={currentPage}"
+        ///  Pagination/$"?pageSize={pageSize}+search={search}+currentPage={currentPage} 
         /// </summary>
         Task<Response?> Get(int pageSize, int currentPage, string? search);
 

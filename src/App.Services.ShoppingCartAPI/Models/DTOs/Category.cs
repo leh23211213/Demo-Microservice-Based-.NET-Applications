@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
-using App.Services.ProductAPI.Extensions;
-namespace App.Services.ProductAPI.Models;
-
+using App.Services.ShoppingCartAPI.Extensions;
+namespace App.Services.ShoppingCartAPI.Models;
+[NotMapped]
 public class Category
 {
     public int Id { get; set; }

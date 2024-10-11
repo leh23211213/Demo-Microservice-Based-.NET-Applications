@@ -13,17 +13,19 @@ namespace App.Services.ProductAPI.Controllers.v1
     [ApiVersion("1.0")]
     public class ProductAPIController : Controller
     {
-        private readonly ApplicationDbContext _dbContext;
         private Response _response;
+        private readonly ApplicationDbContext _dbContext;
 
-        public ProductAPIController(ApplicationDbContext dbContext)
+        public ProductAPIController(
+                                    ApplicationDbContext dbContext
+                                    )
         {
-            _dbContext = dbContext;
             _response = new Response();
+            _dbContext = dbContext;
         }
 
-        [HttpGet("GetAllProduct")]
-        public async Task<ActionResult<Response>> GetAllProduct()
+        [HttpGet]
+        public async Task<ActionResult<Response>> Get()
         {
             try
             {
@@ -52,11 +54,11 @@ namespace App.Services.ProductAPI.Controllers.v1
             try
             {
                 var product = await _dbContext.Products
-                                                .Include(p => p.Category)
-                                                .Include(p => p.Size)
-                                                .Include(p => p.Color)
-                                                .Include(p => p.Brand)
-                                                .FirstOrDefaultAsync(p => p.Id == id);
+                                                    .Include(p => p.Category)
+                                                    .Include(p => p.Size)
+                                                    .Include(p => p.Color)
+                                                    .Include(p => p.Brand)
+                                                    .FirstOrDefaultAsync(p => p.Id == id);
                 _response.StatusCode = HttpStatusCode.OK;
                 _response.Result = product;
                 _response.IsSuccess = true;
@@ -70,14 +72,9 @@ namespace App.Services.ProductAPI.Controllers.v1
             return _response;
         }
 
-        [HttpGet]
+        [HttpGet("Pagination")]
         // [ResponseCache(CacheProfileName = "Default10")]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Response>> Get(
+        public async Task<ActionResult<Response>> Pagination(
                                                     [FromQuery] int pageSize,
                                                     [FromQuery] int currentPage,
                                                     [FromQuery] string? search = ""
@@ -137,12 +134,30 @@ namespace App.Services.ProductAPI.Controllers.v1
             return _response;
         }
 
-        [HttpPost]
-        [Authorize(Roles = "ADMIN")]
+        [HttpPost("Create")]
+        // [Authorize(Roles = "ADMIN")]
+
         public async Task<ActionResult<Response>> Create(Product product)
         {
             try
             {
+                // // Xử lý thêm sản phẩm, cho phép các trường Size, Color, Brand và Category nullable
+                // if (ModelState.IsValid)
+                // {
+                //     product.Id = Guid.NewGuid().ToString();
+
+                //     // Nếu người dùng không chọn, các thuộc tính này sẽ là null
+                //     product.Size = product.Size?.Id != null ? context.Sizes.Find(product.Size.Id) : null;
+                //     product.Color = product.Color?.Id != null ? context.Colors.Find(product.Color.Id) : null;
+                //     product.Brand = product.Brand?.Id != null ? context.Brands.Find(product.Brand.Id) : null;
+                //     product.Category = product.Category?.Id != null ? context.Categories.Find(product.Category.Id) : null;
+
+                //     context.Products.Add(product);
+                //     context.SaveChanges();
+                //     return RedirectToAction("Index");
+                // }
+
+
                 _dbContext.Add(product);
                 _dbContext.SaveChanges();
 
@@ -177,6 +192,7 @@ namespace App.Services.ProductAPI.Controllers.v1
                 _response.StatusCode = HttpStatusCode.OK;
                 _response.IsSuccess = true;
                 _response.Result = product;
+                _response.Message = "Create product successfully";
             }
             catch (Exception ex)
             {
@@ -187,8 +203,9 @@ namespace App.Services.ProductAPI.Controllers.v1
             return _response;
         }
 
-        [HttpPut]
-        [Authorize(Roles = "ADMIN")]
+        [HttpPut("Update")]
+        // [Authorize(Roles = "ADMIN")]
+
         public async Task<ActionResult<Response>> Update(Product product)
         {
             try
@@ -221,7 +238,7 @@ namespace App.Services.ProductAPI.Controllers.v1
 
                 _response.StatusCode = HttpStatusCode.OK;
                 _response.IsSuccess = true;
-                _response.Result = product;
+                _response.Message = "Product update successfully";
             }
             catch (Exception ex)
             {
@@ -232,9 +249,9 @@ namespace App.Services.ProductAPI.Controllers.v1
             return _response;
         }
 
-        [HttpDelete("{id}")]
-        [Authorize(Roles = "ADMIN")]
-        public async Task<ActionResult<Response>> Remove(string id)
+        [HttpDelete("Delete/{id}")]
+        //  [Authorize(Roles = "ADMIN")]
+        public async Task<ActionResult<Response>> Delete(string id)
         {
             try
             {
@@ -251,6 +268,7 @@ namespace App.Services.ProductAPI.Controllers.v1
                 _dbContext.Remove(product);
                 _dbContext.SaveChanges();
 
+                _response.Message = "Product deleted successfully";
                 _response.StatusCode = HttpStatusCode.OK;
                 _response.IsSuccess = true;
             }

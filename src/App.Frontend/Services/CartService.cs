@@ -19,17 +19,17 @@ namespace App.Frontend.Services
             return await _baseService.SendAsync(new Request()
             {
                 ApiType = StaticDetail.ApiType.GET,
-                Url = StaticDetail.ShoppingCartAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/cart/" + userId,
+                Url = StaticDetail.ShoppingCartAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/cart/Checkout/" + userId,
             });
         }
 
-        public async Task<Response?> RemoveAsync(int cartDetailsId)
+        public async Task<Response?> DeleteAsync(string cartDetailsId)
         {
             return await _baseService.SendAsync(new Request()
             {
                 ApiType = StaticDetail.ApiType.DELETE,
                 Data = cartDetailsId,
-                Url = StaticDetail.ShoppingCartAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/cart",
+                Url = StaticDetail.ShoppingCartAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/cart/Delete",
             });
         }
 

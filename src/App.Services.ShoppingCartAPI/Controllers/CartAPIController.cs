@@ -10,7 +10,7 @@ namespace App.Services.ShoppingCartAPI.Controllers
     [Route("api/v{version:apiVersion}/cart")]
     [ApiController]
     [ApiVersion("1.0")]
-    public class CartAPIController : Controller
+    public class CartAPIController : ControllerBase
     {
         private Response _response;
         private IProductService _productService;
@@ -21,13 +21,13 @@ namespace App.Services.ShoppingCartAPI.Controllers
                                 ApplicationDbContext dbContext
                                 )
         {
-            this._response = new Response();
+            _response = new Response();
             _productService = productService;
             _dbContext = dbContext;
         }
 
-        [HttpGet("Checkout")]
-        public async Task<Response> Checkout(string userId)
+        [HttpGet("Checkout/{userId}")]
+        public async Task<ActionResult<Response>> Checkout(string userId)
         {
             try
             {
@@ -35,6 +35,7 @@ namespace App.Services.ShoppingCartAPI.Controllers
                 {
                     CartHeader = await _dbContext.CartHeaders.AsNoTracking().FirstAsync(u => u.UserId == userId)
                 };
+
                 cart.CartDetails = _dbContext.CartDetails.Where(u => u.CartHeaderId == cart.CartHeader.Id);
 
                 IEnumerable<Product> products = await _productService.GetAsync();
@@ -64,23 +65,23 @@ namespace App.Services.ShoppingCartAPI.Controllers
         }
 
         [HttpPost("Add")]
-        public async Task<Response> Add(Cart cart)
+        public async Task<ActionResult<Response>> Add(Cart cart)
         {
             try
             {
                 var cartHeaderFromDb = await _dbContext.CartHeaders.FirstOrDefaultAsync(u => u.UserId == cart.CartHeader.UserId);
-                _response.Message = "1";
                 if (cartHeaderFromDb == null)
                 {
                     //create header and details
-                    var cartHeader = cart.CartHeader;
-                    _dbContext.Add(cartHeader);
+                    cart.CartHeader.Id = Guid.NewGuid().ToString();
+                    _dbContext.Add(cart.CartHeader);
                     await _dbContext.SaveChangesAsync();
-                    _response.Message = "2";
-                    cart.CartDetails.First().CartHeaderId = cartHeader.Id;
+
+                    cart.CartDetails.First().CartHeaderId = cart.CartHeader.Id;
                     _dbContext.Add(cart.CartDetails.First());
                     await _dbContext.SaveChangesAsync();
-                    _response.Message = "3";
+
+                    _response.Message = "Item has been added to Cart";
                 }
                 else
                 {
@@ -89,26 +90,29 @@ namespace App.Services.ShoppingCartAPI.Controllers
                         u => u.ProductId == cart.CartDetails.First().ProductId &&
                         u.CartHeaderId == cartHeaderFromDb.Id
                     );
-                    _response.Message = "4";
                     if (cartDetailsFromDb == null)
                     {
                         //create cartdetails
                         cart.CartDetails.First().CartHeaderId = cartHeaderFromDb.Id;
                         _dbContext.CartDetails.Add(cart.CartDetails.First());
                         await _dbContext.SaveChangesAsync();
-                        _response.Message = "5";
+
+                        _response.Message = "Item has been added to Cart";
                     }
                     else
                     {
+                        // cart.CartDetails.First().Count += cartDetailsFromDb.Count;
+                        // cart.CartDetails.First().CartHeaderId = cartDetailsFromDb.CartHeaderId;
+                        // cart.CartDetails.First().Id = cartDetailsFromDb.Id;
+                        // _dbContext.CartDetails.Update(cart.CartDetails.First());
                         //update count in cart details
                         _response.Message = "Product are ready exists in your cart!";
                     }
                 }
 
+
                 _response.IsSuccess = true;
-                _response.Result = cart;
                 _response.StatusCode = HttpStatusCode.OK;
-                _response.Message = "6";
             }
             catch (Exception ex)
             {
@@ -119,20 +123,19 @@ namespace App.Services.ShoppingCartAPI.Controllers
             return _response;
         }
 
-        [HttpDelete("Remove")]
-        public async Task<Response> Remove([FromBody] string cartDetailsId)
+        [HttpDelete("Delete/{cartDetailsId}")]
+        public async Task<ActionResult<Response>> Delete([FromBody] string cartDetailsId)
         {
             try
             {
                 CartDetails cartDetails = _dbContext.CartDetails.First(u => u.Id == cartDetailsId);
-                int countCartItem = _dbContext.CartDetails.Where(u => u.CartHeaderId == cartDetails.CartHeaderId).Count();
 
                 _dbContext.CartDetails.Remove(cartDetails);
-
-
                 await _dbContext.SaveChangesAsync();
+
                 _response.Result = true;
                 _response.StatusCode = HttpStatusCode.OK;
+                _response.Message = "Remove product successfully";
             }
             catch (Exception ex)
             {
@@ -144,7 +147,7 @@ namespace App.Services.ShoppingCartAPI.Controllers
         }
 
         [HttpPost("ApplyCoupon")]
-        public async Task<Response> ApplyCoupon([FromBody] Cart cart)
+        public async Task<ActionResult<Response>> ApplyCoupon([FromBody] Cart cart)
         {
             try
             {
