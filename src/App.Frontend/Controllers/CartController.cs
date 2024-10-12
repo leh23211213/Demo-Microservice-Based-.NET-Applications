@@ -33,20 +33,19 @@ namespace App.Frontend.Controllers
             return View(await LoadCart());
         }
 
-        [HttpPost]
         public async Task<IActionResult> Delete(string cartDetailsId)
         {
             Response? response = await _cartService.DeleteAsync(cartDetailsId);
             if (response != null && response.IsSuccess)
             {
-                TempData["success"] = response.Message;
-                return RedirectToAction(nameof(Checkout));
+                TempData["success"] = response?.Message;
+                return RedirectToAction(nameof(Index));
             }
             else
             {
                 TempData["error"] = response?.Message;
             }
-            return View();
+            return RedirectToAction(nameof(Index));
         }
 
         private async Task<Cart> LoadCart()

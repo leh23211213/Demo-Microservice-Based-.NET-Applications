@@ -123,8 +123,10 @@ namespace App.Services.ShoppingCartAPI.Controllers
             return _response;
         }
 
-        [HttpDelete("Delete/{cartDetailsId}")]
-        public async Task<ActionResult<Response>> Delete([FromBody] string cartDetailsId)
+        [HttpDelete("Delete")]
+        public async Task<ActionResult<Response>> Delete(
+                                                        [FromBody] string cartDetailsId
+                                                        )
         {
             try
             {
