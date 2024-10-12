@@ -20,6 +20,10 @@ public class ApplicationDbContext : DbContext
             entity.Property(e => e.Id).IsRequired();
             entity.Property(e => e.Count).IsRequired();
 
+            entity.HasOne(p => p.CartHeader)
+                           .WithMany(s => s.CartDetails)
+                           .HasForeignKey(p => p.CartHeaderId)
+                           .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<CartHeader>(entity =>

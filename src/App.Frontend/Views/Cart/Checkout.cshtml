@@ -1,8 +1,8 @@
 ﻿@model Cart
 
 <form method="post">
-    <input asp-for="CartHeader.UserId" hidden />
     <input asp-for="CartHeader.Id" hidden />
+    <input asp-for="CartHeader.UserId" hidden />
     <input asp-for="CartHeader.CouponCode" hidden />
     <input asp-for="CartHeader.Discount" hidden />
     <input asp-for="CartHeader.CartTotal" hidden />
@@ -10,30 +10,26 @@
     <div class="border mt-2 p-4 rounded">
         <div class="container row">
             <div class="col-md-7 col-12">
-                <span style="font-size:25px;" class="text-warning mb-2">Order Summary</span>
-            </div>
-            <div class="col-md-5 col-12">
-                <a asp-action="CartIndex" class="btn btn-outline-warning form-control">Back to Cart</a>
+                <span style="font-size:25px;" class="mb-2">Order Summary</span>
             </div>
             <br /><br /><br />
             <hr />
             <div class="col-7">
                 <div class="row pt-2">
-                    <div class="col-12 py-2">
-                        <input asp-for="CartHeader.Name" placeholder="full name..." class="form-control" />
+                    <div class="col-10 py-2">
+                        <input asp-for="CartHeader.Name" placeholder="FULL NAME" class="form-control" />
                         <span asp-validation-for="CartHeader.Name" class="text-danger"></span>
                     </div>
-                    <div class="col-12 py-2">
-                        <input placeholder="email..." asp-for="CartHeader.Email" class="form-control" />
+                    <div class="col-10 py-2">
+                        <input placeholder="EMAIL" asp-for="CartHeader.Email" class="form-control" />
                         <span asp-validation-for="CartHeader.Email" class="text-danger"></span>
                     </div>
-                    <div class="col-12 py-2">
-                        <input class="form-control" asp-for="CartHeader.Phone" placeholder="phone number..." />
+                    <div class="col-10 py-2">
+                        <input class="form-control" asp-for="CartHeader.Phone" placeholder="PHONE NUMBER" />
                         <span asp-validation-for="CartHeader.Phone" class="text-danger"></span>
                     </div>
-                    <div class="col-12 pt-2">
-                        <label class="col-form-label">Order will be ready in 30minutes after placing order. If you place
-                            order when restaurant is closed it will be ready next day.</label>
+                    <div class="col-10 pt-2">
+                        <label class="col-form-label">Message :# </label>
                     </div>
 
                 </div>
@@ -42,39 +38,39 @@
                 <div class="card mt-2">
                     <div class="card-body">
                         <div class=" d-none d-lg-block">
-                            <div class="row text-danger">
-                                <div class="col-6">
-                                    Product Details
+                            <div class="row">
+                                <div class="col-6" style="font-size:20px">
+                                    Product Name
                                 </div>
 
-                                <div class="col-3">
+                                <div class="col-3" style="font-size:20px">
                                     Price
                                 </div>
-                                <div class="col-3">
+                                <div class="col-3" style="font-size:20px">
                                     Count
                                 </div>
                             </div>
                         </div>
                         <hr />
-                        @foreach (var cartObj in Model.CartDetails)
+                        @foreach (var item in Model.CartDetails)
                         {
                             <div class="row h-100">
                                 <div class="col-6">
-                                    <span style="font-size:20px">@cartObj.Product.Name</span>
+                                    <span style="font-size:20px">@item.Product.Name</span>
                                 </div>
 
                                 <div class="col-3" style="font-size:11px;">
-                                    <span style="font-size:17px;"> @cartObj.Product.Price.ToString("c")</span>
+                                    <span style="font-size:17px;"> @item.Product.Price.ToString("c")</span>
 
                                 </div>
                                 <div class="col-3" style="font-size:11px;">
-                                    <span style="font-size:17px;"> @cartObj.Count</span>
+                                    <span style="font-size:17px;"> @item.Count</span>
                                 </div>
                             </div>
                             <hr />
                         }
                         <div class="row">
-                            <div class="col-12 text-center pr-4 text-danger">
+                            <div class="col-12 text-center pr-4">
                                 Order Total : @Model.CartHeader.CartTotal.ToString("c") <br />
                                 @if (Model.CartHeader.Discount > 0)
                                 {
@@ -89,13 +85,16 @@
                         <div class="row">
 
                             <div class="col-12 ">
-                                <button type="submit" class="btn btn-success form-control ">
-                                    <span>Place Order</span>
+                                <button type="submit" class="btn btn-primary btn-lg form-control">
+                                    <span>Order</span>
                                 </button>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="col-md-5 col-12">
+                <a asp-action="Index" class="btn btn-primary btn-lg">Back to Cart</a>
             </div>
         </div>
     </div>

@@ -6,6 +6,9 @@ public class CartDetails
 {
     public string? Id { get; set; }
     public string? CartHeaderId { get; set; }
+    
+    [NotMapped, SwaggerIgnore]
+    public virtual CartHeader? CartHeader { get; set; }
     [NotMapped, SwaggerIgnore]
     public virtual Product? Product { get; set; }
     public string ProductId { get; set; }

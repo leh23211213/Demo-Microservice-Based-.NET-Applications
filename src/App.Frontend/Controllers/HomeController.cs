@@ -25,6 +25,7 @@ namespace App.Frontend.Controllers
         {
             Response? response = await _productService.Get(pageSize, currentPage, search);
             Pagination pagination = new();
+
             if (response.IsSuccess && response != null && response.Result != null)
             {
                 pagination = JsonConvert.DeserializeObject<Pagination>(Convert.ToString(response.Result));
@@ -41,6 +42,7 @@ namespace App.Frontend.Controllers
         {
             Response? response = await _productService.Get(id);
             Product? product = new();
+
             if (response != null && response.IsSuccess)
             {
                 product = JsonConvert.DeserializeObject<Product>(Convert.ToString(response.Result));
@@ -78,6 +80,7 @@ namespace App.Frontend.Controllers
             #endregion
 
             Response response = await _cartService.AddAsync(cart);
+
             if (response != null && response.IsSuccess)
             {
                 TempData["success"] = response?.Message;

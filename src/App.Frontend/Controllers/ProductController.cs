@@ -23,8 +23,8 @@ namespace App.Frontend.Controllers
                                                 [FromQuery] string? search = ""
                                                 )
         {
-            Pagination pagination = new();
             Response? response = await _productService.Get(pageSize, currentPage, search);
+            Pagination pagination = new();
 
             if (response.IsSuccess && response != null)
             {
@@ -48,6 +48,7 @@ namespace App.Frontend.Controllers
         {
 
             Response? response = await _productService.CreateAsync(product);
+
             if (response.IsSuccess && response != null)
             {
                 TempData["success"] = response?.Message;
@@ -63,6 +64,7 @@ namespace App.Frontend.Controllers
         public async Task<IActionResult> Update(string Id)
         {
             Response? response = await _productService.Get(Id);
+
             if (response.IsSuccess && response != null)
             {
                 Product product = JsonConvert.DeserializeObject<Product>(Convert.ToString(response.Result));
@@ -79,6 +81,7 @@ namespace App.Frontend.Controllers
         public async Task<IActionResult> UpdateAsync(Product product)
         {
             Response? response = await _productService.UpdateAsync(product);
+
             if (response.IsSuccess && response != null)
             {
                 TempData["success"] = response?.Message;
@@ -94,6 +97,7 @@ namespace App.Frontend.Controllers
         public async Task<IActionResult> Delete(string Id)
         {
             Response? response = await _productService.Get(Id);
+
             if (response.IsSuccess && response != null)
             {
                 Product product = JsonConvert.DeserializeObject<Product>(Convert.ToString(response.Result));
@@ -110,6 +114,7 @@ namespace App.Frontend.Controllers
         public async Task<IActionResult> DeleteAsync(Product product)
         {
             Response? response = await _productService.DeleteAsync(product.Id);
+
             if (response.IsSuccess && response != null)
             {
                 TempData["success"] = response?.Message;

@@ -114,27 +114,57 @@
                             <div class="Price-Summary">
                                 <ul class="Price-Items">
                                     <li class="Price-Item">
-                                        <div class="Prices-Text">temporary price</div>
-                                        <div class="Prices-Value"> @ViewBag.TotalTemporaryPrice <sup>đ</sup> </div>
+                                        <div class="Prices-Text">Temporary Price</div>
+                                        <div class="Prices-Value"> @((0).ToString("c")) </div>
                                     </li>
                                     <li class="Price-Item">
-                                        <div class="Prices-Text">discount</div>
-                                        <div class="Prices-Value"> 0 <sup>đ</sup> </div>
+                                        <div class="Prices-Text">Discount</div>
+                                        <div class="Prices-Value"> @((0).ToString("c")) </div>
+                                    </li>
+                                    <li class="Price-Item">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                @if (string.IsNullOrEmpty(Model.CartHeader.CouponCode))
+                                                {
+                                                    <span>Coupon:</span>
+                                                    <input asp-for="CartHeader.CouponCode" disabled />
+                                                    <button type="submit" asp-action="ApplyCoupon"
+                                                        class="btn btn-primary btn-lg" disabled> Apply
+                                                    </button>
+                                                }
+                                                else
+                                                {
+                                                    <span>Coupon:</span>
+                                                    <input asp-for="CartHeader.CouponCode" disabled />
+                                                    <button type="submit" asp-action="RemoveCoupon"
+                                                        class="btn btn-primary btn-lg">
+                                                        Remove </button>
+                                                }
+                                            </div>
+                                            <div class="col-6 text-end">
+                                                @if (Model.CartHeader.Discount > 0)
+                                                {
+                                                    <span class="text-success"> Order Discount : @string.Format("{0:c}",
+                                                Model.CartHeader.Discount) </span>
+                                                }
+                                            </div>
+                                        </div>
                                     </li>
                                 </ul>
                                 <i></i>
                                 <div class="Prices-Total">
                                     <span class="Prices-Text">Total</span>
                                     <div class="Prices-Content">
-                                        <span class="Prices-Value-Final"> @ViewBag.TotalPrice <sup>đ</sup> </span>
+                                        <span class="Prices-Value-Final"> @string.Format("{0:c}",
+                                        Model.CartHeader.CartTotal) </span>
                                     </div>
                                 </div>
                             </div>
-                            <form asp-action="Buy" asp-controller="Order" method="post">
-                                @Html.AntiForgeryToken()
+                            <a asp-action="Checkout">
+                                @* @Html.AntiForgeryToken() *@
                                 <input type="hidden" name="UserId" />
-                                <button type="submit" class="button">BUY</button>
-                            </form>
+                                <button type="submit" class="btn btn-primary btn-lg">Checkout</button>
+                            </a>
                         </div>
                     </div>
                 </div>

@@ -1,5 +1,6 @@
 
 using System.ComponentModel.DataAnnotations.Schema;
+using App.Services.ShoppingCartAPI.Extensions;
 
 namespace App.Services.ShoppingCartAPI.Models;
 public class CartHeader
@@ -14,4 +15,7 @@ public class CartHeader
     public string? Name { get; set; }
     public string? Phone { get; set; }
     public string? Email { get; set; }
+
+    [NotMapped, SwaggerIgnore]
+    public virtual ICollection<CartDetails>? CartDetails { get; set; }
 }

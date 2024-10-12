@@ -3,11 +3,12 @@
 <head>
 	<link rel="stylesheet" type="text/css" href="~/css/Product/Index.css" asp-append-version="true">
 </head>
+
 <div class="card shadow border-0 mt-4">
-	<div class="card-header bg-secondary bg-gradient ml-0 py-3">
+	<div class="card-header bg-gradient ml-0 py-3">
 		<div class="row">
 			<div class="col-12 text-center">
-				<h1 class="text-white">Products List</h1>
+				<h1 class="">Products List</h1>
 			</div>
 		</div>
 	</div>
@@ -68,8 +69,8 @@
 			<div class="pagination">
 				@for (int i = 1; i <= Model.totalPages; i++)
 				{
-					<a asp-controller="Product" asp-action="Index" asp-route-curentPage="@i"
-						class="@(i == Model.currentPage ? "active" : "")">
+					<a asp-controller="Product" asp-action="Index" asp-route-currentPage="@i"
+						class="pagination-link @(i == Model.currentPage ? "active" : "")">
 						@i
 					</a>
 				}
