@@ -1,91 +1,31 @@
-.page-content {
-    min-height: calc(-100px + 100vh);
-    width: 100%;
-    min-width: 1280px;
-    max-width: 1440px;
-    padding: 0px 24px;
-    margin-right: auto;
-    margin-left: auto;
-}
-
-.Content{
+.pagination {
     display: flex;
-    -webkit-box-pack:justify;
-    justify-content: space-between;
-    align-items: flex-start;
-    width: 100%;
-    column-gap: 24px;
+    justify-content: center;
+    margin: 20px 0;
 }
 
-.Left-Content{
-    width: 240px;
-    flex-shrink: 0;
-    display: block;
-}
-
-.Right-Content{
-    flex: 1 1 0%;
-    width: calc(100% - 264px);
-    display: flex;
-    flex-direction: column;
-    row-gap: 26px;
-}
-
-.box-filter {
-    margin-bottom: 20px;
-}
-
-.Title {
-    font-size: 24px;
-    font-weight: bold;
-}
-
-.List-Product {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    list-style-type: none;
-    padding: 0;
-}
-
-.Item {
-    width: calc(25% - 20px);
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    text-align: center;
-    padding: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-.Item-Img img {
-    width: 100%;
-    height: auto;
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 10px;
-    margin-bottom: 10px;
-}
-
-.Product-Info {
-    margin-bottom: 10px;
-}
-
-.price {
-    color: #ff0000;
-    font-weight: bold;
-}
-
-.details-button {
+.pagination-link {
     display: inline-block;
-    padding: 5px 10px;
-    background-color: #007bff;
-    color: #fff;
+    width: 40px; 
+    height: 40px; 
+    line-height: 40px; 
+    text-align: center;
+    margin: 0 5px; 
+    border: 1px solid #ddd; 
+    border-radius: 4px; 
     text-decoration: none;
-    border-radius: 3px;
-    transition: background-color 0.3s;
+    color: #333;
+    font-size: 16px;
+    transition: background-color 0.3s, color 0.3s;
 }
 
-.details-button:hover {
-    background-color: #0056b3;
-    color: black;
+.pagination-link:hover {
+    background-color: #f0f0f0; /* Change background on hover */
+    color: #000; /* Change text color on hover */
+}
+
+.pagination-link.active {
+    background-color: #007bff; /* Active page background */
+    color: #fff; /* Active page text color */
+    border-color: #007bff; /* Active page border color */
 }

@@ -226,13 +226,11 @@
 }
 
 .Price-Summary .Prices-Total .Prices-Content .Prices-Value-Final{
-    color: red;
     font-size: 22px;
     font-weight: 400;
     text-align: right;
 }
 .right-content button{
-    background-color: red;
     color: rgb(255, 255, 255);
     padding: 13px 10px;
     text-align: center;

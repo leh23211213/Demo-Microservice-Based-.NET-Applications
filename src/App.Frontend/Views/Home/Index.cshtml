@@ -3,22 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="~/css/Product/Index.css" asp-append-version="true">
+    <link rel="stylesheet" type="text/css" href="~/css/Home/Index.css" asp-append-version="true">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <style>
-        .pagination a {
-            margin: 0 5px;
-            padding: 5px 10px;
-            text-decoration: none;
-            border: 1px solid #ddd;
-        }
-
-        .pagination a.active {
-            background-color: #007bff;
-            color: white;
-            border: 1px solid #007bff;
-        }
-    </style>
 </head>
 
 <div class="page-content">
@@ -47,7 +33,7 @@
                                     <img src="@Url.Content(item.ImageUrl)" />
                                 </div>
                                 <div class="Product-Info">
-                                    <h3>@item.Name</h3>
+                                    <h3 class="Name">@item.Name</h3>
                                     <strong class="price"> @string.Format("{0:c}", @item.Price)</strong>
                                 </div>
                                 <div>
@@ -62,7 +48,7 @@
                     @for (int i = 1; i <= Model.totalPages; i++)
                     {
                         <a asp-controller="Home" asp-action="Index" asp-route-currentPage="@i"
-                            class="@(i == Model.currentPage ? "active" : "")">
+                            class="pagination-link @(i == Model.currentPage ? "active" : "")">
                             @i
                         </a>
                     }
