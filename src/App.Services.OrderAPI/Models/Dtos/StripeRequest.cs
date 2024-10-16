@@ -1,4 +1,4 @@
-namespace App.Services.OrderAPI.Models.Dtos
+namespace App.Services.OrderAPI.Models
 {
     public class StripeRequest
     {

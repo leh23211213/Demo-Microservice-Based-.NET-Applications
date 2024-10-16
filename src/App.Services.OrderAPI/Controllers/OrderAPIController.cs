@@ -2,11 +2,12 @@ using System.Net;
 using App.Services.Bus;
 using App.Services.OrderAPI.Data;
 using App.Services.OrderAPI.Models;
-using App.Services.OrderAPI.Models.Dtos;
 using App.Services.OrderAPI.Services.IServices;
 using App.Services.OrderAPI.Utility;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Stripe;
+using Stripe.Checkout;
 
 namespace App.Services.OrderAPI.Controllers
 {
@@ -15,6 +16,7 @@ namespace App.Services.OrderAPI.Controllers
     [ApiVersion("1.0")]
     public class OrderAPIController : ControllerBase
     {
+        private readonly ILogger<OrderAPIController> _logger;
         protected Response _response;
         private readonly ApplicationDbContext _dbContext;
         private IProductService _productService;
@@ -25,7 +27,8 @@ namespace App.Services.OrderAPI.Controllers
                                     ApplicationDbContext dbContext,
                                     IProductService productService,
                                     IMessageBus messageBus,
-                                    IConfiguration configuration
+                                    IConfiguration configuration,
+                                    ILogger<OrderAPIController> logger
                                     )
         {
             _response = new();
@@ -33,6 +36,7 @@ namespace App.Services.OrderAPI.Controllers
             _productService = productService;
             _messageBus = messageBus;
             _configuration = configuration;
+            _logger = logger;
         }
 
         //[Authorize]
@@ -114,31 +118,66 @@ namespace App.Services.OrderAPI.Controllers
 
         // [Authorize]
         [HttpPost("CreateStripeSession")]
-        public async Task<ActionResult<Response>> CreateStripeSession([FromBody]StripeRequest stripeRequest)
+        public async Task<ActionResult<Response>> CreateStripeSession([FromBody] Models.StripeRequest stripeRequest)
         {
             try
             {
-                var options = new Stripe.Checkout.SessionCreateOptions
+                var options = new SessionCreateOptions
                 {
-                    SuccessUrl = "https://example.com/success",
-                    LineItems = new List<Stripe.Checkout.SessionLineItemOptions>
-    {
-        new Stripe.Checkout.SessionLineItemOptions
-        {
-            Price = "price_1MotwRLkdIwHu7ixYcPLm5uZ",
-            Quantity = 2,
-        },
-    },
+                    SuccessUrl = stripeRequest.ApprovedUrl,
+                    CancelUrl = stripeRequest.CancelUrl,
+                    LineItems = new List<SessionLineItemOptions>(),
                     Mode = "payment",
                 };
-                var service = new Stripe.Checkout.SessionService();
-                service.Create(options);
+
+                var Discount = new List<SessionDiscountOptions>(){
+                    new SessionDiscountOptions(){
+                        Coupon = stripeRequest.OrderHeader.CouponCode,
+                    }
+                };
+
+                foreach (var item in stripeRequest.OrderHeader.OrderDetails)
+                {
+                    var sessionLineItemOptions = new SessionLineItemOptions()
+                    {
+                        PriceData = new SessionLineItemPriceDataOptions()
+                        {
+                            UnitAmount = (long)(item.Price * 1000),
+                            Currency = "VND",
+                            ProductData = new SessionLineItemPriceDataProductDataOptions()
+                            {
+                                Name = item.Product.Name
+                            },
+                        },
+                        Quantity = item.Count,
+                    };
+
+                    options.LineItems.Add(sessionLineItemOptions);
+                }
+
+                if (stripeRequest.OrderHeader.Discount > 0)
+                {
+                    options.Discounts = Discount;
+                }
+
+                var service = new SessionService();
+                Session session = service.Create(options);
+                stripeRequest.StripeSessionUrl = session.Url;
+                OrderHeader orderHeader = _dbContext.OrderHeaders.First(u => u.Id == stripeRequest.OrderHeader.Id);
+                orderHeader.StripeSessionId = session.Id;
+                _dbContext.SaveChanges();
+
+                _response.Result = stripeRequest;
+                _response.IsSuccess = true;
+                _response.StatusCode = HttpStatusCode.OK;
             }
             catch (Exception ex)
             {
                 _response.Message = ex.Message;
                 _response.IsSuccess = false;
                 _response.StatusCode = HttpStatusCode.BadRequest;
+
+                _logger.LogError(ex.Message);
             }
 
             return _response;
@@ -146,10 +185,28 @@ namespace App.Services.OrderAPI.Controllers
 
         //[Authorize]
         [HttpPost("ValidateStripeSession")]
-        public async Task<ActionResult<Response>> ValidateStripeSession([FromBody] Cart cart)
+        public async Task<ActionResult<Response>> ValidateStripeSession([FromBody] int orderHeaderId)
         {
             try
             {
+                OrderHeader orderHeader = _dbContext.OrderHeaders.First(u => u.Id == orderHeaderId);
+
+                var service = new SessionService();
+                Session session = service.Get(orderHeader.StripeSessionId);
+
+                var paymentIntentService = new PaymentIntentService();
+                PaymentIntent paymentIntent = paymentIntentService.Get(session.PaymentIntentId);
+
+                if (paymentIntent.Status == "succeeded")
+                {
+                    orderHeader.PaymentIntentId = paymentIntent.Id;
+                    orderHeader.Status = paymentIntent.Status;
+                    _dbContext.SaveChanges();
+
+                    _response.Result = orderHeader;
+                    _response.IsSuccess = true;
+                    _response.StatusCode = HttpStatusCode.OK;
+                }
 
             }
             catch (Exception ex)
@@ -158,7 +215,6 @@ namespace App.Services.OrderAPI.Controllers
                 _response.IsSuccess = false;
                 _response.StatusCode = HttpStatusCode.BadRequest;
             }
-
             return _response;
         }
 

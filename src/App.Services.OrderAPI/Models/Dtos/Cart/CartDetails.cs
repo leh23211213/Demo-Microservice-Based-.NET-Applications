@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations.Schema;
-
 namespace App.Services.OrderAPI.Models;
 public class CartDetails
 {

@@ -1,0 +1,105 @@
+2024-10-16 16:28:12.197 +07:00 [DBG] Registered model binder providers, in the following order: ["Microsoft.AspNetCore.Mvc.Versioning.ApiVersionModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BinderTypeModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.ServicesModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BodyModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.HeaderModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.FloatingPointTypeModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.EnumTypeModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.DateTimeModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.SimpleTypeModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.TryParseModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.CancellationTokenModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.ByteArrayModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.FormFileModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.FormCollectionModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.KeyValuePairModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.DictionaryModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.ArrayModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.CollectionModelBinderProvider","Microsoft.AspNetCore.Mvc.ModelBinding.Binders.ComplexObjectModelBinderProvider"]
+2024-10-16 16:28:13.023 +07:00 [DBG] An 'IServiceProvider' was created for internal use by Entity Framework.
+2024-10-16 16:28:16.253 +07:00 [DBG] Entity Framework Core 8.0.8 initialized 'ApplicationDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer:8.0.8' with options: None
+2024-10-16 16:28:16.370 +07:00 [DBG] Creating DbConnection.
+2024-10-16 16:28:16.555 +07:00 [DBG] Created DbConnection. (185ms).
+2024-10-16 16:28:16.559 +07:00 [DBG] Opening connection to database 'App_ProductAPI' on server '(LocalDb)\MSSQLLocalDB'.
+2024-10-16 16:28:23.326 +07:00 [DBG] Opened connection to database 'App_ProductAPI' on server '(LocalDb)\MSSQLLocalDB'.
+2024-10-16 16:28:23.330 +07:00 [DBG] Creating DbCommand for 'ExecuteNonQuery'.
+2024-10-16 16:28:23.337 +07:00 [DBG] Created DbCommand for 'ExecuteNonQuery' (4ms).
+2024-10-16 16:28:23.339 +07:00 [DBG] Initialized DbCommand for 'ExecuteNonQuery' (9ms).
+2024-10-16 16:28:23.345 +07:00 [DBG] Executing DbCommand [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2024-10-16 16:28:23.370 +07:00 [INF] Executed DbCommand (24ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT 1
+2024-10-16 16:28:23.372 +07:00 [DBG] Closing connection to database 'App_ProductAPI' on server '(LocalDb)\MSSQLLocalDB'.
+2024-10-16 16:28:23.379 +07:00 [DBG] Closed connection to database 'App_ProductAPI' on server '(LocalDb)\MSSQLLocalDB' (4ms).
+2024-10-16 16:28:23.382 +07:00 [DBG] Creating DbCommand for 'ExecuteScalar'.
+2024-10-16 16:28:23.382 +07:00 [DBG] Created DbCommand for 'ExecuteScalar' (0ms).
+2024-10-16 16:28:23.382 +07:00 [DBG] Initialized DbCommand for 'ExecuteScalar' (0ms).
+2024-10-16 16:28:23.382 +07:00 [DBG] Opening connection to database 'App_ProductAPI' on server '(LocalDb)\MSSQLLocalDB'.
+2024-10-16 16:28:23.383 +07:00 [DBG] Opened connection to database 'App_ProductAPI' on server '(LocalDb)\MSSQLLocalDB'.
+2024-10-16 16:28:23.383 +07:00 [DBG] Executing DbCommand [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2024-10-16 16:28:23.396 +07:00 [INF] Executed DbCommand (13ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+2024-10-16 16:28:23.396 +07:00 [DBG] Closing connection to database 'App_ProductAPI' on server '(LocalDb)\MSSQLLocalDB'.
+2024-10-16 16:28:23.396 +07:00 [DBG] Closed connection to database 'App_ProductAPI' on server '(LocalDb)\MSSQLLocalDB' (0ms).
+2024-10-16 16:28:23.413 +07:00 [DBG] Opening connection to database 'App_ProductAPI' on server '(LocalDb)\MSSQLLocalDB'.
+2024-10-16 16:28:23.413 +07:00 [DBG] Opened connection to database 'App_ProductAPI' on server '(LocalDb)\MSSQLLocalDB'.
+2024-10-16 16:28:23.413 +07:00 [DBG] Creating DbCommand for 'ExecuteReader'.
+2024-10-16 16:28:23.413 +07:00 [DBG] Created DbCommand for 'ExecuteReader' (0ms).
+2024-10-16 16:28:23.413 +07:00 [DBG] Initialized DbCommand for 'ExecuteReader' (0ms).
+2024-10-16 16:28:23.414 +07:00 [DBG] Executing DbCommand [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+2024-10-16 16:28:23.469 +07:00 [INF] Executed DbCommand (55ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+2024-10-16 16:28:23.471 +07:00 [DBG] Closing data reader to 'App_ProductAPI' on server '(LocalDb)\MSSQLLocalDB'.
+2024-10-16 16:28:23.472 +07:00 [DBG] A data reader for 'App_ProductAPI' on server '(LocalDb)\MSSQLLocalDB' is being disposed after spending 2ms reading results.
+2024-10-16 16:28:23.472 +07:00 [DBG] Closing connection to database 'App_ProductAPI' on server '(LocalDb)\MSSQLLocalDB'.
+2024-10-16 16:28:23.472 +07:00 [DBG] Closed connection to database 'App_ProductAPI' on server '(LocalDb)\MSSQLLocalDB' (0ms).
+2024-10-16 16:28:23.474 +07:00 [DBG] 'ApplicationDbContext' disposed.
+2024-10-16 16:28:23.476 +07:00 [DBG] Disposing connection to database 'App_ProductAPI' on server '(LocalDb)\MSSQLLocalDB'.
+2024-10-16 16:28:23.477 +07:00 [DBG] Disposed connection to database '' on server '' (0ms).
+2024-10-16 16:28:23.479 +07:00 [DBG] Hosting starting
+2024-10-16 16:28:23.656 +07:00 [INF] Now listening on: https://localhost:7002
+2024-10-16 16:28:23.657 +07:00 [INF] Now listening on: http://localhost:5139
+2024-10-16 16:28:23.657 +07:00 [DBG] Loaded hosting startup assembly App.Services.ProductAPI
+2024-10-16 16:28:23.657 +07:00 [DBG] Loaded hosting startup assembly Microsoft.WebTools.ApiEndpointDiscovery
+2024-10-16 16:28:23.657 +07:00 [DBG] Loaded hosting startup assembly Microsoft.AspNetCore.Watch.BrowserRefresh
+2024-10-16 16:28:23.657 +07:00 [DBG] Loaded hosting startup assembly Microsoft.WebTools.BrowserLink.Net
+2024-10-16 16:28:23.700 +07:00 [DBG] Connection id "0HN7DOJGSCA7C" accepted.
+2024-10-16 16:28:23.701 +07:00 [DBG] Connection id "0HN7DOJGSCA7C" started.
+2024-10-16 16:28:23.737 +07:00 [DBG] Connection id "0HN7DOJGSCA7C" received FIN.
+2024-10-16 16:28:23.743 +07:00 [DBG] Failed to authenticate HTTPS connection.
+System.IO.IOException: Received an unexpected EOF or 0 bytes from the transport stream.
+   at System.Net.Security.SslStream.ReceiveHandshakeFrameAsync[TIOAdapter](CancellationToken cancellationToken)
+   at System.Net.Security.SslStream.ForceAuthenticationAsync[TIOAdapter](Boolean receiveFirst, Byte[] reAuthenticationData, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Https.Internal.HttpsConnectionMiddleware.OnConnectionAsync(ConnectionContext context)
+2024-10-16 16:28:23.754 +07:00 [INF] Application started. Press Ctrl+C to shut down.
+2024-10-16 16:28:23.775 +07:00 [INF] Hosting environment: Development
+2024-10-16 16:28:23.775 +07:00 [INF] Content root path: E:\IT\VSCode\Github\Demo-Microservice-Based-.NET-Applications\src\App.Services.ProductAPI
+2024-10-16 16:28:23.775 +07:00 [DBG] Hosting started
+2024-10-16 16:28:23.778 +07:00 [DBG] Connection id "0HN7DOJGSCA7C" stopped.
+2024-10-16 16:28:23.781 +07:00 [DBG] Connection id "0HN7DOJGSCA7C" sending FIN because: "The Socket transport's send loop completed gracefully."
+2024-10-16 16:28:24.349 +07:00 [DBG] Connection id "0HN7DOJGSCA7D" accepted.
+2024-10-16 16:28:24.349 +07:00 [DBG] Connection id "0HN7DOJGSCA7D" started.
+2024-10-16 16:28:24.472 +07:00 [DBG] Connection 0HN7DOJGSCA7D established using the following protocol: "Tls13"
+2024-10-16 16:28:24.607 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7002/swagger/index.html - null null
+2024-10-16 16:28:25.759 +07:00 [DBG] Wildcard detected, all requests with hosts will be allowed.
+2024-10-16 16:28:25.779 +07:00 [DBG] No candidates found for the request path '/swagger/index.html'
+2024-10-16 16:28:25.780 +07:00 [DBG] Request did not match any endpoints
+2024-10-16 16:28:26.043 +07:00 [DBG] Response markup is scheduled to include Browser Link script injection.
+2024-10-16 16:28:26.045 +07:00 [DBG] Response markup is scheduled to include browser refresh script injection.
+2024-10-16 16:28:26.080 +07:00 [DBG] Response markup was updated to include Browser Link script injection.
+2024-10-16 16:28:26.082 +07:00 [DBG] Response markup was updated to include browser refresh script injection.
+2024-10-16 16:28:26.085 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7002/swagger/index.html - 200 null text/html;charset=utf-8 1514.1903ms
+2024-10-16 16:28:26.775 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7002/swagger/index.js - null null
+2024-10-16 16:28:26.775 +07:00 [DBG] No candidates found for the request path '/swagger/index.js'
+2024-10-16 16:28:26.775 +07:00 [DBG] Request did not match any endpoints
+2024-10-16 16:28:26.777 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7002/swagger/index.js - 200 null application/javascript;charset=utf-8 2.2429ms
+2024-10-16 16:28:27.404 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7002/_framework/aspnetcore-browser-refresh.js - null null
+2024-10-16 16:28:27.408 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7002/_vs/browserLink - null null
+2024-10-16 16:28:27.414 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7002/_framework/aspnetcore-browser-refresh.js - 200 13782 application/javascript; charset=utf-8 9.6658ms
+2024-10-16 16:28:27.446 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7002/_vs/browserLink - 200 null text/javascript; charset=UTF-8 37.938ms
+2024-10-16 16:28:28.467 +07:00 [DBG] Connection id "0HN7DOJGSCA7D" received FIN.
+2024-10-16 16:28:28.501 +07:00 [DBG] Connection id "0HN7DOJGSCA7D" is closed. The last processed stream ID was 7.
+2024-10-16 16:28:28.501 +07:00 [DBG] Connection id "0HN7DOJGSCA7D" sending FIN because: "The Socket transport's send loop completed gracefully."
+2024-10-16 16:28:28.511 +07:00 [DBG] The connection queue processing loop for 0HN7DOJGSCA7D completed.
+2024-10-16 16:28:28.512 +07:00 [DBG] Connection id "0HN7DOJGSCA7D" stopped.
+2024-10-16 16:28:30.930 +07:00 [DBG] Connection id "0HN7DOJGSCA7E" accepted.
+2024-10-16 16:28:30.931 +07:00 [DBG] Connection id "0HN7DOJGSCA7E" started.
+2024-10-16 16:28:30.937 +07:00 [DBG] Connection 0HN7DOJGSCA7E established using the following protocol: "Tls13"
+2024-10-16 16:28:30.938 +07:00 [INF] Request starting HTTP/2 GET https://localhost:7002/swagger/v1/swagger.json - null null
+2024-10-16 16:28:30.938 +07:00 [DBG] No candidates found for the request path '/swagger/v1/swagger.json'
+2024-10-16 16:28:30.938 +07:00 [DBG] Request did not match any endpoints
+2024-10-16 16:28:31.065 +07:00 [INF] Request finished HTTP/2 GET https://localhost:7002/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 126.7402ms
+2024-10-16 16:28:33.472 +07:00 [DBG] Connection id "0HN7DOJGSCA7E" received FIN.
+2024-10-16 16:28:33.472 +07:00 [DBG] Connection id "0HN7DOJGSCA7E" is closed. The last processed stream ID was 1.
+2024-10-16 16:28:33.472 +07:00 [DBG] Connection id "0HN7DOJGSCA7E" sending FIN because: "The Socket transport's send loop completed gracefully."
+2024-10-16 16:28:33.472 +07:00 [DBG] The connection queue processing loop for 0HN7DOJGSCA7E completed.
+2024-10-16 16:28:33.473 +07:00 [DBG] Connection id "0HN7DOJGSCA7E" stopped.
