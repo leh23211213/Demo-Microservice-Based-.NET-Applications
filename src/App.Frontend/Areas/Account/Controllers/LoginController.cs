@@ -27,9 +27,9 @@ namespace App.Frontend.Areas.Account.Controllers
 
         // 20 minutes = 1200;
         [ResponseCache(Duration = 1200, Location = ResponseCacheLocation.None, NoStore = true)]
-        public async Task<ActionResult> Error(ErrorModel errorModel)
+        public async Task<ActionResult> Error(AccountErrorModel errorModel)
         {
-            return View(new ErrorModel
+            return View(new AccountErrorModel
             {
                 RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
                 Message = errorModel.Message.ToString()
@@ -48,18 +48,25 @@ namespace App.Frontend.Areas.Account.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginRequest model)
         {
-            _tokenProvider.ClearToken();
+            // Clear token before login
+            var webToken = _tokenProvider.GetToken();
+            if (webToken != null)
+            {
+                _tokenProvider.ClearToken();
+            }
+
             Response response = await _authService.LoginAsync(model);
+
             if (response.IsSuccess && response != null)
             {
-                var token = JsonConvert.DeserializeObject<dynamic>(Convert.ToString(response.Result));
+                var token = JsonConvert.DeserializeObject<Token>(Convert.ToString(response.Result));
                 if (token != null)
                 {
                     await SignInUser(token);
                     _tokenProvider.SetToken(token);
                     return RedirectToAction("Index", "Home");
                 }
-                return RedirectToAction("Error", new ErrorModel { Message = "Token Bug" });
+                return RedirectToAction("Error", new AccountErrorModel { Message = "Token Bug" });
             }
             else
             {
@@ -94,7 +101,7 @@ namespace App.Frontend.Areas.Account.Controllers
             identity.AddClaim(new Claim(ClaimTypes.Role,
                 jwt.Claims.FirstOrDefault(u => u.Type == "role").Value));
 
-            //
+            // for render information
             identity.AddClaim(new Claim(ClaimTypes.Name,
             jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Email).Value));
 
