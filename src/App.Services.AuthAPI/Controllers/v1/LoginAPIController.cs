@@ -1,6 +1,7 @@
 using System.Net;
 using App.Services.AuthAPI.Models;
 using App.Services.AuthAPI.Services.IServices;
+using App.Services.Bus;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.Services.AuthAPI.Controllers.v2
@@ -10,13 +11,21 @@ namespace App.Services.AuthAPI.Controllers.v2
     [ApiVersionNeutral]
     public class LoginAPIController : ControllerBase
     {
+        private readonly IConfiguration _configuration;
+        private readonly IMessageBus _messageBus;
         private readonly IAuthAPIService _authAPIService;
         protected Response _response;
 
-        public LoginAPIController(IAuthAPIService authAPIService)
+        public LoginAPIController(
+                                IAuthAPIService authAPIService,
+                                   IMessageBus messageBus,
+                                    IConfiguration configuration
+                                )
         {
             _authAPIService = authAPIService;
-            _response = new Response();
+            _response = new();
+            _messageBus = messageBus;
+            _configuration = configuration;
         }
 
         [HttpPost("login")]

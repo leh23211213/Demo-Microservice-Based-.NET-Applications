@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,7 +48,7 @@ builder.Services.AddSwaggerGen(option =>
     option.SwaggerDoc("v1", new OpenApiInfo
     {
         Version = "v1.0",
-        Title = "App.Services.ProductAPI",
+        Title = "App.Services.OrderAPI",
     });
 });
 
@@ -60,14 +61,14 @@ app.UseSwaggerUI(options =>
     {
         app.UseSwaggerUI(options =>
         {
-            options.SwaggerEndpoint("/swagger/v1/swagger.json", "App.Services.ProductAPI V1");
+            options.SwaggerEndpoint("/swagger/v1/swagger.json", "App.Services.OrderAPI V1");
         });
     }
     else
     {
         app.UseSwaggerUI(options =>
         {
-            options.SwaggerEndpoint("/swagger/v1/swagger.json", "App.Services.ProductAPI V1");
+            options.SwaggerEndpoint("/swagger/v1/swagger.json", "App.Services.OrderAPI V1");
             options.RoutePrefix = string.Empty;
         });
     }
@@ -78,6 +79,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 ApplyMigration();
+StripeConfiguration.ApiKey = builder.Configuration.GetConnectionString("DefaultConnection");
+
 app.Run();
 
 void ApplyMigration()

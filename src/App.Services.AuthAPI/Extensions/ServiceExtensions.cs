@@ -2,6 +2,7 @@ using App.Services.AuthAPI.Data;
 using App.Services.AuthAPI.Models;
 using App.Services.AuthAPI.Services;
 using App.Services.AuthAPI.Services.IServices;
+using App.Services.Bus;
 using Microsoft.AspNetCore.Identity;
 
 namespace App.Services.AuthAPI.Extensions
@@ -16,6 +17,7 @@ namespace App.Services.AuthAPI.Extensions
             services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>()
                    .AddDefaultTokenProviders();
             services.AddScoped<IAuthAPIService, AuthAPIService>();
+            services.AddScoped<IMessageBus, MessageBus>();
             // *************
             services.AddControllers();
             services.AddEndpointsApiExplorer();

@@ -1,0 +1,271 @@
+// TODO : 
+
+tách app service write và app service read ra thành 2 bên ? ví dụ trong product service ? hoặc khác 
+ChatGPT said:
+ChatGPT
+Tách App Service Write và App Service Read thành hai phần riêng biệt là một cách tiếp cận tốt trong các kiến trúc CQRS (Command Query Responsibility Segregation). Trong mô hình này, chúng ta tách riêng các lệnh ghi dữ liệu (Write) khỏi các yêu cầu đọc dữ liệu (Read), giúp tối ưu hóa việc quản lý dữ liệu và cho phép hai bên hoạt động độc lập với nhau.
+
+Dưới đây là ví dụ về cách thực hiện việc tách App Service Write và App Service Read trong một Product Service của dự án .NET Core:
+
+1. Cấu trúc thư mục
+Ta có thể chia dự án ra như sau:
+
+markdown
+Copy code
+- Services
+    - Product
+        - Commands  (Write)
+            - CreateProductCommand.cs
+            - UpdateProductCommand.cs
+            - DeleteProductCommand.cs
+        - Queries  (Read)
+            - GetProductByIdQuery.cs
+            - GetAllProductsQuery.cs
+        - Handlers
+            - CreateProductCommandHandler.cs
+            - UpdateProductCommandHandler.cs
+            - DeleteProductCommandHandler.cs
+            - GetProductByIdQueryHandler.cs
+            - GetAllProductsQueryHandler.cs
+        - Controllers
+            - ProductsController.cs
+2. Mô hình C# cho Product
+csharp
+Copy code
+public class Product
+{
+    public Guid Id { get; set; }
+    public string Name { get; set; }
+    public decimal Price { get; set; }
+    public int Stock { get; set; }
+}
+3. Commands - Các lệnh Write
+3.1. CreateProductCommand.cs
+csharp
+Copy code
+public class CreateProductCommand
+{
+    public string Name { get; set; }
+    public decimal Price { get; set; }
+    public int Stock { get; set; }
+}
+3.2. UpdateProductCommand.cs
+csharp
+Copy code
+public class UpdateProductCommand
+{
+    public Guid Id { get; set; }
+    public string Name { get; set; }
+    public decimal Price { get; set; }
+    public int Stock { get; set; }
+}
+3.3. DeleteProductCommand.cs
+csharp
+Copy code
+public class DeleteProductCommand
+{
+    public Guid Id { get; set; }
+}
+4. Queries - Các lệnh Read
+4.1. GetProductByIdQuery.cs
+csharp
+Copy code
+public class GetProductByIdQuery
+{
+    public Guid Id { get; set; }
+
+    public GetProductByIdQuery(Guid id)
+    {
+        Id = id;
+    }
+}
+4.2. GetAllProductsQuery.cs
+csharp
+Copy code
+public class GetAllProductsQuery { }
+5. Handlers - Xử lý các lệnh
+5.1. CreateProductCommandHandler.cs
+csharp
+Copy code
+public class CreateProductCommandHandler
+{
+    private readonly IProductRepository _repository;
+
+    public CreateProductCommandHandler(IProductRepository repository)
+    {
+        _repository = repository;
+    }
+
+    public async Task Handle(CreateProductCommand command)
+    {
+        var product = new Product
+        {
+            Id = Guid.NewGuid(),
+            Name = command.Name,
+            Price = command.Price,
+            Stock = command.Stock
+        };
+
+        await _repository.AddProductAsync(product);
+    }
+}
+5.2. UpdateProductCommandHandler.cs
+csharp
+Copy code
+public class UpdateProductCommandHandler
+{
+    private readonly IProductRepository _repository;
+
+    public UpdateProductCommandHandler(IProductRepository repository)
+    {
+        _repository = repository;
+    }
+
+    public async Task Handle(UpdateProductCommand command)
+    {
+        var product = await _repository.GetProductByIdAsync(command.Id);
+        if (product == null) throw new Exception("Product not found");
+
+        product.Name = command.Name;
+        product.Price = command.Price;
+        product.Stock = command.Stock;
+
+        await _repository.UpdateProductAsync(product);
+    }
+}
+5.3. DeleteProductCommandHandler.cs
+csharp
+Copy code
+public class DeleteProductCommandHandler
+{
+    private readonly IProductRepository _repository;
+
+    public DeleteProductCommandHandler(IProductRepository repository)
+    {
+        _repository = repository;
+    }
+
+    public async Task Handle(DeleteProductCommand command)
+    {
+        var product = await _repository.GetProductByIdAsync(command.Id);
+        if (product == null) throw new Exception("Product not found");
+
+        await _repository.DeleteProductAsync(product);
+    }
+}
+5.4. GetProductByIdQueryHandler.cs
+csharp
+Copy code
+public class GetProductByIdQueryHandler
+{
+    private readonly IProductRepository _repository;
+
+    public GetProductByIdQueryHandler(IProductRepository repository)
+    {
+        _repository = repository;
+    }
+
+    public async Task<Product> Handle(GetProductByIdQuery query)
+    {
+        return await _repository.GetProductByIdAsync(query.Id);
+    }
+}
+5.5. GetAllProductsQueryHandler.cs
+csharp
+Copy code
+public class GetAllProductsQueryHandler
+{
+    private readonly IProductRepository _repository;
+
+    public GetAllProductsQueryHandler(IProductRepository repository)
+    {
+        _repository = repository;
+    }
+
+    public async Task<IEnumerable<Product>> Handle(GetAllProductsQuery query)
+    {
+        return await _repository.GetAllProductsAsync();
+    }
+}
+6. ProductsController - API Controller
+csharp
+Copy code
+[ApiController]
+[Route("api/[controller]")]
+public class ProductsController : ControllerBase
+{
+    private readonly CreateProductCommandHandler _createHandler;
+    private readonly UpdateProductCommandHandler _updateHandler;
+    private readonly DeleteProductCommandHandler _deleteHandler;
+    private readonly GetProductByIdQueryHandler _getByIdHandler;
+    private readonly GetAllProductsQueryHandler _getAllHandler;
+
+    public ProductsController(
+        CreateProductCommandHandler createHandler,
+        UpdateProductCommandHandler updateHandler,
+        DeleteProductCommandHandler deleteHandler,
+        GetProductByIdQueryHandler getByIdHandler,
+        GetAllProductsQueryHandler getAllHandler)
+    {
+        _createHandler = createHandler;
+        _updateHandler = updateHandler;
+        _deleteHandler = deleteHandler;
+        _getByIdHandler = getByIdHandler;
+        _getAllHandler = getAllHandler;
+    }
+
+    // Read API (Query)
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(Guid id)
+    {
+        var product = await _getByIdHandler.Handle(new GetProductByIdQuery(id));
+        if (product == null) return NotFound();
+        return Ok(product);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+        var products = await _getAllHandler.Handle(new GetAllProductsQuery());
+        return Ok(products);
+    }
+
+    // Write API (Command)
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] CreateProductCommand command)
+    {
+        await _createHandler.Handle(command);
+        return CreatedAtAction(nameof(GetById), new { id = command.Id }, command);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateProductCommand command)
+    {
+        if (id != command.Id) return BadRequest("Product ID mismatch");
+        await _updateHandler.Handle(command);
+        return NoContent();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        await _deleteHandler.Handle(new DeleteProductCommand { Id = id });
+        return NoContent();
+    }
+}
+7. Repository Layer (IProductRepository)
+csharp
+Copy code
+public interface IProductRepository
+{
+    Task<Product> GetProductByIdAsync(Guid id);
+    Task<IEnumerable<Product>> GetAllProductsAsync();
+    Task AddProductAsync(Product product);
+    Task UpdateProductAsync(Product product);
+    Task DeleteProductAsync(Product product);
+}
+8. Tổng kết
+App Service Write (Commands) và App Service Read (Queries) được tách riêng giúp dễ quản lý, mở rộng và bảo trì.
+Handlers chịu trách nhiệm xử lý logic cho từng command và query.
+Controller điều phối các thao tác gọi lệnh đọc và ghi dựa trên API.
+Mô hình này tuân theo nguyên tắc CQRS và rất hữu ích khi bạn muốn mở rộng khả năng xử lý của hệ thống với các yêu cầu phức tạp hơn như xử lý song song, lưu trữ sự kiện (event sourcing), hoặc tối ưu hóa hiệu suất.

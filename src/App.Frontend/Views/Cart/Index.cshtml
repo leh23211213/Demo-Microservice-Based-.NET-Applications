@@ -88,9 +88,8 @@
                                         @item.Product.Price <sup>đ</sup>
                                     </div>
                                     <div class="Item-Action">
-                                        <a asp-action="Delete" method="post" asp-route-cartDetailsId="@item.Id">
-                                            @* @Html.AntiForgeryToken() *@
-                                            <input type="hidden" name="id" value="item.Id" />
+                                        <a asp-action="Delete" asp-route-cartDetailsId="@item.Id">
+                                            @* @Html.AntiForgeryToken() *@  
                                             <img src="https://frontend.tikicdn.com/_desktop-next/static/img/icons/trash.svg"
                                                 alt="deleted" class="delete-button" style="cursor: pointer;">
                                         </a>
@@ -218,29 +217,37 @@ else
                         <div class="Price-Summary">
                             <ul class="Price-Items">
                                 <li class="Price-Item">
-                                    <div class="Prices-Text">temporary price</div>
-                                    <div class="Prices-Value"> <strong class="price"> @string.Format("{0:c}", 0)</strong>
-                                    </div>
+                                    <div class="Prices-Text">Temporary Price</div>
+                                    <div class="Prices-Value"> @((0).ToString("c")) </div>
                                 </li>
                                 <li class="Price-Item">
-                                    <div class="Prices-Text">discount</div>
-                                    <div class="Prices-Value"> <strong class="price"> @string.Format("{0:c}", 0) </div>
+                                    <div class="Prices-Text">Discount</div>
+                                    <div class="Prices-Value"> @((0).ToString("c")) </div>
+                                </li>
+                                <li class="Price-Item">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <span>Coupon:</span>
+                                            <input asp-for="CartHeader.CouponCode" disabled />
+                                            <button type="#" class="btn btn-primary btn-lg" disabled> Apply
+                                            </button>
+                                        </div>
+
+                                    </div>
                                 </li>
                             </ul>
                             <i></i>
                             <div class="Prices-Total">
                                 <span class="Prices-Text">Total</span>
                                 <div class="Prices-Content">
-                                    <span class="Prices-Value-Final"> <strong class="price"> @string.Format("{0:c}", 0)
+                                    <span class="Prices-Value-Final"> @string.Format("{0:c}", 0)
                                     </span>
                                 </div>
                             </div>
                         </div>
-                        <form asp-area="Customer" asp-action="Buy" asp-controller="Order" method="post">
-                            @Html.AntiForgeryToken()
-                            <input type="hidden" name="UserId" />
-                            <button type="submit" class="button">BUY</button>
-                        </form>
+                        <a asp-action="#">
+                            <button type="submit" class="btn btn-primary btn-lg" disabled>Checkout</button>
+                        </a>
                     </div>
                 </div>
             </div>
