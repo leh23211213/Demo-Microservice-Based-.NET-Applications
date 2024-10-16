@@ -39,10 +39,14 @@ namespace App.Frontend.Areas.Account.Controllers
             Response response = await _authService.LoginAsync(model);
             if (response.IsSuccess && response != null)
             {
-                var token = JsonConvert.DeserializeObject<Token>(Convert.ToString(response.Result));
+                var token = JsonConvert.DeserializeObject<dynamic>(Convert.ToString(response.Result));
+                if(token != null){
+
                 await SignInUser(token);
                 _tokenProvider.SetToken(token);
                 return RedirectToAction("Index", "Home");
+                }
+                 return RedirectToAction("Error", "Home");
             }
             else
             {

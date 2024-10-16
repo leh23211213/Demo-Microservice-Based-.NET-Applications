@@ -4,7 +4,7 @@ using App.Services.AuthAPI.Services.IServices;
 using App.Services.Bus;
 using Microsoft.AspNetCore.Mvc;
 
-namespace App.Services.AuthAPI.Controllers.v1
+namespace App.Services.AuthAPI.Controllers
 {
     [Route("api/v{version:apiVersion}/auth")]
     [ApiController]
