@@ -35,4 +35,8 @@
     </ContainerEnvironmentVariable>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\App.Services.Bus\App.Services.Bus.csproj" />
+  </ItemGroup>
+
 </Project>

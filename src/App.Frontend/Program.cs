@@ -30,22 +30,35 @@ builder.Services.AddScoped<ITokenProvider, TokenProvider>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICartService, CartService>();
 
+/*
+Cookie Authentication: Used to manage user authentication. 
+It stores the user's authentication ticket (e.g., login status) in a cookie.
+ This allows the server to know if a user is authenticated on subsequent requests.
+*/
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
         options.Cookie.HttpOnly = true;
-        options.ExpireTimeSpan = TimeSpan.FromHours(10);
+        options.ExpireTimeSpan = TimeSpan.FromHours(1); // the expiration time for the authentication cookie
         options.LoginPath = "/Account/Login";
         options.AccessDeniedPath = "/Account/AccessDenied";
         options.SlidingExpiration = true;
     });
 
-// builder.Services.AddSession(options =>
-// {
-//     options.IdleTimeout = TimeSpan.FromMinutes(100);
-//     options.Cookie.HttpOnly = true;
-//     options.Cookie.IsEssential = true;
-// });
+/*
+Session: Used to store user-specific data on the server (such as shopping cart information, preferences, etc.).
+ The session can be used to store non-authentication-related information temporarily and is tied to the user’s session ID.
+ This handles storing session-specific data (like cart items or temporary form data) and sets an idle
+*/
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromHours(1);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+
 
 var app = builder.Build();
 

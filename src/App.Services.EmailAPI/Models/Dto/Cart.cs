@@ -1,4 +1,5 @@
-namespace App.Services.ShoppingCartAPI.Models;
+
+namespace App.Services.EmailAPI.Models;
 public class Cart
 {
     public CartHeader CartHeader { get; set; } = null!;
