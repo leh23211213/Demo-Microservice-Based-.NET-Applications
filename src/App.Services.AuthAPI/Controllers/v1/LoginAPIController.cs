@@ -4,7 +4,7 @@ using App.Services.AuthAPI.Services.IServices;
 using App.Services.Bus;
 using Microsoft.AspNetCore.Mvc;
 
-namespace App.Services.AuthAPI.Controllers.v2
+namespace App.Services.AuthAPI.Controllers
 {
     [Route("api/v{version:apiVersion}/auth")]
     [ApiController]
@@ -28,7 +28,7 @@ namespace App.Services.AuthAPI.Controllers.v2
             _configuration = configuration;
         }
 
-        [HttpPost("login")]
+        [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest model)
         {
             var token = await _authAPIService.Login(model);

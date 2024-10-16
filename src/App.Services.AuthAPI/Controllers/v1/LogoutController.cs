@@ -20,7 +20,7 @@ namespace App.Services.AuthAPI.Controllers.v1
         }
 
 
-        [HttpPost("revoke")]
+        [HttpPost("Revoke")]
         public async Task<IActionResult> RevokeRefreshToken([FromBody] Token token)
         {
 
