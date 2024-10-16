@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using App.Frontend.Areas.Account.Models;
@@ -24,6 +25,17 @@ namespace App.Frontend.Areas.Account.Controllers
             _tokenProvider = tokenProvider;
         }
 
+        // 20 minutes = 1200;
+        [ResponseCache(Duration = 1200, Location = ResponseCacheLocation.None, NoStore = true)]
+        public async Task<ActionResult> Error(ErrorModel errorModel)
+        {
+            return View(new ErrorModel
+            {
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+                Message = errorModel.Message.ToString()
+            });
+        }
+
         [HttpGet]
         public async Task<ActionResult> Login()
         {
@@ -36,17 +48,18 @@ namespace App.Frontend.Areas.Account.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginRequest model)
         {
+            _tokenProvider.ClearToken();
             Response response = await _authService.LoginAsync(model);
             if (response.IsSuccess && response != null)
             {
                 var token = JsonConvert.DeserializeObject<dynamic>(Convert.ToString(response.Result));
-                if(token != null){
-
-                await SignInUser(token);
-                _tokenProvider.SetToken(token);
-                return RedirectToAction("Index", "Home");
+                if (token != null)
+                {
+                    await SignInUser(token);
+                    _tokenProvider.SetToken(token);
+                    return RedirectToAction("Index", "Home");
                 }
-                 return RedirectToAction("Error", "Home");
+                return RedirectToAction("Error", new ErrorModel { Message = "Token Bug" });
             }
             else
             {
