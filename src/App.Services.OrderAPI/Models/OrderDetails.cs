@@ -7,5 +7,5 @@ public class OrderDetail
     public decimal Price { get; set; }
     public string? ProductName { get; set; }
     public string? ProductId { get; set; }
-    public Product? product { get; set; }
+    public Product? Product { get; set; }
 }

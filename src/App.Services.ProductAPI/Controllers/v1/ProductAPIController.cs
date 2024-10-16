@@ -13,20 +13,24 @@ namespace App.Services.ProductAPI.Controllers.v1
     [ApiVersion("1.0")]
     public class ProductAPIController : Controller
     {
+        private readonly ILogger<ProductAPIController> _logger;
         private Response _response;
         private readonly ApplicationDbContext _dbContext;
 
         public ProductAPIController(
-                                    ApplicationDbContext dbContext
+                                    ApplicationDbContext dbContext,
+                                    ILogger<ProductAPIController> logger
                                     )
         {
             _response = new Response();
             _dbContext = dbContext;
+            _logger = logger;
         }
 
         [HttpGet]
         public async Task<ActionResult<Response>> Get()
         {
+            _logger.LogInformation("orther service call");
             try
             {
                 IEnumerable<Product> products = await _dbContext.Products
@@ -44,6 +48,7 @@ namespace App.Services.ProductAPI.Controllers.v1
                 _response.IsSuccess = false;
                 _response.Message = ex.Message;
                 _response.StatusCode = HttpStatusCode.NotFound;
+                _logger.LogError(ex.Message);
             }
             return _response;
         }
