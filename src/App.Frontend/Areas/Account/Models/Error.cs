@@ -1,6 +1,6 @@
-namespace App.Frontend.Models
+namespace App.Frontend.Areas.Account.Models
 {
-    public class ErrorViewModel
+    public class ErrorModel
     {
         public string? RequestId { get; set; }
 
