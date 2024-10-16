@@ -1,10 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Net;
 
 namespace App.Services.OrderAPI.Models;
-[NotMapped]
 public class Response
 {
-    public object? Result { get; set; } = null!;
+    public HttpStatusCode StatusCode { get; set; }
+    public object? Result { get; set; } = "";
     public bool IsSuccess { get; set; } = true;
     public string Message { get; set; } = "";
 }

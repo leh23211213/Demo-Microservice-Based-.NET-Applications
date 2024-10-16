@@ -9,11 +9,13 @@ namespace App.Frontend.Controllers
 {
     public class CartController : Controller
     {
+        private readonly IOrderService _orderService;
         private readonly ICartService _cartService;
 
-        public CartController(ICartService cartService)
+        public CartController(ICartService cartService, IOrderService orderService)
         {
             _cartService = cartService;
+            _orderService = orderService;
         }
 
         public async Task<IActionResult> Index()
@@ -31,6 +33,16 @@ namespace App.Frontend.Controllers
         public async Task<IActionResult> CheckoutAsync(Cart cart)
         {
             return View(await LoadCart());
+        }
+
+        public async Task<IActionResult> Confirmation(int orderId)
+        {
+            Response response = await _orderService.ValidateStripeSession(orderId);
+            if (response.IsSuccess && response != null)
+            {
+                return View(orderId);
+            }
+            return View(orderId);
         }
 
         public async Task<IActionResult> Delete(string cartDetailsId)
@@ -52,7 +64,7 @@ namespace App.Frontend.Controllers
         {
             var userId = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
             Response? response = await _cartService.GetAsync(userId);
-            if (response != null & response.IsSuccess)
+            if (response != null && response.IsSuccess)
             {
                 Cart cart = JsonConvert.DeserializeObject<Cart>(Convert.ToString(response.Result));
                 return cart;
