@@ -3,15 +3,15 @@ public class Order
 {
     public int OrderId { get; set; }
 
-    public string CustomerName { get; set; } = null!;
+    public string? CustomerName { get; set; }
 
-    public string? Address { get; set; } = null!;
+    public string? Address { get; set; }
 
-    public string? City { get; set; } = null!;
+    public string? City { get; set; }
 
-    public string? Country { get; set; } = null!;
+    public string? Country { get; set; }
 
-    public double TotalPrice { get; set; } = 0;
+    public double TotalPrice { get; set; }
     public DateTime OrderDate { get; set; }
-    public List<OrderDetails> OrderDetails { get; set; } = null!;
+    public List<OrderDetails>? OrderDetails { get; set; }
 }
