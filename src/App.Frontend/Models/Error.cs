@@ -1,4 +1,4 @@
-namespace App.Frontend.Areas.Account.Models
+namespace App.Frontend.Models
 {
     public class ErrorModel
     {

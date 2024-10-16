@@ -9,7 +9,7 @@ namespace App.Services.ProductAPI.Models
 
         [JsonPropertyName("result")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-        public object? Result { get; set; } = "";
+        public object? Result { get; set; }
 
         public bool IsSuccess { get; set; } = true;
 

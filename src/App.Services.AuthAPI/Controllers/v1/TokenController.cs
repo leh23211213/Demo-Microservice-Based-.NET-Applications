@@ -20,7 +20,7 @@ namespace App.Services.AuthAPI.Controllers
             _authAPIService = authAPIService;
         }
 
-        [HttpPost("refresh")]
+        [HttpPost("Refresh")]
         public async Task<IActionResult> GetNewTokenFromRefreshToken([FromBody] Token token)
         {
             if (ModelState.IsValid)

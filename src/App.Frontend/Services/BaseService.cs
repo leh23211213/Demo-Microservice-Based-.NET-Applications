@@ -148,7 +148,7 @@ namespace App.Frontend.Services
         {
             HttpRequestMessage message = new();
             message.Headers.Add("Accept", "application/json");
-            message.RequestUri = new Uri($"{_url}/api/{StaticDetail.CurrentAPIVersion}/auth/refresh");
+            message.RequestUri = new Uri($"{_url}/api/{StaticDetail.CurrentAPIVersion}/auth/Refresh");
             message.Method = HttpMethod.Post;
             message.Content = new StringContent(JsonConvert.SerializeObject(new Token()
             {
@@ -184,10 +184,21 @@ namespace App.Frontend.Services
         {
             var handler = new JwtSecurityTokenHandler();
             var jwt = handler.ReadJwtToken(token.AccessToken);
-
             var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
-            identity.AddClaim(new Claim(ClaimTypes.Name, jwt.Claims.FirstOrDefault(u => u.Type == "email").Value));
-            identity.AddClaim(new Claim(ClaimTypes.Role, jwt.Claims.FirstOrDefault(u => u.Type == "role").Value));
+
+            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Email,
+                jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Email).Value));
+            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Sub,
+                jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Sub).Value));
+            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Name,
+                jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Name).Value));
+            identity.AddClaim(new Claim(ClaimTypes.Role,
+                jwt.Claims.FirstOrDefault(u => u.Type == "role").Value));
+
+            // for render information
+            identity.AddClaim(new Claim(ClaimTypes.Name,
+            jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Email).Value));
+
             var principal = new ClaimsPrincipal(identity);
             await _httpContextAccessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 

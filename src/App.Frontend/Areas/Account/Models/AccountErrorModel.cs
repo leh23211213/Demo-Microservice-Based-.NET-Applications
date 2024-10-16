@@ -1,9 +1,8 @@
-namespace App.Frontend.Models
+namespace App.Frontend.Areas.Account.Models
 {
-    public class ErrorViewModel
+    public class AccountErrorModel
     {
         public string? RequestId { get; set; }
-
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
         public string Message { get; set; } = string.Empty;
     }
