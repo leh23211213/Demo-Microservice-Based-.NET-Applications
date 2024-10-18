@@ -1,19 +1,20 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy ASP.Net Core app to Azure Web App - 409149productapi
+name: Build and deploy ASP.Net Core app to Azure Web App - 409159cartapi
 
 on:
   push:
     branches:
       - main
-  
+
 env:
-  AZURE_WEBAPP_NAME: 409149productapi
-  AZURE_WEBAPP_PACKAGE_PATH: App.Services.ProductAPI\published
+  AZURE_WEBAPP_NAME: 409159cartapi
+  AZURE_WEBAPP_PACKAGE_PATH: App.Services.ShoppingCartAPI\published
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
-  WORKING_DIRECTORY: ./src/App.Services.ProductAPI
+  WORKING_DIRECTORY: ./src/App.Services.ShoppingCartAPI
+
 
 
 jobs:
@@ -69,5 +70,5 @@ jobs:
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_FC32F4D363FD41619C3B49B29BA1C9F9 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_4B789395871641D6B10743CAF5B3F0E5 }}
           package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}

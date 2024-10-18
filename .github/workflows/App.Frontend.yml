@@ -83,8 +83,6 @@ jobs:
     
     environment: Production
     
-    if: "contains(github.event.head_commit.message, 'deploy')"
-    
     strategy:
       matrix:
         os: [windows-latest]
