@@ -31,29 +31,42 @@ namespace App.Services.ShoppingCartAPI.Controllers
         {
             try
             {
-                Cart cart = new()
+                var cartHeader = await _dbContext.CartHeaders.AsNoTracking().FirstAsync(u => u.UserId == userId);
+                if (cartHeader == null)
                 {
-                    CartHeader = await _dbContext.CartHeaders.AsNoTracking().FirstAsync(u => u.UserId == userId)
-                };
-
-                cart.CartDetails = _dbContext.CartDetails.Where(u => u.CartHeaderId == cart.CartHeader.Id);
-
-                IEnumerable<Product> products = await _productService.GetAsync();
-
-                foreach (var item in cart.CartDetails)
-                {
-                    item.Product = products.FirstOrDefault(u => u.Id == item.ProductId);
-                    cart.CartHeader.Total += (item.Count * item.Product.Price);
+                    _response.IsSuccess = false;
+                    _response.StatusCode = HttpStatusCode.NotFound;
                 }
+                else
+                {
+                    Cart cart = new()
+                    {
+                        CartHeader = cartHeader
+                    };
 
-                // if (!string.IsNullOrEmpty(cart.CartHeader.CouponCode))
-                // {
+                    var cartDetails = _dbContext.CartDetails.Where(u => u.CartHeaderId == cart.CartHeader.Id);
+                    if (cartDetails == null)
+                    {
+                    }
+                    else
+                    {
+                        cart.CartDetails = cartDetails;
+                        IEnumerable<Product> products = await _productService.GetAsync();
 
-                // }
+                        foreach (var item in cart.CartDetails)
+                        {
+                            item.Product = products.FirstOrDefault(u => u.Id == item.ProductId);
+                            cart.CartHeader.Total += (item.Count * item.Product.Price);
+                        }
+                        // if (!string.IsNullOrEmpty(cart.CartHeader.CouponCode))
+                        // {    
+                        // }
 
-                _response.Result = cart;
-                _response.IsSuccess = true;
-                _response.StatusCode = HttpStatusCode.OK;
+                    }
+                    _response.Result = cart;
+                    _response.IsSuccess = true;
+                    _response.StatusCode = HttpStatusCode.OK;
+                }
             }
             catch (Exception ex)
             {
