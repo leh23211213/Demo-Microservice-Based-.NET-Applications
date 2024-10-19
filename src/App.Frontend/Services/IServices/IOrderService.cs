@@ -6,19 +6,19 @@ namespace App.Frontend.Services.IServices
     {
         Task<Response> CreateOrder(Cart cart);
         Task<Response> CreateStripeSession(StripeRequest stripeRequest);
-        Task<Response> ValidateStripeSession(int orderHeaderId);
+        Task<Response> ValidateStripeSession(string orderHeaderId);
         /// <summary>
         /// Get all order by userid
         /// </summary>
         /// <param name="cart"></param>
         /// <returns></returns>
-        Task<Response> Get(string userId);
+        Task<Response> GetOrders(string userId);
         /// <summary>
         /// Get order by orderid
         /// </summary>
-        /// <param name="oderId"></param>
+        /// <param name="orderId"></param>
         /// <returns></returns>
-        Task<Response> Get(int oderId);
-        Task<Response> UpdateOrderStatus(int orderId, string newStatus);
+        Task<Response> Get(string orderId);
+        Task<Response> UpdateOrderStatus(string orderId, string newStatus);
     }
 }

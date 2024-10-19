@@ -4,44 +4,48 @@ using App.Services.OrderAPI.Data;
 using App.Services.OrderAPI.Models;
 using App.Services.OrderAPI.Services.IServices;
 using App.Services.OrderAPI.Utility;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 using Stripe;
 using Stripe.Checkout;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace App.Services.OrderAPI.Controllers
 {
-    [Route("api/v{version:apiVersion}/order")]
     [ApiController]
     [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/order")]
     public class OrderAPIController : ControllerBase
     {
-        private readonly ILogger<OrderAPIController> _logger;
+        private IMapper _mapper;
         protected Response _response;
-        private readonly ApplicationDbContext _dbContext;
         private IProductService _productService;
         private readonly IMessageBus _messageBus;
         private readonly IConfiguration _configuration;
+        private readonly ApplicationDbContext _dbContext;
+        private readonly ILogger<OrderAPIController> _logger;
 
         public OrderAPIController(
-                                    ApplicationDbContext dbContext,
-                                    IProductService productService,
+                                    IMapper mapper,
                                     IMessageBus messageBus,
                                     IConfiguration configuration,
+                                    ApplicationDbContext dbContext,
+                                    IProductService productService,
                                     ILogger<OrderAPIController> logger
                                     )
         {
+            _mapper = mapper;
+            _logger = logger;
             _response = new();
             _dbContext = dbContext;
-            _productService = productService;
             _messageBus = messageBus;
             _configuration = configuration;
-            _logger = logger;
+            _productService = productService;
         }
 
         //[Authorize]
-        [HttpGet]
-        public async Task<ActionResult<Response?>> Get(string? userId = "")
+        [HttpGet("GetOrders")]
+        public async Task<ActionResult<Response?>> GetOrders([FromQuery] string? userId = "")
         {
             try
             {
@@ -56,9 +60,6 @@ namespace App.Services.OrderAPI.Controllers
                     orders = await _dbContext.OrderHeaders.Include(u => u.OrderDetails).Where(u => u.UserId == userId).OrderByDescending(u => u.Id).ToListAsync();
                 }
                 _response.Result = orders;
-                _response.Message = "";
-                _response.IsSuccess = true;
-                _response.StatusCode = HttpStatusCode.OK;
             }
             catch (Exception ex)
             {
@@ -70,17 +71,13 @@ namespace App.Services.OrderAPI.Controllers
         }
 
         // [Authorize]
-        [HttpGet("{id:int}")]
-        public async Task<ActionResult<Response?>> Get(int orderId)
+        [HttpGet("Get")]
+        public async Task<ActionResult<Response?>> Get(string orderId)
         {
             try
             {
                 var orderHead = await _dbContext.OrderHeaders.Include(u => u.OrderDetails).FirstOrDefaultAsync(u => u.Id == orderId);
-
                 _response.Result = orderHead;
-                _response.Message = "";
-                _response.IsSuccess = true;
-                _response.StatusCode = HttpStatusCode.OK;
             }
             catch (Exception ex)
             {
@@ -91,20 +88,24 @@ namespace App.Services.OrderAPI.Controllers
             return _response;
         }
 
-
-
         // [Authorize]
-        [HttpPost("Create")]
-        public async Task<ActionResult<Response>> Create([FromBody] Cart cart)
+        [HttpPost("CreateOrder")]
+        public async Task<ActionResult<Response>> CreateOrder([FromBody] Cart cart)
         {
             try
             {
+                OrderHeader orderHeader = _mapper.Map<OrderHeader>(cart.CartHeader);
 
+                orderHeader.Status = StaticDetail.Status_Pending;
+                orderHeader.OrderTotal = Math.Round(orderHeader.OrderTotal, 2);
+                orderHeader.OrderDetails = _mapper.Map<IEnumerable<OrderDetails>>(cart.CartDetails);
+                orderHeader.OrderTime = DateTime.Now;
 
-                _response.Result = "";
-                _response.Message = "";
-                _response.IsSuccess = true;
-                _response.StatusCode = HttpStatusCode.OK;
+                OrderHeader orderCreated = _dbContext.OrderHeaders.Add(orderHeader).Entity;
+                await _dbContext.SaveChangesAsync();
+
+                orderHeader.Id = orderCreated.Id;
+                _response.Result = orderHeader;
             }
             catch (Exception ex)
             {
@@ -112,7 +113,6 @@ namespace App.Services.OrderAPI.Controllers
                 _response.IsSuccess = false;
                 _response.StatusCode = HttpStatusCode.BadRequest;
             }
-
             return _response;
         }
 
@@ -185,7 +185,7 @@ namespace App.Services.OrderAPI.Controllers
 
         //[Authorize]
         [HttpPost("ValidateStripeSession")]
-        public async Task<ActionResult<Response>> ValidateStripeSession([FromBody] int orderHeaderId)
+        public async Task<ActionResult<Response>> ValidateStripeSession([FromBody] string orderHeaderId)
         {
             try
             {

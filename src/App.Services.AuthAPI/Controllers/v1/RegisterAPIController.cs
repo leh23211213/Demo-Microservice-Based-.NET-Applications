@@ -39,10 +39,6 @@ namespace App.Services.AuthAPI.Controllers
                 _response.Message = errorMessage;
                 return BadRequest(_response);
             }
-
-            _response.StatusCode = HttpStatusCode.OK;
-            _response.IsSuccess = true;
-
             await _messageBus.PublishMessage(model.Email, _configuration.GetValue<string>("TopicAndQueueNames:RegisterUserQueue"));
             return Ok(_response);
         }
