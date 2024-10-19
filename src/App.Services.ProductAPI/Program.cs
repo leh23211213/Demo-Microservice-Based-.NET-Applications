@@ -32,7 +32,6 @@ builder.Services.AddVersionedApiExplorer(options =>
 });
 
 builder.Services.AddEndpointsApiExplorer();
-
 builder.Services.AddSwaggerGen(option =>
 {
     option.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());

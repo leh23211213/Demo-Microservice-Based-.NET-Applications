@@ -1,3 +1,4 @@
+using App.Services.Bus;
 using App.Services.OrderAPI.Models;
 using App.Services.OrderAPI.Services;
 using App.Services.OrderAPI.Services.IServices;
@@ -15,12 +16,13 @@ namespace App.Services.OrderAPI.Extensions
             IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
             services.AddSingleton(mapper);
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
-            services.AddScoped<IProductService, ProductService>();
-            services.AddScoped<Response>();
             services.AddHttpContextAccessor();
-            services.AddHttpClient("Product", u => u.BaseAddress = new Uri(configuration["ServiceUrls:ProductAPI"])).AddHttpMessageHandler<ApiAuthenticationHttpClientHandler>();
-
+            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IMessageBus, MessageBus>();
+            services.AddScoped<Response>();
+            services.AddHttpClient("Product", u => u.BaseAddress =
+                                                    new Uri(configuration["ServiceUrls:ProductAPI"]))
+                                                    .AddHttpMessageHandler<ApiAuthenticationHttpClientHandler>();
             return services;
         }
     }

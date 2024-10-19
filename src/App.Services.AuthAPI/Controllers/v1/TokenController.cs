@@ -33,8 +33,6 @@ namespace App.Services.AuthAPI.Controllers
                     _response.Message = "Token Invalid";
                     return BadRequest(_response);
                 }
-                _response.StatusCode = HttpStatusCode.OK;
-                _response.IsSuccess = true;
                 _response.Result = tokenResponse;
                 return Ok(_response);
             }

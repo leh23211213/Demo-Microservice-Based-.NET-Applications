@@ -1,5 +1,6 @@
 using App.Services.OrderAPI.Data;
 using App.Services.OrderAPI.Extensions;
+using App.Services.ShoppingCartAPI.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,12 @@ builder.Services.AddApiVersioning(options =>
         options.DefaultApiVersion = new ApiVersion(1, 0);
         // options.ApiVersionReader = new UrlSegmentApiVersionReader();  // Read version from URL
     });
+
+builder.Services.AddVersionedApiExplorer(options =>
+{
+    options.GroupNameFormat = "'v'VVV";
+    options.SubstituteApiVersionInUrl = true;
+});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(option =>
@@ -52,6 +59,8 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
+builder.AddAppAuthetication();
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 app.UseSwagger();
@@ -73,14 +82,13 @@ app.UseSwaggerUI(options =>
         });
     }
 });
+StripeConfiguration.ApiKey = builder.Configuration.GetConnectionString("DefaultConnection");
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 ApplyMigration();
-StripeConfiguration.ApiKey = builder.Configuration.GetConnectionString("DefaultConnection");
-
 app.Run();
 
 void ApplyMigration()

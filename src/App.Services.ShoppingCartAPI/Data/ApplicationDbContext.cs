@@ -30,8 +30,8 @@ public class ApplicationDbContext : DbContext
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Id).IsRequired();
-
             entity.Property(e => e.UserId).IsRequired();
+            entity.Property(e => e.CouponCode).IsRequired(false);
             entity.Property(e => e.Name).HasMaxLength(100).IsRequired(false); ;
             entity.Property(e => e.Phone).HasMaxLength(15).IsRequired(false); ;
             entity.Property(e => e.Email).HasMaxLength(100).IsRequired(false); ;

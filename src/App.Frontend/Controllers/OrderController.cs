@@ -27,19 +27,19 @@ namespace App.Frontend.Controllers
         }
 
         [HttpPost("OrderReadyForPickup")]
-        public async Task<IActionResult> OrderReadyForPickup(int orderId)
+        public async Task<IActionResult> OrderReadyForPickup(string orderId)
         {
             return View();
         }
 
         [HttpPost("CompleteOrder")]
-        public async Task<IActionResult> CompleteOrder(int orderId)
+        public async Task<IActionResult> CompleteOrder(string orderId)
         {
             return View();
         }
 
         [HttpPost("CancelOrder")]
-        public async Task<IActionResult> CancelOrder(int orderId)
+        public async Task<IActionResult> CancelOrder(string orderId)
         {
             return View();
         }

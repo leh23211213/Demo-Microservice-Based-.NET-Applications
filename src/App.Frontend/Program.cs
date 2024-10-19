@@ -9,10 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient();
-
 builder.Services.AddSingleton<IApiMessageRequestBuilder, ApiMessageRequestBuilder>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
 builder.Services.AddHttpClient<IAuthService, AuthService>();
 builder.Services.AddHttpClient<IProductService, ProductService>();
 builder.Services.AddHttpClient<ICartService, CartService>();
@@ -22,7 +20,6 @@ StaticDetail.AuthAPIBase = builder.Configuration["ServiceUrls:AuthAPI"];
 StaticDetail.ProductAPIBase = builder.Configuration["ServiceUrls:ProductAPI"];
 StaticDetail.ShoppingCartAPIBase = builder.Configuration["ServiceUrls:ShoppingCartAPI"];
 StaticDetail.OrderAPIBase = builder.Configuration["ServiceUrls:OrderAPI"];
-
 
 builder.Services.AddScoped<IBaseService, BaseService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -39,10 +36,11 @@ It stores the user's authentication ticket (e.g., login status) in a cookie.
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.Cookie.HttpOnly = true;
-        options.ExpireTimeSpan = TimeSpan.FromHours(1); // the expiration time for the authentication cookie
+        //options.ExpireTimeSpan = TimeSpan.FromSeconds(20); // the expiration time for the authentication cookie
+        options.ExpireTimeSpan = TimeSpan.FromDays(1); // the expiration time for the authentication cookie
         options.LoginPath = "/Account/Login";
         options.AccessDeniedPath = "/Account/AccessDenied";
+        options.Cookie.HttpOnly = true;
         options.SlidingExpiration = true;
     });
 
@@ -54,7 +52,9 @@ Session: Used to store user-specific data on the server (such as shopping cart i
 
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromHours(1);
+    // options.IdleTimeout = TimeSpan.FromSeconds(20);
+    options.IdleTimeout = TimeSpan.FromDays(1);
+
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });

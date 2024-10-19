@@ -1,38 +1,75 @@
 using App.Frontend.Models;
 using App.Frontend.Services.IServices;
+using App.Frontend.Utility;
 
 namespace App.Frontend.Services
 {
     public class OrderService : IOrderService
     {
-        public async Task<Response> CreateOrder(Cart cart)
+        private readonly IBaseService _baseService;
+
+        public OrderService(IBaseService baseService)
         {
-            throw new NotImplementedException();
+            _baseService = baseService;
         }
 
-        public async Task<Response> CreateStripeSession(StripeRequest stripeRequest)
+        public async Task<Response?> GetOrders(string userId)
         {
-            throw new NotImplementedException();
+            return await _baseService.SendAsync(new Request()
+            {
+                ApiType = StaticDetail.ApiType.GET,
+                Url = StaticDetail.OrderAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/order/GetOrders?userId=" + userId,
+            });
         }
 
-        public async Task<Response> Get(string userId)
+        public async Task<Response?> Get(string orderId)
         {
-            throw new NotImplementedException();
+            return await _baseService.SendAsync(new Request()
+            {
+                ApiType = StaticDetail.ApiType.GET,
+                Url = StaticDetail.OrderAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/order/Get/" + orderId
+            });
         }
 
-        public async Task<Response> Get(int oderId)
+        public async Task<Response?> CreateOrder(Cart cart)
         {
-            throw new NotImplementedException();
+            return await _baseService.SendAsync(new Request()
+            {
+                ApiType = StaticDetail.ApiType.POST,
+                Data = cart,
+                Url = StaticDetail.OrderAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/order/CreateOrder"
+            });
         }
 
-        public async Task<Response> UpdateOrderStatus(int orderId, string newStatus)
+        public async Task<Response?> CreateStripeSession(StripeRequest stripeRequest)
         {
-            throw new NotImplementedException();
+            return await _baseService.SendAsync(new Request()
+            {
+                ApiType = StaticDetail.ApiType.POST,
+                Data = stripeRequest,
+                Url = StaticDetail.OrderAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/order/CreateStripeSession"
+            });
         }
 
-        public async Task<Response> ValidateStripeSession(int orderHeaderId)
+
+        public async Task<Response?> UpdateOrderStatus(string orderId, string newStatus)
         {
-            throw new NotImplementedException();
+            return await _baseService.SendAsync(new Request()
+            {
+                ApiType = StaticDetail.ApiType.POST,
+                Data = newStatus,
+                Url = StaticDetail.OrderAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/order/UpdateOrderStatus" + orderId
+            });
+        }
+
+        public async Task<Response?> ValidateStripeSession(string orderHeaderId)
+        {
+            return await _baseService.SendAsync(new Request()
+            {
+                ApiType = StaticDetail.ApiType.POST,
+                Data = orderHeaderId,
+                Url = StaticDetail.OrderAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/order/ValidateStripeSession"
+            });
         }
     }
 }

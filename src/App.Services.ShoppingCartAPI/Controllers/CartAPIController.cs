@@ -1,15 +1,15 @@
 using System.Net;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using App.Services.ShoppingCartAPI.Data;
 using App.Services.ShoppingCartAPI.Models;
 using App.Services.ShoppingCartAPI.Services.IServices;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace App.Services.ShoppingCartAPI.Controllers
 {
-    [Route("api/v{version:apiVersion}/cart")]
     [ApiController]
     [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/cart")]
     public class CartAPIController : ControllerBase
     {
         private Response _response;
@@ -21,9 +21,9 @@ namespace App.Services.ShoppingCartAPI.Controllers
                                 ApplicationDbContext dbContext
                                 )
         {
+            _dbContext = dbContext;
             _response = new Response();
             _productService = productService;
-            _dbContext = dbContext;
         }
 
         [HttpGet("Checkout/{userId}")]
@@ -64,8 +64,6 @@ namespace App.Services.ShoppingCartAPI.Controllers
 
                     }
                     _response.Result = cart;
-                    _response.IsSuccess = true;
-                    _response.StatusCode = HttpStatusCode.OK;
                 }
             }
             catch (Exception ex)
@@ -122,10 +120,7 @@ namespace App.Services.ShoppingCartAPI.Controllers
                         _response.Message = "Product are ready exists in your cart!";
                     }
                 }
-
-
-                _response.IsSuccess = true;
-                _response.StatusCode = HttpStatusCode.OK;
+                _response.Result = cart;
             }
             catch (Exception ex)
             {
@@ -148,8 +143,6 @@ namespace App.Services.ShoppingCartAPI.Controllers
                 _dbContext.CartDetails.Remove(cartDetails);
                 await _dbContext.SaveChangesAsync();
 
-                _response.Result = true;
-                _response.StatusCode = HttpStatusCode.OK;
                 _response.Message = "Remove product successfully";
             }
             catch (Exception ex)
@@ -161,22 +154,19 @@ namespace App.Services.ShoppingCartAPI.Controllers
             return _response;
         }
 
-        [HttpPost("ApplyCoupon")]
-        public async Task<ActionResult<Response>> ApplyCoupon([FromBody] Cart cart)
-        {
-            try
-            {
-
-                _response.IsSuccess = true;
-                _response.StatusCode = HttpStatusCode.OK;
-            }
-            catch (Exception ex)
-            {
-                _response.IsSuccess = false;
-                _response.Message = ex.Message;
-                _response.StatusCode = HttpStatusCode.BadRequest;
-            }
-            return _response;
-        }
+        // [HttpPost("ApplyCoupon")]
+        // public async Task<ActionResult<Response>> ApplyCoupon([FromBody] Cart cart)
+        // {
+        //     try
+        //     {
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         _response.IsSuccess = false;
+        //         _response.Message = ex.Message;
+        //         _response.StatusCode = HttpStatusCode.BadRequest;
+        //     }
+        //     return _response;
+        // }
     }
 }

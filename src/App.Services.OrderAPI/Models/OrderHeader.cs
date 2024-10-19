@@ -1,7 +1,7 @@
 namespace App.Services.OrderAPI.Models;
 public class OrderHeader
 {
-    public int Id { get; set; }
+    public string? Id { get; set; }
     public string? UserId { get; set; }
     public string? CouponCode { get; set; }
     public double Discount { get; set; }
@@ -13,5 +13,5 @@ public class OrderHeader
     public string? Status { get; set; }
     public string? PaymentIntentId { get; set; }
     public string? StripeSessionId { get; set; }
-    public IEnumerable<OrderDetail>? OrderDetails { get; set; }
+    public IEnumerable<OrderDetails>? OrderDetails { get; set; }
 }

@@ -32,6 +32,7 @@ namespace App.Services.AuthAPI.Controllers
         public async Task<IActionResult> Login([FromBody] LoginRequest model)
         {
             var token = await _authAPIService.Login(model);
+
             if (token == null || string.IsNullOrEmpty(token.AccessToken))
             {
                 _response.StatusCode = HttpStatusCode.BadRequest;
@@ -39,8 +40,6 @@ namespace App.Services.AuthAPI.Controllers
                 _response.Message = "Email or password is incorrect";
                 return BadRequest(_response);
             }
-            _response.StatusCode = HttpStatusCode.OK;
-            _response.IsSuccess = true;
             _response.Result = token;
             return Ok(_response);
         }

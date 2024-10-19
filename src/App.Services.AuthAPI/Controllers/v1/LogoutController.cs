@@ -27,8 +27,6 @@ namespace App.Services.AuthAPI.Controllers.v1
             if (ModelState.IsValid)
             {
                 await _authAPIService.RevokeRefreshToken(token);
-                _response.IsSuccess = true;
-                _response.StatusCode = HttpStatusCode.OK;
                 return Ok(_response);
 
             }

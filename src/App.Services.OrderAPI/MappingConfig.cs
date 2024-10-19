@@ -12,7 +12,7 @@ namespace App.Services.OrderAPI
                 config.CreateMap<OrderHeader, CartHeader>()
                 .ForMember(dest => dest.Total, u => u.MapFrom(src => src.OrderTotal)).ReverseMap();
 
-                config.CreateMap<CartDetails, OrderDetail>()
+                config.CreateMap<CartDetails, OrderDetails>()
                 .ForMember(dest => dest.ProductName, u => u.MapFrom(src => src.Product.Name))
                 .ForMember(dest => dest.Price, u => u.MapFrom(src => src.Product.Price))
                 .ReverseMap();

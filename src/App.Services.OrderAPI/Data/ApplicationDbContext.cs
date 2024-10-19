@@ -9,7 +9,7 @@ public class ApplicationDbContext : DbContext
   }
 
   public DbSet<OrderHeader> OrderHeaders { get; set; }
-  public DbSet<OrderDetail> OrderDetails { get; set; }
+  public DbSet<OrderDetails> OrderDetails { get; set; }
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {
     modelBuilder.Entity<OrderHeader>(entity =>
@@ -18,6 +18,14 @@ public class ApplicationDbContext : DbContext
 
       entity.Property(e => e.UserId)
                 .HasMaxLength(100)
+                .IsRequired();
+      entity.Property(e => e.Name)
+                .IsRequired(false);
+      entity.Property(e => e.Phone)
+                .HasMaxLength(20)
+                .IsRequired(false);
+      entity.Property(e => e.Email)
+                .HasMaxLength(256)
                 .IsRequired(false);
 
       entity.Property(e => e.CouponCode)
@@ -25,20 +33,25 @@ public class ApplicationDbContext : DbContext
                 .IsRequired(false);
 
       entity.Property(e => e.Discount)
-                .HasColumnType("decimal(18,2)")
-                .IsRequired();
+                .HasColumnType("decimal(18,2)");
 
       entity.Property(e => e.OrderTotal)
-                .HasColumnType("decimal(18,2)")
-                .IsRequired();
-
+                .HasColumnType("decimal(18,2)");
       entity.Property(e => e.OrderTime)
                 .HasColumnType("datetime");
 
+      entity.Property(e => e.Status)
+                  .IsRequired(false)
+                  .IsRequired();
+      entity.Property(e => e.PaymentIntentId)
+                   .IsRequired(false)
+                  .IsRequired();
+      entity.Property(e => e.StripeSessionId)
+                  .IsRequired(false);
       entity.Ignore(e => e.OrderDetails);
     });
 
-    modelBuilder.Entity<OrderDetail>(entity =>
+    modelBuilder.Entity<OrderDetails>(entity =>
     {
       entity.HasKey(e => e.Id);
 
@@ -46,23 +59,18 @@ public class ApplicationDbContext : DbContext
                 .HasMaxLength(100)
                 .IsRequired();
 
-      entity.Property(e => e.Count)
-                .IsRequired();
-
-      entity.Property(e => e.Price)
-                .HasColumnType("decimal(18,2)")
-                .IsRequired();
-
       entity.Property(e => e.ProductName)
                 .HasMaxLength(255)
-                .IsRequired();
+               .IsRequired(false);
 
+      entity.Property(e => e.Price)
+                .HasColumnType("decimal(18,2)");
 
       entity.HasOne<OrderHeader>()
                 .WithMany(o => o.OrderDetails)
                 .HasForeignKey(d => d.OrderHeaderId)
                 .OnDelete(DeleteBehavior.Cascade);
-      entity.Ignore(e => e.product);
+      entity.Ignore(e => e.Product);
     });
   }
 }
