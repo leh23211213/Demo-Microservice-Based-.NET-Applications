@@ -1,17 +1,20 @@
 using Microsoft.AspNetCore.Mvc;
 using App.Frontend.Services.IServices;
 using Microsoft.AspNetCore.Authorization;
+using App.Frontend.Models;
+using Newtonsoft.Json;
+using System.IdentityModel.Tokens.Jwt;
+using App.Frontend.Utility;
 
 namespace App.Frontend.Controllers
 {
-
     public class OrderController : Controller
     {
-        private readonly IProductService _productService;
+        private readonly IOrderService _orderService;
 
-        public OrderController(IProductService productService)
+        public OrderController(IOrderService orderService)
         {
-            _productService = productService;
+            _orderService = orderService;
         }
 
         [Authorize]
@@ -21,9 +24,21 @@ namespace App.Frontend.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> Details()
+        public async Task<IActionResult> Details(string orderId)
         {
-            return View();
+            OrderHeader orderHeader = new OrderHeader();
+            var userId = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
+
+            Response response = await _orderService.Get(orderId);
+            if (response.IsSuccess && response != null)
+            {
+                orderHeader = JsonConvert.DeserializeObject<OrderHeader>(Convert.ToString(response.Result));
+            }
+            if (!User.IsInRole(StaticDetail.RoleAdmin) && userId != orderHeader.UserId)
+            {
+                return NotFound();
+            }
+            return View(orderHeader);
         }
 
         [HttpPost("OrderReadyForPickup")]
@@ -44,11 +59,40 @@ namespace App.Frontend.Controllers
             return View();
         }
         [HttpGet]
-        public async Task<IActionResult> Get(string status)
+        public IActionResult Get(string status)
         {
-            return View();
+            IEnumerable<OrderHeader> list;
+            string userId = "";
+
+            if (!User.IsInRole(StaticDetail.RoleAdmin))
+            {
+                userId = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
+            }
+
+            Response response = _orderService.GetAllOrder(userId).GetAwaiter().GetResult();
+            if (response.IsSuccess && response != null)
+            {
+                list = JsonConvert.DeserializeObject<List<OrderHeader>>(Convert.ToString(response.Result));
+                switch (status)
+                {
+                    case "approved":
+                        list = list.Where(u => u.Status == StaticDetail.Status_Approved);
+                        break;
+                    case "readyforpickup":
+                        list = list.Where(u => u.Status == StaticDetail.Status_ReadyForPickup);
+                        break;
+                    case "cancelled":
+                        list = list.Where(u => u.Status == StaticDetail.Status_Cancelled);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else
+            {
+                list = new List<OrderHeader>();
+            }
+            return Json(new { data = list.OrderByDescending(u => u.Id) });
         }
-
-
     }
 }

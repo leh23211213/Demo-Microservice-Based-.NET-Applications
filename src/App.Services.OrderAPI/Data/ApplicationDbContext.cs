@@ -41,11 +41,9 @@ public class ApplicationDbContext : DbContext
                 .HasColumnType("datetime");
 
       entity.Property(e => e.Status)
-                  .IsRequired(false)
-                  .IsRequired();
+                  .IsRequired(false);
       entity.Property(e => e.PaymentIntentId)
-                   .IsRequired(false)
-                  .IsRequired();
+                   .IsRequired(false);
       entity.Property(e => e.StripeSessionId)
                   .IsRequired(false);
       entity.Ignore(e => e.OrderDetails);

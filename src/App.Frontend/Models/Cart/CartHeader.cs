@@ -3,11 +3,11 @@ using System.ComponentModel.DataAnnotations;
 namespace App.Frontend.Models;
 public class CartHeader
 {
-    public string? Id { get; set; }
-    public string? UserId { get; set; }
+    public string? Id { get; set; } = null!;
+    public string? UserId { get; set; } = null!;
     public string? CouponCode { get; set; }
     public double Discount { get; set; }
-    public double CartTotal { get; set; }
+    public double Total { get; set; }
     [Required]
     public string? Name { get; set; }
     [Required]

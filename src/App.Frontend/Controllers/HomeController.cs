@@ -70,7 +70,6 @@ namespace App.Frontend.Controllers
 
             CartDetails cartDetails = new CartDetails()
             {
-                Id = Guid.NewGuid().ToString(),
                 ProductId = product.Id,
             };
 

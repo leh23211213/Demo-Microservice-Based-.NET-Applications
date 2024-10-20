@@ -12,7 +12,7 @@ namespace App.Frontend.Services.IServices
         /// </summary>
         /// <param name="cart"></param>
         /// <returns></returns>
-        Task<Response> GetOrders(string userId);
+        Task<Response> GetAllOrder(string? userId);
         /// <summary>
         /// Get order by orderid
         /// </summary>

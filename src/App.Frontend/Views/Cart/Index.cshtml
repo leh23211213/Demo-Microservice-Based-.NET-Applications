@@ -28,6 +28,7 @@
         }
     </script>
 </head>
+
 @if (Model.CartHeader != null && Model.CartDetails?.Count() > 0)
 {
     <div class="page-content">
@@ -73,7 +74,7 @@
                                         </div>
                                     </div>
                                     <div class="Item-Price">
-                                        <div type="normal" class="Price">@item.Product.Price <sup>đ</sup></div>
+                                        <div type="normal" class="Price">@string.Format("{0:c}",@item.Product.Price)</div>
                                     </div>
                                     <div class="Item-Quantity">
                                         <input type="hidden" name="productId" value="@item.ProductId" />
@@ -85,7 +86,7 @@
                                         <button type="submit" class="Add">+</button>
                                     </div>
                                     <div id="itemTotal-item.Id" class="Item-Subtotal">
-                                        @item.Product.Price <sup>đ</sup>
+                                        @string.Format("{0:c}",@item.Product.Price)
                                     </div>
                                     <div class="Item-Action">
                                         <a asp-action="Delete" asp-route-cartDetailsId="@item.Id">
@@ -114,7 +115,8 @@
                                 <ul class="Price-Items">
                                     <li class="Price-Item">
                                         <div class="Prices-Text">Temporary Price</div>
-                                        <div class="Prices-Value"> @((0).ToString("c")) </div>
+                                        <div class="Prices-Value"> @string.Format("{0:c}",
+                                        Model.CartHeader.Total) </div>
                                     </li>
                                     <li class="Price-Item">
                                         <div class="Prices-Text">Discount</div>
@@ -155,7 +157,7 @@
                                     <span class="Prices-Text">Total</span>
                                     <div class="Prices-Content">
                                         <span class="Prices-Value-Final"> @string.Format("{0:c}",
-                                        Model.CartHeader.CartTotal) </span>
+                                        Model.CartHeader.Total) </span>
                                     </div>
                                 </div>
                             </div>
@@ -183,7 +185,7 @@ else
             <div class="left-content">
                 <div class="row-heading">
                     <label class="checkBox">
-                        <input type="checkbox" onclick="togglecheckboxes('cb')" value="Toggle all" />
+                        <input type="checkbox" disabled />
                         <span class="checkbox-fake">
                             <svg class="checkbox-mark" width="24" height="24" viewBox="0 0 24 24" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -194,11 +196,9 @@ else
                     <span>Price</span>
                     <span>Amount</span>
                     <span>Total</span>
-                    <form asp-area="Customer" asp-action="DeleteAll" asp-controller="Cart">
-                        <input type="hidden" name="id" />
-                        <img src="https://frontend.tikicdn.com/_desktop-next/static/img/icons/trash.svg" alt="deleted"
-                            class="delete-button" style="cursor: pointer;" onclick="submitDeleteForm(this)">
-                    </form>
+                    <input type="hidden" name="id" />
+                    <img src="https://frontend.tikicdn.com/_desktop-next/static/img/icons/trash.svg" alt="deleted"
+                        class="delete-button" disabled>
                 </div>
             </div>
             <div class="infinite-scroll-component">
@@ -228,7 +228,7 @@ else
                                     <div class="row">
                                         <div class="col-6">
                                             <span>Coupon:</span>
-                                            <input asp-for="CartHeader.CouponCode" disabled />
+                                            <input disabled />
                                             <button type="#" class="btn btn-primary btn-lg" disabled> Apply
                                             </button>
                                         </div>
@@ -245,9 +245,7 @@ else
                                 </div>
                             </div>
                         </div>
-                        <a asp-action="#">
-                            <button type="submit" class="btn btn-primary btn-lg" disabled>Checkout</button>
-                        </a>
+                        <button type="submit" class="btn btn-primary btn-lg" disabled>Checkout</button>
                     </div>
                 </div>
             </div>

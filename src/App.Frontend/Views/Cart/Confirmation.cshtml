@@ -1,7 +1,12 @@
-﻿@model int
+﻿@model string
 <div class="text-center">
-    <h1 class="text-info pt-4">Congratulations! ...11px.</h1>
+    <h1 class="text-info pt-4">Thank you for your order</h1>
     <p class="pb-3">...</p>
-    <h4 class="text-warning pb-3">Order ID - @Model</h4>
-    <img src="/images/order.PNG" width="80%" />
+    <a asp-controller="Home" asp-action="Index">
+        <button class="btn btn-primary btn-lg">Continue Shopping</button>
+    </a>
+    <a asp-controller="Order" asp-action="Index">
+        <button class="btn btn-primary btn-lg">Order History</button>
+    </a>
+    <img src="" width="80%" />
 </div>

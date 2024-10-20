@@ -17,8 +17,10 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<CartDetails>(entity =>
         {
             entity.HasKey(e => e.Id);
-            entity.Property(e => e.Id).IsRequired();
             entity.Property(e => e.Count).IsRequired();
+
+            entity.Ignore(e => e.CartHeader);
+            entity.Ignore(e => e.Product);
 
             entity.HasOne(p => p.CartHeader)
                            .WithMany(s => s.CartDetails)
@@ -32,9 +34,13 @@ public class ApplicationDbContext : DbContext
             entity.Property(e => e.Id).IsRequired();
             entity.Property(e => e.UserId).IsRequired();
             entity.Property(e => e.CouponCode).IsRequired(false);
-            entity.Property(e => e.Name).HasMaxLength(100).IsRequired(false); ;
-            entity.Property(e => e.Phone).HasMaxLength(15).IsRequired(false); ;
-            entity.Property(e => e.Email).HasMaxLength(100).IsRequired(false); ;
+            entity.Ignore(e => e.Discount);
+            entity.Ignore(e => e.Total);
+            entity.Ignore(e => e.Count);
+            entity.Ignore(e => e.Name);
+            entity.Ignore(e => e.Phone);
+            entity.Ignore(e => e.Email);
+            entity.Ignore(e => e.CartDetails);
         });
     }
 }
