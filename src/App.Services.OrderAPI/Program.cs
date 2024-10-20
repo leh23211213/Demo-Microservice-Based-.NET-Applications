@@ -82,7 +82,8 @@ app.UseSwaggerUI(options =>
         });
     }
 });
-StripeConfiguration.ApiKey = builder.Configuration.GetConnectionString("DefaultConnection");
+
+StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
 
 app.UseHttpsRedirection();
 app.UseAuthentication();

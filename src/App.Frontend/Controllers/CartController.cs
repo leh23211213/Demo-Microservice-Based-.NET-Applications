@@ -105,7 +105,5 @@ namespace App.Frontend.Controllers
             }
             return new Cart();
         }
-
-
     }
 }

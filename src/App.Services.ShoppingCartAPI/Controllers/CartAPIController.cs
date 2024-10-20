@@ -50,6 +50,7 @@ namespace App.Services.ShoppingCartAPI.Controllers
                     }
                     else
                     {
+                        cart.CartHeader.Count = cartDetails.Count();
                         cart.CartDetails = cartDetails;
                         IEnumerable<Product> products = await _productService.GetAsync();
 
@@ -76,12 +77,12 @@ namespace App.Services.ShoppingCartAPI.Controllers
         }
 
         [HttpPost("Add")]
-        public async Task<ActionResult<Response>> Add(Cart cart)
+        public async Task<ActionResult<Response>> Add([FromBody] Cart cart)
         {
             try
             {
-                var cartHeaderFromDb = await _dbContext.CartHeaders.FirstOrDefaultAsync(u => u.UserId == cart.CartHeader.UserId);
-                if (cartHeaderFromDb == null)
+                var cartHeader = await _dbContext.CartHeaders.FirstOrDefaultAsync(u => u.UserId == cart.CartHeader.UserId);
+                if (cartHeader == null)
                 {
                     //create header and details
                     cart.CartHeader.Id = Guid.NewGuid().ToString();
@@ -97,14 +98,14 @@ namespace App.Services.ShoppingCartAPI.Controllers
                 else
                 {
                     //check if details has same product
-                    var cartDetailsFromDb = await _dbContext.CartDetails.AsNoTracking().FirstOrDefaultAsync(
+                    var cartDetails = await _dbContext.CartDetails.AsNoTracking().FirstOrDefaultAsync(
                         u => u.ProductId == cart.CartDetails.First().ProductId &&
-                        u.CartHeaderId == cartHeaderFromDb.Id
+                        u.CartHeaderId == cartHeader.Id
                     );
-                    if (cartDetailsFromDb == null)
+                    if (cartDetails == null)
                     {
                         //create cartdetails
-                        cart.CartDetails.First().CartHeaderId = cartHeaderFromDb.Id;
+                        cart.CartDetails.First().CartHeaderId = cartHeader.Id;
                         _dbContext.CartDetails.Add(cart.CartDetails.First());
                         await _dbContext.SaveChangesAsync();
 

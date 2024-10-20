@@ -13,7 +13,7 @@ namespace App.Frontend.Services
             _baseService = baseService;
         }
 
-        public async Task<Response?> GetOrders(string userId)
+        public async Task<Response?> GetAllOrder(string? userId)
         {
             return await _baseService.SendAsync(new Request()
             {

@@ -9,6 +9,7 @@ using Stripe;
 using Stripe.Checkout;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace App.Services.OrderAPI.Controllers
 {
@@ -43,9 +44,9 @@ namespace App.Services.OrderAPI.Controllers
             _productService = productService;
         }
 
-        //[Authorize]
+        // [Authorize]
         [HttpGet("GetOrders")]
-        public async Task<ActionResult<Response?>> GetOrders([FromQuery] string? userId = "")
+        public async Task<ActionResult<Response?>> GetOrders(string? userId = "")
         {
             try
             {
@@ -165,6 +166,7 @@ namespace App.Services.OrderAPI.Controllers
                 stripeRequest.StripeSessionUrl = session.Url;
                 OrderHeader orderHeader = _dbContext.OrderHeaders.First(u => u.Id == stripeRequest.OrderHeader.Id);
                 orderHeader.StripeSessionId = session.Id;
+
                 _dbContext.SaveChanges();
 
                 _response.Result = stripeRequest;
@@ -219,7 +221,7 @@ namespace App.Services.OrderAPI.Controllers
         }
 
         //[Authorize]
-        [HttpPost("UpdateStatus/{orderId:int}")]
+        [HttpPost("UpdateStatus")]
         public async Task<ActionResult<Response>> UpdateStatus([FromBody] Cart cart)
         {
             try
