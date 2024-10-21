@@ -137,7 +137,6 @@
         <div class="divider"></div>
         <div class="sidebar-links-wrapper">
             <div class="sidebar-links">
-                <h2>Manage Order</h2>
                 <div class="divider"></div>
                 <ul>
                     <li>
@@ -160,7 +159,7 @@
                                     <line class="st0" x1="9" y1="25" x2="15" y2="25"></line>
                                 </g>
                             </svg>
-                            <span class="link hide">orders</span>
+                            <span class="link hide">Manage Order</span>
                         </a>
                     </li>
                 </ul>
@@ -186,6 +185,10 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
     <script src="//cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

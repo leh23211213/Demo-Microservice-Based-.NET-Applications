@@ -27,6 +27,7 @@ namespace App.Services.ProductAPI.Controllers.v1
             _response = new Response();
         }
 
+        // [Authorize]
         [HttpGet]
         public async Task<ActionResult<Response>> Get()
         {
@@ -51,6 +52,7 @@ namespace App.Services.ProductAPI.Controllers.v1
             return _response;
         }
 
+        // [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Response>> Get(string id)
         {
@@ -84,13 +86,14 @@ namespace App.Services.ProductAPI.Controllers.v1
             return _response;
         }
 
+        //[Authorize]
         [HttpGet("Pagination")]
         // [ResponseCache(CacheProfileName = "Default10")]
         public async Task<ActionResult<Response>> Pagination(
-                                                    [FromQuery] int pageSize,
-                                                    [FromQuery] int currentPage,
-                                                    [FromQuery] string? search = ""
-                                                    )
+                                                           [FromQuery] int pageSize,
+                                                           [FromQuery] int currentPage,
+                                                           [FromQuery] string? search = ""
+                                                           )
         {
             try
             {
@@ -143,6 +146,7 @@ namespace App.Services.ProductAPI.Controllers.v1
             return _response;
         }
 
+        //[Authorize]
         // [Authorize(Roles = "ADMIN")]
         [HttpPost("Create")]
         public async Task<ActionResult<Response>> Create(Product product)
@@ -152,30 +156,25 @@ namespace App.Services.ProductAPI.Controllers.v1
                 var existingProduct = await _dbContext.Products.FirstOrDefaultAsync(p => p.Id == product.Id);
                 if (existingProduct != null)
                 {
-                    // Nếu sản phẩm đã tồn tại, trả về thông báo hoặc xử lý lỗi
                     _response.Message = "Product already exists.";
                     _response.StatusCode = HttpStatusCode.BadRequest;
                     _response.IsSuccess = false;
                 }
                 else
                 {
-                    // // Xử lý thêm sản phẩm, cho phép các trường Size, Color, Brand và Category nullable
-                    // if (ModelState.IsValid)
-                    // {
-                    //     product.Id = Guid.NewGuid().ToString();
+                    var createProduct = new Product
+                    {
+                        Id = product.Id,
+                        Name = product.Name,
+                        Price = product.Price,
+                        Description = product.Description,
+                        SizeId = product.Size.Id,
+                        ColorId = product.Color.Id,
+                        CategoryId = product.Category.Id,
+                        BrandId = product.Brand.Id,
+                    };
 
-                    //     // Nếu người dùng không chọn, các thuộc tính này sẽ là null
-                    //     product.Size = product.Size?.Id != null ? context.Sizes.Find(product.Size.Id) : null;
-                    //     product.Color = product.Color?.Id != null ? context.Colors.Find(product.Color.Id) : null;
-                    //     product.Brand = product.Brand?.Id != null ? context.Brands.Find(product.Brand.Id) : null;
-                    //     product.Category = product.Category?.Id != null ? context.Categories.Find(product.Category.Id) : null;
-
-                    //     context.Products.Add(product);
-                    //     context.SaveChanges();
-                    //     return RedirectToAction("Index");
-                    // }
-
-                    _dbContext.Add(product);
+                    _dbContext.Products.Add(createProduct);
                     _dbContext.SaveChanges();
 
                     if (product.Image != null)
@@ -196,17 +195,17 @@ namespace App.Services.ProductAPI.Controllers.v1
                             product.Image.CopyTo(fileStream);
                         }
                         var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.Value}{HttpContext.Request.PathBase.Value}";
-                        product.ImageUrl = baseUrl + "/SmartPhone/" + fileName;
-                        product.ImageLocalPath = filePath;
+                        createProduct.ImageUrl = baseUrl + "/SmartPhone/" + fileName;
+                        createProduct.ImageLocalPath = filePath;
                     }
                     else
                     {
-                        product.ImageUrl = "https://placehold.co/600x400";
+                        createProduct.ImageUrl = "https://placehold.co/600x400";
                     }
-                    _dbContext.Update(product);
+                    _dbContext.Update(createProduct);
                     _dbContext.SaveChanges();
 
-                    _response.Result = product;
+                    _response.Result = createProduct;
                     _response.Message = "Create product successfully";
                 }
             }
@@ -219,9 +218,9 @@ namespace App.Services.ProductAPI.Controllers.v1
             return _response;
         }
 
+        // [Authorize]
         [HttpPut("Update")]
-        // [Authorize(Roles = "ADMIN")]
-
+        //[Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<Response>> Update(Product product)
         {
             try
@@ -234,7 +233,6 @@ namespace App.Services.ProductAPI.Controllers.v1
                 }
                 else
                 {
-
                     if (product.Image != null)
                     {
                         if (!string.IsNullOrEmpty(product.ImageLocalPath))
@@ -257,7 +255,6 @@ namespace App.Services.ProductAPI.Controllers.v1
                         product.ImageUrl = baseUrl + "/ProductImages/" + fileName;
                         product.ImageLocalPath = filePath;
                     }
-
                     _dbContext.Update(product);
                     _dbContext.SaveChanges();
 
@@ -273,8 +270,9 @@ namespace App.Services.ProductAPI.Controllers.v1
             return _response;
         }
 
+        // [Authorize]
         [HttpDelete("Delete/{id}")]
-        //  [Authorize(Roles = "ADMIN")]
+        // [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<Response>> Delete(string id)
         {
             try
@@ -298,7 +296,6 @@ namespace App.Services.ProductAPI.Controllers.v1
                     }
                     _dbContext.Remove(product);
                     _dbContext.SaveChanges();
-
                     _response.Message = "Product deleted successfully";
                 }
             }

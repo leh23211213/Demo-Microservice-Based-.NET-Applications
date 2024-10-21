@@ -1,32 +1,52 @@
+
+
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
-using App.Services.ProductAPI.Extensions;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace App.Services.ProductAPI.Models;
 public class Product
 {
     public string Id { get; set; } = null!;
     public string Name { get; set; } = null!;
-    public double Price { get; set; }
+    private double _price;
+    public double Price
+    {
+        get => _price;
+        set
+        {
+            if (value > 0)
+            {
+                _price = value;
+            }
+            else
+            {
+                throw new ArgumentException("Price must be greater than 0.");
+            }
+        }
+    }
+    public string? Description { get; set; }
+    [SwaggerIgnore]
     public string? ImageUrl { get; set; }
+    [SwaggerIgnore]
     public string? ImageLocalPath { get; set; }
-    public string? Description { get; set; } = null!;
-
-    [NotMapped, SwaggerIgnore]
-    public IFormFile? Image { get; set; } = null!;
-
+    [NotMapped]
+    public IFormFile? Image { get; set; }
+    [SwaggerIgnore]
     public int SizeId { get; set; }
+    [SwaggerIgnore]
     public int ColorId { get; set; }
+    [SwaggerIgnore]
     public int CategoryId { get; set; }
+    [SwaggerIgnore]
     public int BrandId { get; set; }
 
-    [NotMapped, SwaggerIgnore]
+    [NotMapped]
     public virtual Size? Size { get; set; }
-    [NotMapped, SwaggerIgnore]
+    [NotMapped]
     public virtual Color? Color { get; set; }
-    [NotMapped, SwaggerIgnore]
+    [NotMapped]
     public virtual Category? Category { get; set; }
-    [NotMapped, SwaggerIgnore]
+    [NotMapped]
     public virtual Brand? Brand { get; set; }
 
 }

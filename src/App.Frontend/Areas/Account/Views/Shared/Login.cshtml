@@ -34,23 +34,16 @@
                         <form id="login" method="post" class="form-horizontal">
                             <div class="form-floating mb-3">
                                 <input asp-for="Email" class="form-control" autocomplete="username"
-                                    placeholder="name@example.com" value="admin@gmail.com"/>
+                                    placeholder="name@example.com" value="admin@gmail.com" />
                                 <label asp-for="Email" class="form-label">Email</label>
                                 <span asp-validation-for="Email" class="text-danger" />
                             </div>
 
                             <div class="form-floating mb-3">
                                 <input asp-for="Password" class="form-control" autocomplete="current-password"
-                                    placeholder="password" value="Admin123*"/>
+                                    placeholder="password" value="Admin123*" />
                                 <label asp-for="Password" class="form-label">Password</label>
                                 <span asp-validation-for="Password" class="text-danger" />
-                            </div>
-
-                            <div class="checkbox mb-3">
-                                <label asp-for="RememberMe" class="form-label">
-                                    <input class="form-check-input" asp-for="RememberMe" />
-                                    @Html.DisplayNameFor(m => m.RememberMe)
-                                </label>
                             </div>
 
                             <div class="mt-3 d-grid">
@@ -59,14 +52,14 @@
                             </div>
                         </form>
 
-                        <div class="mt-4 text-center">
+                        @* <div class="mt-4 text-center" disabled>
                             <p>
-                                <a id="forgot-password" asp-area="Account" asp-controller="ForgotPassword"
-                                    asp-action="ForgotPassword">Forgot
+                                <a href="#" disabled>Forgot
                                     your
                                     password?</a>
                             </p>
-                        </div>
+                        </div> *@
+
                         <div class="my-form__actions">
                             <div class="my-form__row">
                                 <span>Don't have an account?</span>
