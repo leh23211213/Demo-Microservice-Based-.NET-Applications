@@ -89,7 +89,6 @@ namespace App.Frontend.Controllers
         private async Task<Cart> LoadCart()
         {
             //var userId = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
-
             //Hiệu suất tốt hơn: FindFirst() dừng ngay khi tìm thấy kết quả, thay vì duyệt qua tất cả các claim.
             var userId = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
             var userEmail = User.FindFirst(JwtRegisteredClaimNames.Email)?.Value;

@@ -12,7 +12,12 @@ namespace App.Services.ProductAPI.Data.Configuration
                      builder.HasKey(e => e.Id);
 
                      builder.Property(e => e.Name).HasMaxLength(100).IsRequired();
-                     builder.Property(e => e.Price).HasColumnType("decimal(18,2)").IsRequired();
+                     
+                     builder.Property(e => e.Price)
+                            .HasField("_price")   // Maps the field _price to the column Price
+                            .HasColumnName("Price")
+                            .HasColumnType("decimal(18,2)").IsRequired();
+
                      builder.Property(e => e.ImageUrl).HasMaxLength(255).IsRequired(false);
                      builder.Property(e => e.Description).HasMaxLength(255).IsRequired(false);
 

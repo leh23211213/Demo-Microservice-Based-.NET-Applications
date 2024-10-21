@@ -46,47 +46,46 @@
                 <label class="control-label pt-2" style="font-size:20px;">Brand</label>
             </div>
             <div class="col-10 pb-3">
-                <select asp-for="Brand.Name" asp-items="ViewBag.Brands" class="form-control">
-                    <option value="">-- Select Brand --</option>
+                <select asp-for="Brand.Name" asp-items="@ViewBag.BrandList" class="form-select">
+                    <option disabled selected>-- Select Brand --</option>
+                    <span asp-validation-for="Brand.Name" class="text-danger"></span>
                 </select>
-                <span asp-validation-for="Brand.Name" class="text-danger"></span>
             </div>
             <!-- Color Selection -->
             <div class="col-2">
                 <label class="control-label pt-2" style="font-size:20px;">Color</label>
             </div>
             <div class="col-10 pb-3">
-                <select asp-for="Color.Name" asp-items="ViewBag.Colors" class="form-control">
-                    <option value="">-- Select Color --</option>
+                <select asp-for="Color.Name" asp-items="@ViewBag.ColorList" class="form-select">
+                    <option disabled selected>-- Select Color --</option>
+                    <span asp-validation-for="Color.Name" class="text-danger"></span>
                 </select>
-                <span asp-validation-for="Color.Name" class="text-danger"></span>
             </div>
             <!-- Category Selection -->
             <div class="col-2">
                 <label class="control-label pt-2" style="font-size:20px;">Category</label>
             </div>
             <div class="col-10 pb-3">
-                <select asp-for="Category.Name" asp-items="ViewBag.Categorys" class="form-control">
-                    <option value="">-- Select Category --</option>
+                <select asp-for="Category.Name" asp-items="@ViewBag.CategoryList" class="form-select">
+                    <option disabled selected>-- Select Category --</option>
+                    <span asp-validation-for="Category.Name" class="text-danger"></span>
                 </select>
-                <span asp-validation-for="Category.Name" class="text-danger"></span>
             </div>
             <!-- Size Selection -->
             <div class="col-2">
                 <label class="control-label pt-2" style="font-size:20px;">Size</label>
             </div>
             <div class="col-10 pb-3">
-                <select asp-for="Size.RAM" asp-items="ViewBag.Sizes" class="form-control">
-                    <option value="">-- Select Size --</option>
+                <select asp-for="Size.RAM" asp-items="@ViewBag.SizeList" class="form-select">
+                    <option disabled selected>-- Select Size --</option>
                 </select>
-                <span asp-validation-for="Size.RAM" class="text-danger"></span>
             </div>
 
             <div class="col-5 offset-2">
                 <a asp-action="Index" class="btn-primary btn form-control ">Back to List</a>
             </div>
             <div class="col-5">
-                <input type="submit" value="Create" class="btn btn-success form-control" disabled/>
+                <input type="submit" value="Create" class="btn btn-success form-control" />
             </div>
         </div>
         <div>

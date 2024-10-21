@@ -11,6 +11,10 @@ public static class StaticDetail
     public static string RefreshToken = "RefreshToken";
     public const string RoleAdmin = "ADMIN";
     public const string RoleCustomer = "CUSTOMER";
+    public const string Size = "128GB";
+    public const string Color = "Black";
+    public const string Category = "Smartphone";
+    public const string Brand = "Apple";
     public enum ApiType
     {
         GET,
