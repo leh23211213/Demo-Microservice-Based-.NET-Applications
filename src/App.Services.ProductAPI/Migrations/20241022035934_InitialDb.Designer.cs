@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace App.Services.ProductAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240923110020_InitialDb")]
+    [Migration("20241022035934_InitialDb")]
     partial class InitialDb
     {
         /// <inheritdoc />
@@ -138,6 +138,10 @@ namespace App.Services.ProductAPI.Migrations
                     b.Property<int>("ColorId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Description")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
                     b.Property<string>("ImageLocalPath")
                         .HasColumnType("nvarchar(max)");
 
@@ -151,7 +155,8 @@ namespace App.Services.ProductAPI.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("Price");
 
                     b.Property<int>("SizeId")
                         .HasColumnType("int");

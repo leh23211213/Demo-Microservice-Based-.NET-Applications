@@ -1,8 +1,5 @@
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Net;
 namespace App.Services.ProductAPI.Models;
-[NotMapped]
-
 public class Response
 {
     public HttpStatusCode StatusCode { get; set; } = HttpStatusCode.OK;

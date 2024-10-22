@@ -1,12 +1,11 @@
 using System.ComponentModel.DataAnnotations.Schema;
-using Swashbuckle.AspNetCore.Annotations;
+using System.Text.Json.Serialization;
 namespace App.Services.ProductAPI.Models;
 
 public class Color
 {
     public int Id { get; set; }
-    [SwaggerIgnore]
     public string? Name { get; set; }
-    [NotMapped, SwaggerIgnore]
+    [NotMapped, JsonIgnore]
     public ICollection<Product>? Products { get; set; }
 }
