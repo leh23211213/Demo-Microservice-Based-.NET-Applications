@@ -7,7 +7,7 @@
 namespace App.Services.ProductAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialProductAPI : Migration
+    public partial class InitialDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -72,12 +72,13 @@ namespace App.Services.ProductAPI.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    ImageUrl = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    ImageLocalPath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     SizeId = table.Column<int>(type: "int", nullable: false),
                     ColorId = table.Column<int>(type: "int", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
-                    BrandId = table.Column<int>(type: "int", nullable: false)
+                    BrandId = table.Column<int>(type: "int", nullable: false),
+                    ImageUrl = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    ImageLocalPath = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -143,19 +144,19 @@ namespace App.Services.ProductAPI.Migrations
 
             migrationBuilder.InsertData(
                 table: "Products",
-                columns: new[] { "Id", "BrandId", "CategoryId", "ColorId", "ImageLocalPath", "ImageUrl", "Name", "Price", "SizeId" },
+                columns: new[] { "Id", "BrandId", "CategoryId", "ColorId", "Description", "ImageLocalPath", "ImageUrl", "Name", "Price", "SizeId" },
                 values: new object[,]
                 {
-                    { "IP13MiniBK128GB", 1, 1, 1, null, "https://placehold.co/603x403", "iPhone 13 Mini", 999m, 1 },
-                    { "IP14MiniBK128GB", 1, 1, 1, null, "https://placehold.co/603x403", "iPhone 14 Mini", 999m, 1 },
-                    { "IP15MiniBK128GB", 1, 1, 1, null, "https://placehold.co/603x403", "iPhone 15 Mini", 999m, 1 },
-                    { "IP16MiniBK128GB", 1, 1, 1, null, "https://placehold.co/603x403", "iPhone 16 Mini", 999m, 1 },
-                    { "IP17MiniBK128GB", 1, 1, 1, null, "https://placehold.co/603x403", "iPhone 17 Mini", 999m, 1 },
-                    { "IP18MiniBK128GB", 1, 1, 1, null, "https://placehold.co/603x403", "iPhone 18 Mini", 999m, 1 },
-                    { "IP19MiniBK128GB", 1, 1, 1, null, "https://placehold.co/603x403", "iPhone 19 Mini", 999m, 1 },
-                    { "IP20MiniBK128GB", 1, 1, 1, null, "https://placehold.co/603x403", "iPhone 20 Mini", 999m, 1 },
-                    { "IP21MiniBK128GB", 1, 1, 1, null, "https://placehold.co/603x403", "iPhone 21 Mini", 999m, 1 },
-                    { "IP22MiniBK128GB", 1, 1, 1, null, "https://placehold.co/603x403", "iPhone 22 Mini", 999m, 1 }
+                    { "IP13MiniBK128GB", 1, 1, 1, null, null, "https://placehold.co/603x403", "iPhone 13 Mini", 999m, 1 },
+                    { "IP14MiniBK128GB", 1, 1, 1, null, null, "https://placehold.co/603x403", "iPhone 14 Mini", 999m, 1 },
+                    { "IP15MiniBK128GB", 1, 1, 1, null, null, "https://placehold.co/603x403", "iPhone 15 Mini", 999m, 1 },
+                    { "IP16MiniBK128GB", 1, 1, 1, null, null, "https://placehold.co/603x403", "iPhone 16 Mini", 999m, 1 },
+                    { "IP17MiniBK128GB", 1, 1, 1, null, null, "https://placehold.co/603x403", "iPhone 17 Mini", 999m, 1 },
+                    { "IP18MiniBK128GB", 1, 1, 1, null, null, "https://placehold.co/603x403", "iPhone 18 Mini", 999m, 1 },
+                    { "IP19MiniBK128GB", 1, 1, 1, null, null, "https://placehold.co/603x403", "iPhone 19 Mini", 999m, 1 },
+                    { "IP20MiniBK128GB", 1, 1, 1, null, null, "https://placehold.co/603x403", "iPhone 20 Mini", 999m, 1 },
+                    { "IP21MiniBK128GB", 1, 1, 1, null, null, "https://placehold.co/603x403", "iPhone 21 Mini", 999m, 1 },
+                    { "IP22MiniBK128GB", 1, 1, 1, null, null, "https://placehold.co/603x403", "iPhone 22 Mini", 999m, 1 }
                 });
 
             migrationBuilder.CreateIndex(

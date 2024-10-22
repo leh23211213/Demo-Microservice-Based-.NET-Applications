@@ -12,7 +12,7 @@ namespace App.Services.ProductAPI.Data.Configuration
                      builder.HasKey(e => e.Id);
 
                      builder.Property(e => e.Name).HasMaxLength(100).IsRequired();
-                     
+
                      builder.Property(e => e.Price)
                             .HasField("_price")   // Maps the field _price to the column Price
                             .HasColumnName("Price")

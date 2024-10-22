@@ -5,7 +5,7 @@
 namespace App.Services.ProductAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialDb : Migration
+    public partial class update_product : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
