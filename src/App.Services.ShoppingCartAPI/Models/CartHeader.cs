@@ -1,5 +1,5 @@
 
-using App.Services.ShoppingCartAPI.Extensions;
+using Swashbuckle.AspNetCore.Annotations;
 namespace App.Services.ShoppingCartAPI.Models;
 public class CartHeader
 {

@@ -24,8 +24,8 @@ function loadDataTable(status) {
     dataTable = $('#tblData').DataTable({
         order: [[0, 'desc']],
         "ajax": { 
-            url: "/order/get", 
-            data: { status: status },    // Pass the status as a parameter
+            url: "/order/Get?status=" + status, 
+            data: { status: status },
             error: function(xhr, error, code) {
                 console.log(xhr);
                 console.log(code);
@@ -42,7 +42,7 @@ function loadDataTable(status) {
                 data: 'Id',
                 "render": function (data) {
                     return `<div class="w-75 btn-group" role="group">
-                    <a href="/order/orderDetail?orderId=${data}" class="btn btn-primary mx-2"><i class="bi bi-pencil-square"></i></a>
+                    <a href="/order/Get?orderId=${data}" class="btn btn-primary mx-2"><i class="bi bi-pencil-square"></i></a>
                     </div>`;
                 },
                 "width": "10%"

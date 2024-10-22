@@ -2,10 +2,12 @@
 {
     public interface IRepository<T> where T : class
     {
-        Task<List<T>> GetAllAsync(string? search, int pageSize = 0, int pageNumber = 1);
-        Task<T> GetAsync(bool tracked = true);
+        Task<List<T>> Pagination(string? search, int pageSize, int pageNumber);
+        Task<T> Get(bool tracked = true);
+        Task<T> Get(string id, bool tracked = true);
         Task CreateAsync(T entity);
         Task RemoveAsync(T entity);
+        Task DeleteAsync(string id);
         Task SaveAsync();
     }
 }

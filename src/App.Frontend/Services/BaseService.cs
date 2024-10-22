@@ -110,7 +110,7 @@ namespace App.Frontend.Services
                 Token token = _tokenProvider.GetToken();
                 if (token != null && !string.IsNullOrEmpty(token.AccessToken))
                 {
-                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("token", token.AccessToken);
                 }
                 try
                 {
@@ -175,7 +175,7 @@ namespace App.Frontend.Services
                 {
                     //New method to sign in with the new token that we receive
                     await SignInWithNewTokens(token);
-                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("token", token.AccessToken);
                 }
             }
         }

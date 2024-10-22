@@ -14,33 +14,39 @@ namespace App.Services.ProductAPI.Repository
             _dbSet = _db.Set<T>();
         }
 
-        public async Task CreateAsync(T entity)
-        {
-            await _dbSet.AddAsync(entity);
-            await SaveAsync();
-        }
-
-        public Task<List<T>> GetAllAsync(string? search, int pageSize = 0, int pageNumber = 1)
+        public Task CreateAsync(T entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task<T> GetAsync(bool tracked = true)
+        public Task DeleteAsync(string id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task RemoveAsync(T entity)
+        public Task<T> Get(bool tracked = true)
         {
-            _dbSet.Remove(entity);
-            await SaveAsync();
+            throw new NotImplementedException();
         }
 
-        public async Task SaveAsync()
+        public Task<T> Get(string id, bool tracked = true)
         {
-            await _db.SaveChangesAsync();
+            throw new NotImplementedException();
         }
 
+        public Task<List<T>> Pagination(string? search, int pageSize, int pageNumber)
+        {
+            throw new NotImplementedException();
+        }
 
+        public Task RemoveAsync(T entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SaveAsync()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

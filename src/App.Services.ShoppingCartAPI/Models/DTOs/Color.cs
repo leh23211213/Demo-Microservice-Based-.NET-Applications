@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
-using App.Services.ShoppingCartAPI.Extensions;
+using Swashbuckle.AspNetCore.Annotations;
 namespace App.Services.ShoppingCartAPI.Models;
 
 public class Color

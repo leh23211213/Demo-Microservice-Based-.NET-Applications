@@ -18,11 +18,13 @@ namespace App.Frontend.Controllers
             _orderService = orderService;
         }
 
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             return View(await LoadCart());
         }
-
+        
+        [Authorize]
         public async Task<IActionResult> Checkout()
         {
             return View(await LoadCart());
@@ -71,6 +73,7 @@ namespace App.Frontend.Controllers
             return View(orderId);
         }
 
+        [Authorize]
         public async Task<IActionResult> Delete(string cartDetailsId)
         {
             Response? response = await _cartService.DeleteAsync(cartDetailsId);
