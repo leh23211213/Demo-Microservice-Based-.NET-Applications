@@ -62,6 +62,11 @@ builder.Services.AddSwaggerGen(option =>
         Version = "v1.0",
         Title = "App.Services.ProductAPI",
     });
+    option.SwaggerDoc("v2", new OpenApiInfo
+    {
+        Version = "v2.0",
+        Title = "App.Services.ProductAPI",
+    });
 });
 
 var app = builder.Build();
@@ -74,12 +79,21 @@ app.UseSwaggerUI(options =>
         {
             options.SwaggerEndpoint("/swagger/v1/swagger.json", "App.Services.ProductAPI V1");
         });
+        app.UseSwaggerUI(options =>
+        {
+            options.SwaggerEndpoint("/swagger/v2/swagger.json", "App.Services.ProductAPI V2");
+        });
     }
     else
     {
         app.UseSwaggerUI(options =>
         {
-            options.SwaggerEndpoint("/swagger/v1/swagger.json", "App.Services.ProductAPI V1");
+            options.SwaggerEndpoint("/swagger/v1/swagger.json", "App.Services.ProductAPI V");
+            options.RoutePrefix = string.Empty;
+        });
+        app.UseSwaggerUI(options =>
+        {
+            options.SwaggerEndpoint("/swagger/v2/swagger.json", "App.Services.ProductAPI V2");
             options.RoutePrefix = string.Empty;
         });
     }

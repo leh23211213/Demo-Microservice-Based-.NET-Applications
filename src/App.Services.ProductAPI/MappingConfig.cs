@@ -1,6 +1,4 @@
-﻿
-
-using App.Services.ProductAPI.Models;
+﻿using App.Services.ProductAPI.Models;
 using AutoMapper;
 
 namespace App.Services.ProductAPI
@@ -12,7 +10,7 @@ namespace App.Services.ProductAPI
             var mappingConfig = new MapperConfiguration(config =>
             {
                 config.CreateMap<Product, ProductDto>().ReverseMap();
-                
+
                 config.CreateMap<Product, ProductDetailsDto>().ReverseMap();
                 config.CreateMap<Product, PaginateProduct>().ReverseMap();
             });
