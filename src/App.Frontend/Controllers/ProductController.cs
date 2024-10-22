@@ -11,9 +11,7 @@ namespace App.Frontend.Controllers
     [Authorize(Roles = "ADMIN")]
     public class ProductController : Controller
     {
-
         private readonly IProductService _productService;
-
         public ProductController(IProductService productService)
         {
             _productService = productService;

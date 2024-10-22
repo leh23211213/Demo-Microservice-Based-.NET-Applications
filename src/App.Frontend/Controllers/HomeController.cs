@@ -1,5 +1,6 @@
 using App.Frontend.Models;
 using App.Frontend.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Diagnostics;
@@ -37,7 +38,7 @@ namespace App.Frontend.Controllers
             return View(pagination);
         }
 
-        // [Authorize]
+
         public async Task<IActionResult> Details(string id)
         {
             Response? response = await _productService.Get(id);
@@ -54,7 +55,7 @@ namespace App.Frontend.Controllers
             return View(product);
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Details(Product product)
         {

@@ -15,7 +15,6 @@ builder.Host.UseSerilog();
 
 builder.Services.ConfigureDatabase(builder.Configuration);
 builder.Services.AppServiceCollection(builder.Configuration);
-
 // Configure the HTTP request pipeline.
 builder.Services.AddApiVersioning(options =>
     {
@@ -38,10 +37,10 @@ builder.Services.AddSwaggerGen(option =>
     option.AddSecurityDefinition(name: JwtBearerDefaults.AuthenticationScheme, securityScheme: new OpenApiSecurityScheme
     {
         Name = "Authorization",
-        Description = "Enter the Bearer Authorization string as following: `Bearer Generated-JWT-Token`",
+        Description = "Enter the Bearer Authorization string as following: `token Generated-JWT-Token`",
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer"
+        Scheme = "token"
     });
     option.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
@@ -69,6 +68,7 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
+builder.AddAppAuthetication();
 var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI(options =>
@@ -92,6 +92,7 @@ app.UseSwaggerUI(options =>
     }
 });
 
+app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

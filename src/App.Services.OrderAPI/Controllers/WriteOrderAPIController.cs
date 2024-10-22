@@ -16,7 +16,7 @@ namespace App.Services.OrderAPI.Controllers
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/order")]
-    public class OrderAPIController : ControllerBase
+    public class WriteOrderAPIController : ControllerBase
     {
         private IMapper _mapper;
         protected Response _response;
@@ -24,15 +24,15 @@ namespace App.Services.OrderAPI.Controllers
         private readonly IMessageBus _messageBus;
         private readonly IConfiguration _configuration;
         private readonly ApplicationDbContext _dbContext;
-        private readonly ILogger<OrderAPIController> _logger;
+        private readonly ILogger<WriteOrderAPIController> _logger;
 
-        public OrderAPIController(
+        public WriteOrderAPIController(
                                     IMapper mapper,
                                     IMessageBus messageBus,
                                     IConfiguration configuration,
                                     ApplicationDbContext dbContext,
                                     IProductService productService,
-                                    ILogger<OrderAPIController> logger
+                                    ILogger<WriteOrderAPIController> logger
                                     )
         {
             _mapper = mapper;
@@ -44,53 +44,8 @@ namespace App.Services.OrderAPI.Controllers
             _productService = productService;
         }
 
-        // [Authorize]
-        [HttpGet("GetOrders")]
-        public async Task<ActionResult<Response?>> GetOrders(string? userId = "")
-        {
-            try
-            {
-                IEnumerable<OrderHeader> orders;
-
-                if (User.IsInRole(StaticDetail.RoleAdmin))
-                {
-                    orders = await _dbContext.OrderHeaders.Include(u => u.OrderDetails).OrderByDescending(u => u.Id).ToListAsync();
-                }
-                else
-                {
-                    orders = await _dbContext.OrderHeaders.Include(u => u.OrderDetails).Where(u => u.UserId == userId).OrderByDescending(u => u.Id).ToListAsync();
-                }
-                _response.Result = orders;
-            }
-            catch (Exception ex)
-            {
-                _response.Message = ex.Message;
-                _response.IsSuccess = false;
-                _response.StatusCode = HttpStatusCode.NotFound;
-            }
-            return _response;
-        }
-
-        // [Authorize]
-        [HttpGet("Get")]
-        public async Task<ActionResult<Response?>> Get(string orderId)
-        {
-            try
-            {
-                var orderHead = await _dbContext.OrderHeaders.Include(u => u.OrderDetails).FirstOrDefaultAsync(u => u.Id == orderId);
-                _response.Result = orderHead;
-            }
-            catch (Exception ex)
-            {
-                _response.Message = ex.Message;
-                _response.IsSuccess = false;
-                _response.StatusCode = HttpStatusCode.NotFound;
-            }
-            return _response;
-        }
-
-        // [Authorize]
-        [HttpPost("CreateOrder")]
+        [Authorize]
+        [HttpPost]
         public async Task<ActionResult<Response>> CreateOrder([FromBody] Cart cart)
         {
             try
@@ -117,8 +72,8 @@ namespace App.Services.OrderAPI.Controllers
             return _response;
         }
 
-        // [Authorize]
-        [HttpPost("CreateStripeSession")]
+        [Authorize]
+        [HttpPost]
         public async Task<ActionResult<Response>> CreateStripeSession([FromBody] Models.StripeRequest stripeRequest)
         {
             try
@@ -185,8 +140,8 @@ namespace App.Services.OrderAPI.Controllers
             return _response;
         }
 
-        //[Authorize]
-        [HttpPost("ValidateStripeSession")]
+        [Authorize]
+        [HttpPost]
         public async Task<ActionResult<Response>> ValidateStripeSession([FromBody] string orderHeaderId)
         {
             try
@@ -209,7 +164,6 @@ namespace App.Services.OrderAPI.Controllers
                     _response.IsSuccess = true;
                     _response.StatusCode = HttpStatusCode.OK;
                 }
-
             }
             catch (Exception ex)
             {
@@ -220,7 +174,7 @@ namespace App.Services.OrderAPI.Controllers
             return _response;
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpPost("UpdateStatus")]
         public async Task<ActionResult<Response>> UpdateStatus([FromBody] Cart cart)
         {

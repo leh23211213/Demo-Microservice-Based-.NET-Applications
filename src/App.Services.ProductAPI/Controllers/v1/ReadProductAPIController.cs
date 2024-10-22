@@ -15,14 +15,11 @@ namespace App.Services.ProductAPI.Controllers.v1
     {
         private Response _response;
         private readonly ApplicationDbContext _dbContext;
-        // private readonly ILogger<ProductAPIController> _logger;
 
         public ReadProductAPIController(
                                     ApplicationDbContext dbContext
-                                    // ILogger<ProductAPIController> logger
                                     )
         {
-            //   _logger = logger;
             _dbContext = dbContext;
             _response = new Response();
         }
@@ -31,10 +28,9 @@ namespace App.Services.ProductAPI.Controllers.v1
         [ResponseCache(CacheProfileName = "Default10")]
         public async Task<ActionResult<Response>> Get()
         {
-            // _logger.LogInformation("orther service call");
             try
             {
-                IEnumerable<Product> products = await _dbContext.Products
+                IEnumerable<Product> products = await _dbContext.Products.AsNoTracking()
                                                                         .Include(p => p.Size)
                                                                         .Include(p => p.Category)
                                                                         .Include(p => p.Color)
@@ -46,6 +42,7 @@ namespace App.Services.ProductAPI.Controllers.v1
                                                                             Price = p.Price,
                                                                             ImageUrl = p.ImageUrl,
                                                                             ImageLocalPath = p.ImageLocalPath,
+                                                                            Description = p.Description,
                                                                             Size = p.Size,
                                                                             Category = p.Category,
                                                                             Color = p.Color,
@@ -74,7 +71,7 @@ namespace App.Services.ProductAPI.Controllers.v1
         {
             try
             {
-                var product = await _dbContext.Products
+                var product = await _dbContext.Products.AsNoTracking()
                                                         .Where(p => p.Id == id)
                                                         .Include(p => p.Category)
                                                         .Include(p => p.Size)
@@ -127,7 +124,7 @@ namespace App.Services.ProductAPI.Controllers.v1
                     products = _dbContext.Products.Where(p => p.Name.ToLower().Contains(search.ToLower()));
                 }
 
-                products = await _dbContext.Products
+                products = await _dbContext.Products.AsNoTracking()
                                                 .Select(p => new Product
                                                 {
                                                     Id = p.Id,
@@ -136,7 +133,6 @@ namespace App.Services.ProductAPI.Controllers.v1
                                                     ImageUrl = p.ImageUrl,
                                                     ImageLocalPath = p.ImageLocalPath
                                                 }).ToListAsync();
-
                 var totalItems = products.Count();
                 var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
 

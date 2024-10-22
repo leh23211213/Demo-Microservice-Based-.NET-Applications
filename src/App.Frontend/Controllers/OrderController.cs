@@ -58,16 +58,12 @@ namespace App.Frontend.Controllers
         {
             return View();
         }
+
         [HttpGet]
         public IActionResult Get(string status)
         {
             IEnumerable<OrderHeader> list;
-            string userId = "";
-
-            if (!User.IsInRole(StaticDetail.RoleAdmin))
-            {
-                userId = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
-            }
+            string userId = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
 
             Response response = _orderService.GetAllOrder(userId).GetAwaiter().GetResult();
             if (response.IsSuccess && response != null)

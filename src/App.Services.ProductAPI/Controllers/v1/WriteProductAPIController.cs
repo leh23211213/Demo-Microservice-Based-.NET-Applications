@@ -26,8 +26,8 @@ namespace App.Services.ProductAPI.Controllers.v1
             _response = new Response();
         }
 
+        [HttpPost]
         [Authorize(Roles = "ADMIN")]
-        [HttpPost("Create")]
         public async Task<ActionResult<Response>> Create(Product product)
         {
             try
@@ -52,7 +52,6 @@ namespace App.Services.ProductAPI.Controllers.v1
                         CategoryId = product.Category.Id,
                         BrandId = product.Brand.Id,
                     };
-
                     _dbContext.Products.Add(createProduct);
                     _dbContext.SaveChanges();
 
@@ -97,7 +96,7 @@ namespace App.Services.ProductAPI.Controllers.v1
             return _response;
         }
 
-        [HttpPut("Update")]
+        [HttpPut]
         [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<Response>> Update(Product product)
         {
