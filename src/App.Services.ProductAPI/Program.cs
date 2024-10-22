@@ -78,9 +78,6 @@ app.UseSwaggerUI(options =>
         app.UseSwaggerUI(options =>
         {
             options.SwaggerEndpoint("/swagger/v1/swagger.json", "App.Services.ProductAPI V1");
-        });
-        app.UseSwaggerUI(options =>
-        {
             options.SwaggerEndpoint("/swagger/v2/swagger.json", "App.Services.ProductAPI V2");
         });
     }
@@ -89,10 +86,6 @@ app.UseSwaggerUI(options =>
         app.UseSwaggerUI(options =>
         {
             options.SwaggerEndpoint("/swagger/v1/swagger.json", "App.Services.ProductAPI V");
-            options.RoutePrefix = string.Empty;
-        });
-        app.UseSwaggerUI(options =>
-        {
             options.SwaggerEndpoint("/swagger/v2/swagger.json", "App.Services.ProductAPI V2");
             options.RoutePrefix = string.Empty;
         });
