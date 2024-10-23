@@ -33,9 +33,11 @@ public class ApplicationDbContext : DbContext
                 .IsRequired(false);
 
       entity.Property(e => e.Discount)
+                .IsRequired(false)
                 .HasColumnType("decimal(18,2)");
 
       entity.Property(e => e.OrderTotal)
+                .IsRequired(false)
                 .HasColumnType("decimal(18,2)");
       entity.Property(e => e.OrderTime)
                 .HasColumnType("datetime");

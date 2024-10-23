@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace App.Services.OrderAPI.Controllers
 {
+    //[Authorize]
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/order")]
@@ -24,8 +25,7 @@ namespace App.Services.OrderAPI.Controllers
             _dbContext = dbContext;
         }
 
-        [Authorize]
-        [HttpGet]
+        [HttpGet("GetAllOrder")]
         public async Task<ActionResult<Response?>> GetAllOrder(string? userId = "")
         {
             try
@@ -38,7 +38,7 @@ namespace App.Services.OrderAPI.Controllers
                                                             .Include(u => u.OrderDetails)
                                                             .OrderByDescending(u => u.Id)
                                                             .ToListAsync();
-                                                            // select
+                    // select
                 }
                 else
                 {
@@ -61,8 +61,7 @@ namespace App.Services.OrderAPI.Controllers
             return _response;
         }
 
-        [Authorize]
-        [HttpGet]
+        [HttpGet("{orderId}")]
         public async Task<ActionResult<Response?>> Get(string orderId)
         {
             try

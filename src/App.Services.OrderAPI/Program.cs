@@ -7,7 +7,6 @@ using Microsoft.OpenApi.Models;
 using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
-
 builder.Services.ConfigureDatabase(builder.Configuration);
 builder.Services.AppServiceCollection(builder.Configuration);
 
@@ -15,8 +14,8 @@ builder.Services.AppServiceCollection(builder.Configuration);
 builder.Services.AddApiVersioning(options =>
     {
         options.ReportApiVersions = true;
-        options.AssumeDefaultVersionWhenUnspecified = true;
         options.DefaultApiVersion = new ApiVersion(1, 0);
+        options.AssumeDefaultVersionWhenUnspecified = true;
         // options.ApiVersionReader = new UrlSegmentApiVersionReader();  // Read version from URL
     });
 
@@ -32,10 +31,10 @@ builder.Services.AddSwaggerGen(option =>
     option.AddSecurityDefinition(name: JwtBearerDefaults.AuthenticationScheme, securityScheme: new OpenApiSecurityScheme
     {
         Name = "Authorization",
-        Description = "Enter the Bearer Authorization string as following: `token Generated-JWT-Token`",
+        Description = "Enter the Bearer Authorization string as following: `Bearer Generated-JWT-Token`",
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.ApiKey,
-        Scheme = "token"
+        Scheme = "Bearer"
     });
     option.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
@@ -59,9 +58,9 @@ builder.Services.AddSwaggerGen(option =>
 });
 
 builder.AddAppAuthetication();
-builder.Services.AddAuthorization();
-
 var app = builder.Build();
+
+
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {

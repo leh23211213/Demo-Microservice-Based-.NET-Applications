@@ -4,9 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using App.Services.ShoppingCartAPI.Data;
 using App.Services.ShoppingCartAPI.Models;
 using App.Services.ShoppingCartAPI.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 
 namespace App.Services.ShoppingCartAPI.Controllers
 {
+    //[Authorize]
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/cart")]
@@ -26,12 +28,13 @@ namespace App.Services.ShoppingCartAPI.Controllers
             _productService = productService;
         }
 
+
         [HttpGet("Checkout/{userId}")]
         public async Task<ActionResult<Response>> Checkout(string userId)
         {
             try
             {
-                var cartHeader = await _dbContext.CartHeaders.AsNoTracking().FirstAsync(u => u.UserId == userId);
+                var cartHeader = await _dbContext.CartHeaders.AsNoTracking().FirstOrDefaultAsync(u => u.UserId == userId);
                 if (cartHeader == null)
                 {
                     _response.IsSuccess = false;
