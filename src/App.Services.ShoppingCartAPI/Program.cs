@@ -1,14 +1,11 @@
-using App.Services.ShoppingCartAPI;
 using App.Services.ShoppingCartAPI.Data;
 using App.Services.ShoppingCartAPI.Extensions;
-using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.AddAppAuthetication();
 builder.Services.ConfigureDatabase(builder.Configuration);
 builder.Services.AppServiceCollection(builder.Configuration);
 
@@ -16,9 +13,9 @@ builder.Services.AppServiceCollection(builder.Configuration);
 // Configure the HTTP request pipeline.
 builder.Services.AddApiVersioning(options =>
 {
+    options.ReportApiVersions = true;
     options.DefaultApiVersion = new ApiVersion(1, 0);
     options.AssumeDefaultVersionWhenUnspecified = true;
-    options.ReportApiVersions = true;
 });
 
 builder.Services.AddVersionedApiExplorer(options =>
@@ -33,10 +30,10 @@ builder.Services.AddSwaggerGen(option =>
     option.AddSecurityDefinition(name: JwtBearerDefaults.AuthenticationScheme, securityScheme: new OpenApiSecurityScheme
     {
         Name = "Authorization",
-        Description = "Enter the Bearer Authorization string as following: `token Generated-JWT-Token`",
+        Description = "Enter the Bearer Authorization string as following: `Bearer Generated-JWT-Token`",
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.ApiKey,
-        Scheme = "token"
+        Scheme = "Bearer"
     });
     option.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
@@ -59,6 +56,7 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
+builder.AddAppAuthetication();
 
 var app = builder.Build();
 app.UseSwagger();
@@ -80,7 +78,6 @@ app.UseSwaggerUI(options =>
         });
     }
 });
-
 
 app.UseHttpsRedirection();
 app.UseAuthorization();

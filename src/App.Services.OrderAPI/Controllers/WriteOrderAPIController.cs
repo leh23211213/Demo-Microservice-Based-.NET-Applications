@@ -8,11 +8,9 @@ using AutoMapper;
 using Stripe;
 using Stripe.Checkout;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authorization;
-
 namespace App.Services.OrderAPI.Controllers
 {
+    //[Authorize]
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/order")]
@@ -44,19 +42,17 @@ namespace App.Services.OrderAPI.Controllers
             _productService = productService;
         }
 
-        [Authorize]
-        [HttpPost]
+
+        [HttpPost("CreateOrder")]
         public async Task<ActionResult<Response>> CreateOrder([FromBody] Cart cart)
         {
             try
             {
                 OrderHeader orderHeader = _mapper.Map<OrderHeader>(cart.CartHeader);
-
                 orderHeader.Status = StaticDetail.Status_Pending;
-                orderHeader.OrderTotal = Math.Round(orderHeader.OrderTotal, 2);
+                orderHeader.OrderTotal = Math.Round(orderHeader.OrderTotal ?? 0, 2);
                 orderHeader.OrderDetails = _mapper.Map<IEnumerable<OrderDetails>>(cart.CartDetails);
                 orderHeader.OrderTime = DateTime.Now;
-
                 OrderHeader orderCreated = _dbContext.OrderHeaders.Add(orderHeader).Entity;
                 await _dbContext.SaveChangesAsync();
 
@@ -72,8 +68,7 @@ namespace App.Services.OrderAPI.Controllers
             return _response;
         }
 
-        [Authorize]
-        [HttpPost]
+        [HttpPost("CreateStripeSession")]
         public async Task<ActionResult<Response>> CreateStripeSession([FromBody] Models.StripeRequest stripeRequest)
         {
             try
@@ -140,8 +135,7 @@ namespace App.Services.OrderAPI.Controllers
             return _response;
         }
 
-        [Authorize]
-        [HttpPost]
+        [HttpPost("ValidateStripeSession")]
         public async Task<ActionResult<Response>> ValidateStripeSession([FromBody] string orderHeaderId)
         {
             try
@@ -174,7 +168,6 @@ namespace App.Services.OrderAPI.Controllers
             return _response;
         }
 
-        [Authorize]
         [HttpPost("UpdateStatus")]
         public async Task<ActionResult<Response>> UpdateStatus([FromBody] Cart cart)
         {

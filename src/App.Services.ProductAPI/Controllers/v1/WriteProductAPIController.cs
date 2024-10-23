@@ -7,8 +7,10 @@ using App.Services.ProductAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 namespace App.Services.ProductAPI.Controllers.v1
 {
-    [ApiVersion("1.0")]
+
     [ApiController]
+    [ApiVersion("1.0")]
+    [Authorize(Roles = "ADMIN")]
     [Route("api/v{version:apiVersion}/product")]
     public class WriteProductAPIController : Controller
     {
@@ -26,8 +28,7 @@ namespace App.Services.ProductAPI.Controllers.v1
             _response = new Response();
         }
 
-        [HttpPost]
-        [Authorize(Roles = "ADMIN")]
+        [HttpPost("Create")]
         public async Task<ActionResult<Response>> Create(Product product)
         {
             try
@@ -96,8 +97,7 @@ namespace App.Services.ProductAPI.Controllers.v1
             return _response;
         }
 
-        [HttpPut]
-        [Authorize(Roles = "ADMIN")]
+        [HttpPut("Update")]
         public async Task<ActionResult<Response>> Update(Product product)
         {
             try
@@ -148,7 +148,6 @@ namespace App.Services.ProductAPI.Controllers.v1
         }
 
         [HttpDelete("Delete/{id}")]
-        [Authorize(Roles = "ADMIN")]
         public async Task<ActionResult<Response>> Delete(string id)
         {
             try

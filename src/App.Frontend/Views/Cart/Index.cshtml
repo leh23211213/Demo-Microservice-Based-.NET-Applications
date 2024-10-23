@@ -74,7 +74,7 @@
                                         </div>
                                     </div>
                                     <div class="Item-Price">
-                                        <div type="normal" class="Price">@string.Format("{0:c}",@item.Product.Price)</div>
+                                        <div type="normal" class="Price">@string.Format("{0:c}", @item.Product.Price)</div>
                                     </div>
                                     <div class="Item-Quantity">
                                         <input type="hidden" name="productId" value="@item.ProductId" />
@@ -86,7 +86,7 @@
                                         <button type="submit" class="Add">+</button>
                                     </div>
                                     <div id="itemTotal-item.Id" class="Item-Subtotal">
-                                        @string.Format("{0:c}",@item.Product.Price)
+                                        @string.Format("{0:c}", @item.Product.Price)
                                     </div>
                                     <div class="Item-Action">
                                         <a asp-action="Delete" asp-route-cartDetailsId="@item.Id">

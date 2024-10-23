@@ -2,7 +2,7 @@
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-namespace App.Services.ProductAPI.Extensions
+namespace App.Services.ShoppingCartAPI.Extensions
 {
     public static class WebApplicationBuilderExtensions
     {
@@ -36,8 +36,6 @@ namespace App.Services.ProductAPI.Extensions
             });
             builder.Services.AddAuthorization();
             builder.Services.AddControllers();
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
             builder.Services.AddAuthentication();
             return builder;
         }
