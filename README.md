@@ -22,4 +22,4 @@ Product Service API : https://409149productapi-axacf3gtfjayeefb.eastasia-01.azur
 
 Cart Service API : https://409159cartapi-ekf4ckdxhmfpc5f0.eastasia-01.azurewebsites.net
 
-Cart Service API : https://409159orderapi-gcg0a2dufab3f9hj.eastasia-01.azurewebsites.net
+Order Service API : https://409159orderapi-gcg0a2dufab3f9hj.eastasia-01.azurewebsites.net

@@ -102,7 +102,7 @@ namespace App.Services.ProductAPI.Controllers.v1
         {
             try
             {
-                Product p = _dbContext.Products.FirstOrDefault(u => u.Id == product.Id);
+                Product p = await _dbContext.Products.FirstOrDefaultAsync(u => u.Id == product.Id);
                 if (p is null)
                 {
                     _response.StatusCode = HttpStatusCode.NotFound;
@@ -152,7 +152,7 @@ namespace App.Services.ProductAPI.Controllers.v1
         {
             try
             {
-                Product product = _dbContext.Products.FirstOrDefault(u => u.Id == id);
+                Product product = await _dbContext.Products.FirstOrDefaultAsync(u => u.Id == id);
                 if (product == null)
                 {
                     _response.StatusCode = HttpStatusCode.NotFound;
