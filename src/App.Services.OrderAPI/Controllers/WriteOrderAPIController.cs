@@ -8,6 +8,7 @@ using AutoMapper;
 using Stripe;
 using Stripe.Checkout;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 namespace App.Services.OrderAPI.Controllers
 {
     //[Authorize]
@@ -141,7 +142,7 @@ namespace App.Services.OrderAPI.Controllers
             try
             {
                 OrderHeader orderHeader = await _dbContext.OrderHeaders.FirstOrDefaultAsync(u => u.Id == orderHeaderId);
-                
+
                 var service = new SessionService();
                 Session session = service.Get(orderHeader.StripeSessionId);
                 var paymentIntentService = new PaymentIntentService();
