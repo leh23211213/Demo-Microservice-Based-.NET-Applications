@@ -26,7 +26,6 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
-          include-prerelease: true
 
       - name: Restore Dependencies
         run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
