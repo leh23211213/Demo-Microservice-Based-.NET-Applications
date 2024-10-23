@@ -40,6 +40,8 @@ namespace App.Services.ProductAPI.Data.Configuration
                             .WithMany(b => b.Products)
                             .HasForeignKey(p => p.BrandId)
                             .OnDelete(DeleteBehavior.Cascade);
+
+                     builder.Ignore(e => e.Image);
               }
        }
 }

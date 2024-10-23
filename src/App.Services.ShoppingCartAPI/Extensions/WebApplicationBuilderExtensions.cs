@@ -2,7 +2,7 @@
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-namespace App.Services.ShoppingCartAPI.Extensions
+namespace App.Services.ProductAPI.Extensions
 {
     public static class WebApplicationBuilderExtensions
     {
@@ -22,19 +22,22 @@ namespace App.Services.ShoppingCartAPI.Extensions
             })
             .AddJwtBearer(options =>
             {
+                options.RequireHttpsMetadata = false; // Enable if you're not using HTTPS (for dev environment)
+                options.SaveToken = true;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
                     ValidateIssuer = true,
                     ValidIssuer = issuer,
-                    ValidateIssuerSigningKey = true,
                     ValidAudience = audience,
-                    ValidateAudience = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key)
+                    ValidateAudience = true
                 };
             });
             builder.Services.AddAuthorization();
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
             builder.Services.AddAuthentication();
             return builder;
         }

@@ -1,5 +1,3 @@
-
-
 using System.ComponentModel.DataAnnotations.Schema;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -27,17 +25,23 @@ public class Product
     public string? Description { get; set; }
     [NotMapped]
     public IFormFile? Image { get; set; }
-    public virtual Size? Size { get; set; }
-    public virtual Color? Color { get; set; }
-    public virtual Category? Category { get; set; }
-    public virtual Brand? Brand { get; set; }
-
     public int SizeId { get; set; }
     public int ColorId { get; set; }
     public int CategoryId { get; set; }
     public int BrandId { get; set; }
+    
+    //                  SwaggerIgnore
+    [SwaggerIgnore, NotMapped]
+    public virtual Size? Size { get; set; }
+    [SwaggerIgnore, NotMapped]
+    public virtual Color? Color { get; set; }
+    [SwaggerIgnore, NotMapped]
+    public virtual Category? Category { get; set; }
+    [SwaggerIgnore, NotMapped]
+    public virtual Brand? Brand { get; set; }
 
-
+    [SwaggerIgnore]
     public string? ImageUrl { get; set; }
+    [SwaggerIgnore]
     public string? ImageLocalPath { get; set; }
 }
