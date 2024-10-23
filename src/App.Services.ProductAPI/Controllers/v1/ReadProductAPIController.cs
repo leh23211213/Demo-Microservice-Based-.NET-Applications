@@ -119,11 +119,6 @@ namespace App.Services.ProductAPI.Controllers.v1
             try
             {
                 IEnumerable<Product> products = null;
-                if (!string.IsNullOrEmpty(search))
-                {
-                    products = _dbContext.Products.Where(p => p.Name.ToLower().Contains(search.ToLower()));
-                }
-
                 products = await _dbContext.Products.AsNoTracking()
                                                 .Select(p => new Product
                                                 {
@@ -133,6 +128,12 @@ namespace App.Services.ProductAPI.Controllers.v1
                                                     ImageUrl = p.ImageUrl,
                                                     ImageLocalPath = p.ImageLocalPath
                                                 }).ToListAsync();
+
+                if (!string.IsNullOrEmpty(search))
+                {
+                    products = _dbContext.Products.Where(p => p.Name.ToLower().Contains(search.ToLower()));
+                }
+
                 var totalItems = products.Count();
                 var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
 

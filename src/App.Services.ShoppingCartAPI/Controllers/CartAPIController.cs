@@ -92,8 +92,8 @@ namespace App.Services.ShoppingCartAPI.Controllers
                     _dbContext.Add(cart.CartHeader);
                     await _dbContext.SaveChangesAsync();
 
-                    cart.CartDetails.First().CartHeaderId = cart.CartHeader.Id;
-                    _dbContext.Add(cart.CartDetails.First());
+                    cart.CartDetails.FirstOrDefault().CartHeaderId = cart.CartHeader.Id;
+                    _dbContext.Add(cart.CartDetails.FirstOrDefault());
                     await _dbContext.SaveChangesAsync();
 
                     _response.Message = "Item has been added to Cart";
@@ -102,14 +102,14 @@ namespace App.Services.ShoppingCartAPI.Controllers
                 {
                     //check if details has same product
                     var cartDetails = await _dbContext.CartDetails.AsNoTracking().FirstOrDefaultAsync(
-                        u => u.ProductId == cart.CartDetails.First().ProductId &&
+                        u => u.ProductId == cart.CartDetails.FirstOrDefault().ProductId &&
                         u.CartHeaderId == cartHeader.Id
                     );
                     if (cartDetails == null)
                     {
                         //create cartdetails
-                        cart.CartDetails.First().CartHeaderId = cartHeader.Id;
-                        _dbContext.CartDetails.Add(cart.CartDetails.First());
+                        cart.CartDetails.FirstOrDefault().CartHeaderId = cartHeader.Id;
+                        _dbContext.CartDetails.Add(cart.CartDetails.FirstOrDefault());
                         await _dbContext.SaveChangesAsync();
 
                         _response.Message = "Item has been added to Cart";
@@ -142,7 +142,7 @@ namespace App.Services.ShoppingCartAPI.Controllers
         {
             try
             {
-                CartDetails cartDetails = _dbContext.CartDetails.First(u => u.Id == cartDetailsId);
+                CartDetails cartDetails = await _dbContext.CartDetails.FirstOrDefaultAsync(u => u.Id == cartDetailsId);
 
                 _dbContext.CartDetails.Remove(cartDetails);
                 await _dbContext.SaveChangesAsync();
@@ -172,5 +172,31 @@ namespace App.Services.ShoppingCartAPI.Controllers
         //     }
         //     return _response;
         // }
+
+        [HttpDelete("Clear/{userId}")]
+        public async Task<ActionResult<Response>> Clear(string userId)
+        {
+            try
+            {
+                var cart = await _dbContext.CartHeaders.FirstOrDefaultAsync(u => u.UserId == userId);
+
+                if (cart == null)
+                {
+                    _response.IsSuccess = false;
+                    _response.Message = "Empty";
+                    _response.StatusCode = HttpStatusCode.NotFound;
+                }
+
+                _dbContext.CartHeaders.Remove(cart);
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
+                _response.StatusCode = HttpStatusCode.BadRequest;
+            }
+            return _response;
+        }
     }
 }

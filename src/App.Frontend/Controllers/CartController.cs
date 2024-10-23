@@ -58,6 +58,7 @@ namespace App.Frontend.Controllers
                     var stripeResponseResult = JsonConvert.DeserializeObject<StripeRequest>(Convert.ToString(stripeResponse.Result));
                     Response.Headers?.Add("Location", stripeResponseResult.StripeSessionUrl);
                 }
+
                 return new StatusCodeResult(303);
             }
             return View(cart);
@@ -91,9 +92,9 @@ namespace App.Frontend.Controllers
 
         private async Task<Cart> LoadCart()
         {
-            var userId = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
+            //var userId = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
             //Hiệu suất tốt hơn: FindFirst() dừng ngay khi tìm thấy kết quả, thay vì duyệt qua tất cả các claim.
-            // var userId = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+            var userId = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
             var userEmail = User.FindFirst(JwtRegisteredClaimNames.Email)?.Value;
             var userName = User.FindFirst(JwtRegisteredClaimNames.Name)?.Value;
 

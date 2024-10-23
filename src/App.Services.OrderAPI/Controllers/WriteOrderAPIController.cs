@@ -140,11 +140,10 @@ namespace App.Services.OrderAPI.Controllers
         {
             try
             {
-                OrderHeader orderHeader = _dbContext.OrderHeaders.First(u => u.Id == orderHeaderId);
-
+                OrderHeader orderHeader = await _dbContext.OrderHeaders.FirstOrDefaultAsync(u => u.Id == orderHeaderId);
+                
                 var service = new SessionService();
                 Session session = service.Get(orderHeader.StripeSessionId);
-
                 var paymentIntentService = new PaymentIntentService();
                 PaymentIntent paymentIntent = paymentIntentService.Get(session.PaymentIntentId);
 
