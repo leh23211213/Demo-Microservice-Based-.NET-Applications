@@ -1,4 +1,3 @@
-using App.Services.ProductAPI.Data;
 using Microsoft.EntityFrameworkCore;
 namespace App.Services.ProductAPI.Extensions
 {
@@ -6,7 +5,7 @@ namespace App.Services.ProductAPI.Extensions
     {
         public static IServiceCollection ConfigureDatabase(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
+            services.AddDbContext<Data.ApplicationDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
             return services;
