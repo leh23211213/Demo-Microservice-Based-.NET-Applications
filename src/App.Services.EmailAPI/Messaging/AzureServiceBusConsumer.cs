@@ -21,9 +21,7 @@ namespace App.Services.EmailAPI.Messaging
             _configuration = configuration;
 
             serviceBusConnectionString = _configuration.GetValue<string>("serviceBus:ConnectionString");
-
             registerUserQueue = _configuration.GetValue<string>("TopicAndQueueNames:RegisterUserQueue");
-
 
             var client = new ServiceBusClient(serviceBusConnectionString);
             _registerUserProcessor = client.CreateProcessor(registerUserQueue);

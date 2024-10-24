@@ -6,13 +6,14 @@ namespace App.Services.ProductAPI.Extensions
         {
             // Add services to the container. 
             services.AddResponseCaching();
-            services.AddControllers(options =>
-            {
-                options.CacheProfiles.Add("Default10", new Microsoft.AspNetCore.Mvc.CacheProfile
-                {
-                    Duration = 10
-                });
-            })
+            // services.AddControllers(options =>
+            // {
+            //     options.CacheProfiles.Add("Default10", new Microsoft.AspNetCore.Mvc.CacheProfile
+            //     {
+            //         Duration = 10
+            //     });
+            // })
+            services.AddControllers()
             .AddNewtonsoftJson(options =>
             {
                 // If you need to configure Newtonsoft.Json settings, do it here
