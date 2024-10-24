@@ -6,10 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-
 builder.Services.ConfigureDatabase(builder.Configuration);
 builder.Services.AppServiceCollection(builder.Configuration);
-// Configure the HTTP request pipeline.
+
 builder.Services.AddApiVersioning(options =>
     {
         options.ReportApiVersions = true;
@@ -27,7 +26,6 @@ builder.Services.AddVersionedApiExplorer(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(option =>
 {
-    option.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
     option.AddSecurityDefinition(name: JwtBearerDefaults.AuthenticationScheme, securityScheme: new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -55,11 +53,11 @@ builder.Services.AddSwaggerGen(option =>
         Version = "v1.0",
         Title = "App.Services.ProductAPI",
     });
-    // option.SwaggerDoc("v2", new OpenApiInfo
-    // {
-    //     Version = "v2.0",
-    //     Title = "App.Services.ProductAPI",
-    // });
+    option.SwaggerDoc("v2", new OpenApiInfo
+    {
+        Version = "v2.0",
+        Title = "App.Services.ProductAPI",
+    });
 });
 
 builder.AddAppAuthetication();
@@ -72,7 +70,7 @@ app.UseSwaggerUI(options =>
         app.UseSwaggerUI(options =>
         {
             options.SwaggerEndpoint("/swagger/v1/swagger.json", "App.Services.ProductAPI V1");
-            //options.SwaggerEndpoint("/swagger/v2/swagger.json", "App.Services.ProductAPI V2");
+            options.SwaggerEndpoint("/swagger/v2/swagger.json", "App.Services.ProductAPI V2");
         });
     }
     else
@@ -80,7 +78,7 @@ app.UseSwaggerUI(options =>
         app.UseSwaggerUI(options =>
         {
             options.SwaggerEndpoint("/swagger/v1/swagger.json", "App.Services.ProductAPI V");
-            //options.SwaggerEndpoint("/swagger/v2/swagger.json", "App.Services.ProductAPI V2");
+            options.SwaggerEndpoint("/swagger/v2/swagger.json", "App.Services.ProductAPI V2");
             options.RoutePrefix = string.Empty;
         });
     }
