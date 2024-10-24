@@ -25,7 +25,7 @@ namespace App.Services.ProductAPI.Controllers.v1
         }
 
         [HttpGet]
-        [ResponseCache(CacheProfileName = "Default10")]
+        //[ResponseCache(CacheProfileName = "Default10")]
         public async Task<ActionResult<Response>> Get()
         {
             try
@@ -109,7 +109,7 @@ namespace App.Services.ProductAPI.Controllers.v1
         }
 
         [HttpGet("Pagination")]
-        [ResponseCache(CacheProfileName = "Default10")]
+        //[ResponseCache(CacheProfileName = "Default10")]
         public async Task<ActionResult<Response>> Pagination(
                                                            [FromQuery] int pageSize,
                                                            [FromQuery] int currentPage,

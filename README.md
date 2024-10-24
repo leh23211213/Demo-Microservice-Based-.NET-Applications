@@ -1,20 +1,28 @@
 # Table of Contents
+
 1. [Cloud Architecture](#cloud-architecture)
 
 2. [Website System Design](#website-system-design)
-  
-3. [API Document](#open-api)
 
+3. [Product Service Layer](#product-service-layer)
+
+4. [API Document](#open-api)
 
 # Cloud Architecture
- ![System Design](https://github.com/leh23211213/Demo-Microservice-Based-.NET-Applications/blob/main/docs/CloudArchitecture.drawio.png)
- 
+
+![Cloud Architecture](https://github.com/leh23211213/Demo-Microservice-Based-.NET-Applications/blob/main/docs/CloudArchitecture.drawio.png)
+
 # Website System Design
- ![System Design](https://github.com/leh23211213/Demo-Microservice-Based-.NET-Applications/blob/main/docs/WebsiteSystemDesign.drawio.png)
- 
+
+![Website System Design](https://github.com/leh23211213/Demo-Microservice-Based-.NET-Applications/blob/main/docs/WebsiteSystemDesign.drawio.png)
+
+# Product Service Layer
+
+![Product Service Layer](https://github.com/leh23211213/Demo-Microservice-Based-.NET-Applications/blob/main/docs/ProductLayer.drawio.png)
+
 # Open API
 
-POSTMAN : https://documenter.getpostman.com/view/33236192/2sAXxV5pNK  (Updating...)
+POSTMAN : https://documenter.getpostman.com/view/33236192/2sAXxV5pNK (Updating...)
 
 Authentication Service API : https://409159authenticationapi-dmh2bcbddcb9c9ag.eastasia-01.azurewebsites.net
 
