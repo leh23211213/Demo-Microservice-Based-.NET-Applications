@@ -29,6 +29,8 @@ namespace App.Services.ProductAPI.Extensions
                 options.Providers.Add<Microsoft.AspNetCore.ResponseCompression.GzipCompressionProvider>();
                 options.EnableForHttps = true;
             });
+
+
             return services;
         }
     }
