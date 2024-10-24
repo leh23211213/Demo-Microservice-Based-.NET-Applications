@@ -18,7 +18,7 @@
 
 # Product Service Layer
 
-![Product Service Layer](https://github.com/leh23211213/Demo-Microservice-Based-.NET-Applications/blob/409159productapi/docs/ProductLayer.drawio.png)
+![Product Service Layer](https://github.com/leh23211213/Demo-Microservice-Based-.NET-Applications/blob/main/docs/ProductLayer.drawio.png)
 
 # Open API
 
