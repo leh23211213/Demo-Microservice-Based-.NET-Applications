@@ -8,7 +8,7 @@ on:
     branches: [409159productapi]
   
 env:
-  AZURE_WEBAPP_NAME: 409149productapi
+  AZURE_WEBAPP_NAME: 409159productapi
   AZURE_WEBAPP_PACKAGE_PATH: App.Services.ProductAPI\published
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
@@ -68,5 +68,9 @@ jobs:
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_FC32F4D363FD41619C3B49B29BA1C9F9 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_9B65BDDCBB844A6599ADCFA10623B5CD }}
           package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+
+
+
+          
