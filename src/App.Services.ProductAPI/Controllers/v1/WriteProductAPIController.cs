@@ -7,7 +7,6 @@ using App.Services.ProductAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 namespace App.Services.ProductAPI.Controllers.v1
 {
-
     [ApiController]
     [ApiVersion("1.0")]
     [Authorize(Roles = "ADMIN")]

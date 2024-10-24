@@ -26,6 +26,7 @@ namespace App.Services.OrderAPI.Controllers
         }
 
         [HttpGet("GetAllOrder")]
+        [ResponseCache(CacheProfileName = "Default10")]
         public async Task<ActionResult<Response?>> GetAllOrder(string? userId = "")
         {
             try
@@ -62,6 +63,7 @@ namespace App.Services.OrderAPI.Controllers
         }
 
         [HttpGet("{orderId}")]
+        [ResponseCache(CacheProfileName = "Default10")]
         public async Task<ActionResult<Response?>> Get(string orderId)
         {
             try

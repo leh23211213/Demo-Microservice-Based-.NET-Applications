@@ -6,14 +6,13 @@ namespace App.Services.ProductAPI.Extensions
         {
             // Add services to the container. 
             services.AddResponseCaching();
-            // services.AddControllers(options =>
-            // {
-            //     options.CacheProfiles.Add("Default10", new Microsoft.AspNetCore.Mvc.CacheProfile
-            //     {
-            //         Duration = 10
-            //     });
-            // })
-            services.AddControllers()
+            services.AddControllers(options =>
+            {
+                options.CacheProfiles.Add("Default10", new Microsoft.AspNetCore.Mvc.CacheProfile
+                {
+                    Duration = 10
+                });
+            })
             .AddNewtonsoftJson(options =>
             {
                 // If you need to configure Newtonsoft.Json settings, do it here
@@ -30,6 +29,8 @@ namespace App.Services.ProductAPI.Extensions
                 options.Providers.Add<Microsoft.AspNetCore.ResponseCompression.GzipCompressionProvider>();
                 options.EnableForHttps = true;
             });
+
+
             return services;
         }
     }

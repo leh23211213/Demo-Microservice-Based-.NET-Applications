@@ -4,13 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using App.Services.ProductAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using App.Services.ProductAPI.Models;
-using Microsoft.AspNetCore.Authorization;
 namespace App.Services.ProductAPI.Controllers.v1
 {
-    [ApiVersion("1.0")]
     [ApiController]
+    [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/product")]
-
     public class ReadProductAPIController : Controller
     {
         private Response _response;
@@ -25,7 +23,7 @@ namespace App.Services.ProductAPI.Controllers.v1
         }
 
         [HttpGet]
-        //[ResponseCache(CacheProfileName = "Default10")]
+        [ResponseCache(CacheProfileName = "Default10")]
         public async Task<ActionResult<Response>> Get()
         {
             try
@@ -109,7 +107,7 @@ namespace App.Services.ProductAPI.Controllers.v1
         }
 
         [HttpGet("Pagination")]
-        //[ResponseCache(CacheProfileName = "Default10")]
+        [ResponseCache(CacheProfileName = "Default10")]
         public async Task<ActionResult<Response>> Pagination(
                                                            [FromQuery] int pageSize,
                                                            [FromQuery] int currentPage,
