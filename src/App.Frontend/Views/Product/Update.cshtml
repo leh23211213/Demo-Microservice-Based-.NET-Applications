@@ -24,8 +24,8 @@
                         <label class="control-label pt-2" style="font-size:20px;">Description</label>
                     </div>
                     <div class="col-10 pb-3">
-                        <input asp-for="@Model.Description" class="form-control" />
-                        <span asp-validation-for="@Model.Description" class="text-danger"></span>
+                        <input asp-for="Description" class="form-control" />
+                        <span asp-validation-for="Description" class="text-danger"></span>
                     </div>
                     <!-- Price -->
                     <div class="col-2">
@@ -50,7 +50,7 @@
                         <label class="control-label pt-2" style="font-size:20px;">Brand</label>
                     </div>
                     <div class="col-10 pb-3">
-                        <select asp-for="Brand.Name" asp-items="ViewBag.Brands" class="form-control">
+                        <select asp-for="Brand.Name" asp-items="@ViewBag.BrandList" class="form-control">
                             <option value="">-- Select Brand --</option>
                         </select>
                         <span asp-validation-for="Brand.Name" class="text-danger"></span>
@@ -60,7 +60,8 @@
                         <label class="control-label pt-2" style="font-size:20px;">Color</label>
                     </div>
                     <div class="col-10 pb-3">
-                        <select asp-for="Color.Name" asp-items="ViewBag.Colors" class="form-control">
+
+                        <select asp-for="Color.Name" asp-items="@ViewBag.ColorList" class="form-control">
                             <option value="">-- Select Color --</option>
                         </select>
                         <span asp-validation-for="Color.Name" class="text-danger"></span>
@@ -70,7 +71,7 @@
                         <label class="control-label pt-2" style="font-size:20px;">Category</label>
                     </div>
                     <div class="col-10 pb-3">
-                        <select asp-for="Category.Name" asp-items="ViewBag.Categorys" class="form-control">
+                        <select asp-for="Category.Name" asp-items="@ViewBag.CategoryList" class="form-control">
                             <option value="">-- Select Category --</option>
                         </select>
                         <span asp-validation-for="Category.Name" class="text-danger"></span>
@@ -80,7 +81,7 @@
                         <label class="control-label pt-2" style="font-size:20px;">Size</label>
                     </div>
                     <div class="col-10 pb-3">
-                        <select asp-for="Size.RAM" asp-items="ViewBag.Sizes" class="form-control">
+                        <select asp-for="Size.RAM" asp-items="@ViewBag.SizeList" class="form-control">
                             <option value="">-- Select Size --</option>
                         </select>
                         <span asp-validation-for="Size.RAM" class="text-danger"></span>
@@ -90,7 +91,7 @@
                         <a asp-action="Index" class="btn-primary btn form-control ">Back to List</a>
                     </div>
                     <div class="col-5">
-                        <input type="submit" value="Update" class="btn btn-success form-control" disabled />
+                        <input type="submit" value="Update" class="btn btn-success form-control" />
                     </div>
                 </div>
             </div>

@@ -62,10 +62,10 @@ namespace App.Frontend.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAsync(Product product)
         {
-            product.Size.Id = product.Size?.RAM == "128GB" ? 1 : 0;
-            product.Color.Id = product.Color?.Name == "Black" ? 1 : 0;
-            product.Category.Id = product.Category?.Name == "Smartphone" ? 1 : 0;
-            product.Brand.Id = product.Brand?.Name == "Apple" ? 1 : 0;
+            product.Size.Id = product.Size.RAM == "128GB" ? 1 : 0;
+            product.Color.Id = product.Color.Name == "Black" ? 1 : 0;
+            product.Category.Id = product.Category.Name == "Smartphone" ? 1 : 0;
+            product.Brand.Id = product.Brand.Name == "Apple" ? 1 : 0;
 
             Response? response = await _productService.CreateAsync(product);
 
@@ -101,6 +101,24 @@ namespace App.Frontend.Controllers
 
         public async Task<IActionResult> Update(string Id)
         {
+            var categoryList = new List<SelectListItem>(){
+                new SelectListItem{Text = StaticDetail.Category , Value = StaticDetail.Category},
+            };
+            var brandList = new List<SelectListItem>(){
+                new SelectListItem{Text = StaticDetail.Brand , Value = StaticDetail.Brand},
+            };
+            var colorList = new List<SelectListItem>(){
+                new SelectListItem{Text = StaticDetail.Color , Value = StaticDetail.Color},
+            };
+            var sizeList = new List<SelectListItem>(){
+                new SelectListItem{Text = StaticDetail.Size , Value = StaticDetail.Size},
+            };
+            ViewBag.CategoryList = categoryList;
+            ViewBag.BrandList = brandList;
+            ViewBag.ColorList = colorList;
+            ViewBag.SizeList = sizeList;
+
+
             Response? response = await _productService.Get(Id);
 
             if (response.IsSuccess && response != null)
@@ -118,6 +136,11 @@ namespace App.Frontend.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateAsync(Product product)
         {
+            product.Size.Id = product.Size.RAM == "128GB" ? 1 : 0;
+            product.Color.Id = product.Color.Name == "Black" ? 1 : 0;
+            product.Category.Id = product.Category.Name == "Smartphone" ? 1 : 0;
+            product.Brand.Id = product.Brand.Name == "Apple" ? 1 : 0;
+
             Response? response = await _productService.UpdateAsync(product);
 
             if (response.IsSuccess && response != null)
@@ -129,6 +152,24 @@ namespace App.Frontend.Controllers
             {
                 TempData["error"] = response?.Message;
             }
+
+            var categoryList = new List<SelectListItem>(){
+                new SelectListItem{Text = StaticDetail.Category , Value = StaticDetail.Category},
+            };
+            var brandList = new List<SelectListItem>(){
+                new SelectListItem{Text = StaticDetail.Brand , Value = StaticDetail.Brand},
+            };
+            var colorList = new List<SelectListItem>(){
+                new SelectListItem{Text = StaticDetail.Color , Value = StaticDetail.Color},
+            };
+            var sizeList = new List<SelectListItem>(){
+                new SelectListItem{Text = StaticDetail.Size , Value = StaticDetail.Size},
+            };
+            ViewBag.CategoryList = categoryList;
+            ViewBag.BrandList = brandList;
+            ViewBag.ColorList = colorList;
+            ViewBag.SizeList = sizeList;
+
             return View(product);
         }
 

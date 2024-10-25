@@ -67,7 +67,7 @@
             </div>
             <div class="col-10 pb-3">
                 <select asp-for="Category.Name" asp-items="@ViewBag.CategoryList" class="form-select">
-                    <option disabled selected>-- Select Category --</option>
+                    <option disabled selected>-- Select Category --</option> 
                     <span asp-validation-for="Category.Name" class="text-danger"></span>
                 </select>
             </div>
