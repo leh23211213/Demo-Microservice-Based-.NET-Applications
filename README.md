@@ -24,7 +24,7 @@
 
 Authentication Service API : https://409159authenticationapi-dmh2bcbddcb9c9ag.eastasia-01.azurewebsites.net
 
-Product Service API : https://409149productapi-axacf3gtfjayeefb.eastasia-01.azurewebsites.net
+Product Service API : https://409159productapi-chb2d9dedmc8a6bk.eastasia-01.azurewebsites.net
 
 Cart Service API : https://409159cartapi-ekf4ckdxhmfpc5f0.eastasia-01.azurewebsites.net
 

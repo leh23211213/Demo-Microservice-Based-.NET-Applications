@@ -1,0 +1,43 @@
+Trong một ứng dụng e-commerce được xây dựng theo kiến trúc microservices, RewardAPI (API quản lý phần thưởng) 
+có vai trò quan trọng trong việc quản lý hệ thống tích điểm, phần thưởng, và khuyến mãi cho khách hàng.
+ Mục đích chính của RewardAPI là cung cấp các tính năng liên quan đến phần thưởng và tích điểm dựa trên hành vi của người dùng,
+  như mua hàng, đánh giá sản phẩm, hay giới thiệu bạn bè.
+
+Dưới đây là những mục đích cụ thể của RewardAPI trong ứng dụng e-commerce:
+
+1. Quản lý điểm thưởng (Reward Points)
+RewardAPI giúp theo dõi số điểm thưởng mà mỗi người dùng nhận được khi thực hiện các hành động nhất định, ví dụ:
+
+Khi khách hàng thực hiện đơn hàng thành công.
+Khi người dùng giới thiệu bạn bè qua referral program.
+Khi người dùng tham gia các hoạt động như đánh giá sản phẩm hoặc tương tác với các chương trình khuyến mãi.
+Trong class Rewards, bạn có thể thấy các thông tin liên quan đến phần thưởng được quản lý:
+
+Id: Mã định danh cho từng bản ghi phần thưởng.
+userId: Mã định danh của người dùng, dùng để liên kết phần thưởng với tài khoản người dùng.
+dateTime: Ngày giờ ghi nhận hoạt động phần thưởng.
+RewardsActivity: Loại hoạt động dẫn đến phần thưởng, ví dụ: 1 cho mua hàng, 2 cho giới thiệu bạn bè, 3 cho viết đánh giá.
+OrderId: Nếu phần thưởng có liên quan đến đơn hàng, OrderId sẽ lưu trữ mã của đơn hàng.
+2. Khuyến khích mua hàng (Customer Loyalty)
+Hệ thống phần thưởng đóng vai trò quan trọng trong việc tạo động lực cho khách hàng quay lại mua hàng.
+ Bằng cách tích lũy điểm từ việc mua sắm, khách hàng có thể sử dụng những điểm này để đổi quà, giảm giá,
+  hoặc nhận những ưu đãi khác, giúp tăng cường loyalty (lòng trung thành) của khách hàng với thương hiệu.
+
+3. Ghi nhận hoạt động người dùng
+RewardAPI không chỉ quản lý phần thưởng mà còn có thể ghi lại các hoạt động của người dùng để phân tích hành vi. 
+Thông tin như RewardsActivity giúp hiểu rõ hơn người dùng đang tương tác với nền tảng như thế nào và điều gì thúc đẩy họ mua hàng hoặc giới thiệu bạn bè.
+
+4. Tạo ra các chương trình khuyến mãi
+RewardAPI có thể được sử dụng để quản lý các chương trình khuyến mãi dựa trên điểm thưởng.
+ Ví dụ, sau khi tích lũy một số điểm nhất định, khách hàng có thể được giảm giá cho các đơn hàng tiếp theo, hoặc nhận được những phần quà tặng như miễn phí vận chuyển.
+
+5. Tích hợp với các microservices khác
+OrderAPI: Khi một đơn hàng được tạo thành công, OrderAPI sẽ có thể gửi thông tin đến RewardAPI để cập nhật phần thưởng cho người dùng.
+CartAPI: RewardAPI có thể hiển thị số điểm hiện tại của người dùng trong giỏ hàng, cho phép khách hàng chọn sử dụng điểm tích lũy để giảm giá.
+AuthAPI: RewardAPI sẽ cần xác thực người dùng để bảo đảm rằng chỉ người dùng hợp lệ mới có thể nhận được phần thưởng dựa trên userId.
+6. Theo dõi và báo cáo
+RewardAPI có thể được sử dụng để theo dõi và cung cấp báo cáo về các phần thưởng được phát ra cho người dùng, các chương trình khuyến mãi nào đang hoạt động tốt, và lượng điểm thưởng được sử dụng.
+
+Tóm lại
+RewardAPI trong kiến trúc microservice của một ứng dụng e-commerce sẽ đảm nhiệm việc quản lý hệ thống phần thưởng và điểm tích lũy.
+ Nó giúp thúc đẩy sự tham gia và lòng trung thành của khách hàng, tạo động lực để họ quay lại mua hàng nhiều lần hơn, đồng thời hỗ trợ cho các chiến lược marketing như khuyến mãi và giới thiệu sản phẩm.

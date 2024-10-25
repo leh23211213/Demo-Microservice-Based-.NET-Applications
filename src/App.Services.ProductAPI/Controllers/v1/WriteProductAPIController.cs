@@ -101,7 +101,7 @@ namespace App.Services.ProductAPI.Controllers.v1
         {
             try
             {
-                Product p = await _dbContext.Products.FirstOrDefaultAsync(u => u.Id == product.Id);
+                Product p = await _dbContext.Products.AsNoTracking().FirstOrDefaultAsync(u => u.Id == product.Id);
                 if (p is null)
                 {
                     _response.StatusCode = HttpStatusCode.NotFound;
