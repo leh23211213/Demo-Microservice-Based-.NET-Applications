@@ -6,8 +6,14 @@ name: Build and deploy ASP.Net Core app to Azure Web App - templateproductapi
 on:
   push:
     branches:
-      - 409159productapi
-  workflow_dispatch:
+      - development
+
+env:
+  AZURE_WEBAPP_NAME: 409159orderapi
+  AZURE_WEBAPP_PACKAGE_PATH: App.Services.OrderAPI\published
+  CONFIGURATION: Release
+  DOTNET_CORE_VERSION: 8.0.x
+  WORKING_DIRECTORY: ./src/App.Services.OrderAPI
 
 jobs:
   build:
@@ -19,39 +25,50 @@ jobs:
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '8.x'
-          include-prerelease: true
+          dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
 
-      - name: Build with dotnet
-        run: dotnet build --configuration Release
+      - name: Restore Dependencies
+        run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
 
-      - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+      - name: Build
+        run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration "${{ env.CONFIGURATION }}" --no-restore
 
-      - name: Upload artifact for deployment job
+      - name: Test
+        run: dotnet test "${{ env.WORKING_DIRECTORY }}" --no-build
+
+      - name: Publish
+        run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration "${{ env.CONFIGURATION }}" --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
+
+      - name: Publish Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          name: webapp-dotnet-version-${{ env.DOTNET_CORE_VERSION }}
+          path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
   deploy:
     runs-on: windows-latest
     needs: build
+
     environment:
-      name: 'Production'
+      name: Production
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
+
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
-          name: .net-app
+          name: webapp-dotnet-version-${{ env.DOTNET_CORE_VERSION }}
+          path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'templateproductapi'
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_0B970DDE3BB64BF4B2CE11E206C01304 }}
-          package: .
+          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+
+
+          
