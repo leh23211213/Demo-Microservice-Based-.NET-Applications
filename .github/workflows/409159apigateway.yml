@@ -7,6 +7,7 @@ on:
   push:
     branches:
       - main
+      - 409159apigateway
 
 env:
   AZURE_WEBAPP_NAME: 409159apigateway
