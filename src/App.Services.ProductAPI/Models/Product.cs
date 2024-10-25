@@ -29,7 +29,7 @@ public class Product
     public int ColorId { get; set; }
     public int CategoryId { get; set; }
     public int BrandId { get; set; }
-    
+
     //                  SwaggerIgnore
     [SwaggerIgnore, NotMapped]
     public virtual Size? Size { get; set; }

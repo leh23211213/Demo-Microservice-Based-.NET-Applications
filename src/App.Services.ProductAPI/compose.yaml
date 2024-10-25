@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  product-api:
+    image: app.services.productapi:latest
+    container_name: app_product_api
+    build:
+      context: ./App.Services.ProductAPI
+      dockerfile: Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__ProductDb=Server=product-db;Database=App_ProductAPI;User=sa;Password=MyStrongPassword;
+    ports:
+      - "7002:80"  # This exposes the API and Swagger documentation on port 7002
+    networks:
+      - app-network
+    depends_on:
+      - product-db
+
+
+  product-db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: app_product_db
+    environment:
+      - SA_PASSWORD=MyStrongPassword
+      - ACCEPT_EULA=Y
+      - MSSQL_PID=Express
+    ports:
+      - "1433:1433"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

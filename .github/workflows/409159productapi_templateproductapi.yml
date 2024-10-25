@@ -1,19 +1,19 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy ASP.Net Core app to Azure Web App - 409159productapi
+name: Build and deploy ASP.Net Core app to Azure Web App - templateproductapi
 
 on:
   push:
-    branches: [409159productapi]
-  
+    branches:
+      - development
+
 env:
-  AZURE_WEBAPP_NAME: 409159productapi
-  AZURE_WEBAPP_PACKAGE_PATH: App.Services.ProductAPI\published
+  AZURE_WEBAPP_NAME: 409159orderapi
+  AZURE_WEBAPP_PACKAGE_PATH: App.Services.OrderAPI\published
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
-  WORKING_DIRECTORY: ./src/App.Services.ProductAPI
-
+  WORKING_DIRECTORY: ./src/App.Services.OrderAPI
 
 jobs:
   build:
@@ -26,7 +26,6 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
-          include-prerelease: true
 
       - name: Restore Dependencies
         run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
@@ -53,24 +52,23 @@ jobs:
     environment:
       name: Production
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-      
+
     steps:
-    
+
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
           name: webapp-dotnet-version-${{ env.DOTNET_CORE_VERSION }}
           path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-          
+
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_9B65BDDCBB844A6599ADCFA10623B5CD }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_0B970DDE3BB64BF4B2CE11E206C01304 }}
           package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-
 
 
           

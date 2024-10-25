@@ -1,9 +1,9 @@
+using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Mvc;
 using App.Services.ProductAPI.Data;
+using Microsoft.EntityFrameworkCore;
 using App.Services.ProductAPI.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.ConfigureDatabase(builder.Configuration);
@@ -12,8 +12,8 @@ builder.Services.AppServiceCollection(builder.Configuration);
 builder.Services.AddApiVersioning(options =>
     {
         options.ReportApiVersions = true;
-        options.AssumeDefaultVersionWhenUnspecified = true;
         options.DefaultApiVersion = new ApiVersion(1, 0);
+        options.AssumeDefaultVersionWhenUnspecified = true;
         // options.ApiVersionReader = new UrlSegmentApiVersionReader();  // Read version from URL
     });
 
@@ -52,6 +52,12 @@ builder.Services.AddSwaggerGen(option =>
     {
         Version = "v1.0",
         Title = "App.Services.ProductAPI",
+        Description = "product API version 1",
+        Contact = new OpenApiContact
+        {
+            Name = "Postman Document",
+            Url = new Uri("https://documenter.getpostman.com/view/33236192/2sAXxV5pNK")
+        },
     });
     option.SwaggerDoc("v2", new OpenApiInfo
     {
@@ -62,6 +68,7 @@ builder.Services.AddSwaggerGen(option =>
 
 builder.AddAppAuthetication();
 var app = builder.Build();
+
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
@@ -77,7 +84,7 @@ app.UseSwaggerUI(options =>
     {
         app.UseSwaggerUI(options =>
         {
-            options.SwaggerEndpoint("/swagger/v1/swagger.json", "App.Services.ProductAPI V");
+            options.SwaggerEndpoint("/swagger/v1/swagger.json", "App.Services.ProductAPI V1");
             options.SwaggerEndpoint("/swagger/v2/swagger.json", "App.Services.ProductAPI V2");
             options.RoutePrefix = string.Empty;
         });
