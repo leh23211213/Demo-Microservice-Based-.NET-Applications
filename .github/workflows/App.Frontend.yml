@@ -14,18 +14,16 @@ env:
   WORKING_DIRECTORY: ./src/App.Frontend
   GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
 
- 
-
 jobs:
   generate-version:
     runs-on: ${{ matrix.os }}
     permissions:
       contents: write
-      
+
     strategy:
       matrix:
         os: [ubuntu-latest]
-      
+
     steps:
       - uses: actions/checkout@v4
 
@@ -46,19 +44,18 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest]
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
-          fetch-depth: 0  # Fetch full history including tags
-          
-       # we build, test, and deploy steps here  
+          fetch-depth: 0 # Fetch full history including tags
+
+        # we build, test, and deploy steps here
       - name: Setup .NET Core SDK
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
-          include-prerelease: true
 
       - name: Restore Dependencies
         run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
@@ -76,25 +73,24 @@ jobs:
         with:
           name: webapp-dotnet-version-${{ env.DOTNET_CORE_VERSION }}
           path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-          
+
   deploy:
     runs-on: ${{ matrix.os }}
     needs: build
-    
+
     environment: Production
-    
+
     strategy:
       matrix:
         os: [windows-latest]
 
     steps:
-    
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
           name: webapp-dotnet-version-${{ env.DOTNET_CORE_VERSION }}
           path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-          
+
       - name: Deploy to Azure WebApp
         uses: azure/webapps-deploy@v2
         with:
