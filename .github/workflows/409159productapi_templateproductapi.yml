@@ -9,11 +9,11 @@ on:
       - development
 
 env:
-  AZURE_WEBAPP_NAME: 409159orderapi
-  AZURE_WEBAPP_PACKAGE_PATH: App.Services.OrderAPI\published
+  AZURE_WEBAPP_NAME: templateproductapi
+  AZURE_WEBAPP_PACKAGE_PATH: App.Services.ProductAPI\published
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
-  WORKING_DIRECTORY: ./src/App.Services.OrderAPI
+  WORKING_DIRECTORY: ./src/App.Services.ProductAPI
 
 jobs:
   build:
