@@ -20,17 +20,6 @@ namespace template.Extensions
             })
             .AddXmlDataContractSerializerFormatters();
 
-            /*
-            e. Use Compression
-            Enable GZIP compression in your API responses to reduce payload size and improve API response time.
-            */
-            services.AddResponseCompression(options =>
-            {
-                options.Providers.Add<Microsoft.AspNetCore.ResponseCompression.GzipCompressionProvider>();
-                options.EnableForHttps = true;
-            });
-
-
             return services;
         }
     }
