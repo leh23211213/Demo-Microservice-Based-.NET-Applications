@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using template.Extensions;
 using template.Data;
+using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.ConfigureDatabase(builder.Configuration);
@@ -58,11 +59,6 @@ builder.Services.AddSwaggerGen(option =>
             Url = new Uri("https://documenter.getpostman.com/view/33236192/2sAXxV5pNK")
         },
     });
-    option.SwaggerDoc("v2", new OpenApiInfo
-    {
-        Version = "v2.0",
-        Title = "App.Services.ProductAPI",
-    });
 });
 
 builder.AddAppAuthetication();
@@ -76,7 +72,6 @@ app.UseSwaggerUI(options =>
         app.UseSwaggerUI(options =>
         {
             options.SwaggerEndpoint("/swagger/v1/swagger.json", "App.Services.ProductAPI V1");
-            options.SwaggerEndpoint("/swagger/v2/swagger.json", "App.Services.ProductAPI V2");
         });
     }
     else
@@ -84,7 +79,7 @@ app.UseSwaggerUI(options =>
         app.UseSwaggerUI(options =>
         {
             options.SwaggerEndpoint("/swagger/v1/swagger.json", "App.Services.ProductAPI V1");
-            options.SwaggerEndpoint("/swagger/v2/swagger.json", "App.Services.ProductAPI V2");
+
             options.RoutePrefix = string.Empty;
         });
     }
@@ -100,12 +95,20 @@ app.Run();
 
 void ApplyMigration(WebApplication app)
 {
-    using (var scope = app.Services.CreateScope())
+    using var scope = app.Services.CreateScope();
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+    var _db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    try
     {
-        var _db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         if (_db.Database.GetPendingMigrations().Count() > 0)
         {
             _db.Database.Migrate();
         }
+    }
+    catch (Exception ex)
+    {
+        // Log and handle the migration error
+        logger.LogError(ex, "An error occurred while applying migrations.");
+        // Optional: Handle the error (e.g., rethrow or notify)
     }
 }
