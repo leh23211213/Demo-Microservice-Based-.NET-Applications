@@ -5,7 +5,9 @@ name: Build and deploy ASP.Net Core app to Azure Web App - 409159authenticationa
 
 on:
   push:
-    branches: [409159authenticationapi]
+    branches:
+      - main
+      - 409159authenticationapi
 
 env:
   AZURE_WEBAPP_NAME: 409159authenticationapi
