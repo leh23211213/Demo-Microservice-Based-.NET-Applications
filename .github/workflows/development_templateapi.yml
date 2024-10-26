@@ -7,7 +7,14 @@ on:
   push:
     branches:
       - development
-  workflow_dispatch:
+
+env:
+  AZURE_WEBAPP_NAME: templateapi
+  AZURE_WEBAPP_PACKAGE_PATH: template\published
+  CONFIGURATION: Release
+  DOTNET_CORE_VERSION: 8.0.x
+  WORKING_DIRECTORY: ./src/template
+
 
 jobs:
   build:
@@ -19,39 +26,48 @@ jobs:
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '8.x'
+          dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
           include-prerelease: true
 
-      - name: Build with dotnet
-        run: dotnet build --configuration Release
+      - name: Restore Dependencies
+        run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
 
-      - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+      - name: Build
+        run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration "${{ env.CONFIGURATION }}" --no-restore
 
-      - name: Upload artifact for deployment job
+      - name: Test
+        run: dotnet test "${{ env.WORKING_DIRECTORY }}" --no-build
+
+      - name: Publish
+        run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration "${{ env.CONFIGURATION }}" --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
+
+      - name: Publish Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          name: webapp-dotnet-version-${{ env.DOTNET_CORE_VERSION }}
+          path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
   deploy:
     runs-on: windows-latest
     needs: build
-    environment:
-      name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
+    environment:
+      name: Production
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+      
     steps:
+    
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
-          name: .net-app
-
+          name: webapp-dotnet-version-${{ env.DOTNET_CORE_VERSION }}
+          path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+          
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'templateapi'
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_DDE0F8A07B9945F698291018CE62FB52 }}
-          package: .
+          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
