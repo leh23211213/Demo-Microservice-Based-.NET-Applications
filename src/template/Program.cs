@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using template.Extensions;
 using template.Data;
+using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.ConfigureDatabase(builder.Configuration);
@@ -89,17 +90,25 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-ApplyMigration(app);
+// ApplyMigration(app);
 app.Run();
 
-void ApplyMigration(WebApplication app)
-{
-    using (var scope = app.Services.CreateScope())
-    {
-        var _db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        if (_db.Database.GetPendingMigrations().Count() > 0)
-        {
-            _db.Database.Migrate();
-        }
-    }
-}
+// void ApplyMigration(WebApplication app)
+// {
+//     using var scope = app.Services.CreateScope();
+//     var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+//     var _db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+//     try
+//     {
+//         if (_db.Database.GetPendingMigrations().Count() > 0)
+//         {
+//             _db.Database.Migrate();
+//         }
+//     }
+//     catch (Exception ex)
+//     {
+//         // Log and handle the migration error
+//         logger.LogError(ex, "An error occurred while applying migrations.");
+//         // Optional: Handle the error (e.g., rethrow or notify)
+//     }
+// }
