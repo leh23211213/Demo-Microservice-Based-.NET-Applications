@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Swashbuckle.AspNetCore.Annotations;
-using Newtonsoft.Json;
-namespace  template.Models;
+namespace template.Models;
 public class Product
 {
     public string Id { get; set; } = null!;

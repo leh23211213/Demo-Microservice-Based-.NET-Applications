@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using template.Extensions;
+using template.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.ConfigureDatabase(builder.Configuration);
@@ -13,7 +14,6 @@ builder.Services.AddApiVersioning(options =>
         options.ReportApiVersions = true;
         options.DefaultApiVersion = new ApiVersion(1, 0);
         options.AssumeDefaultVersionWhenUnspecified = true;
-
     });
 
 builder.Services.AddVersionedApiExplorer(options =>
@@ -76,6 +76,7 @@ app.UseSwaggerUI(options =>
         app.UseSwaggerUI(options =>
         {
             options.SwaggerEndpoint("/swagger/v1/swagger.json", "App.Services.ProductAPI V1");
+            options.SwaggerEndpoint("/swagger/v2/swagger.json", "App.Services.ProductAPI V2");
         });
     }
     else
@@ -83,6 +84,7 @@ app.UseSwaggerUI(options =>
         app.UseSwaggerUI(options =>
         {
             options.SwaggerEndpoint("/swagger/v1/swagger.json", "App.Services.ProductAPI V1");
+            options.SwaggerEndpoint("/swagger/v2/swagger.json", "App.Services.ProductAPI V2");
             options.RoutePrefix = string.Empty;
         });
     }
@@ -93,5 +95,17 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+ApplyMigration(app);
 app.Run();
 
+void ApplyMigration(WebApplication app)
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var _db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        if (_db.Database.GetPendingMigrations().Count() > 0)
+        {
+            _db.Database.Migrate();
+        }
+    }
+}
