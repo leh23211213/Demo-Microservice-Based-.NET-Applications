@@ -3,7 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using template.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.ConfigureDatabase(builder.Configuration);
+builder.Services.AppServiceCollection(builder.Configuration);
 
 builder.Services.AddApiVersioning(options =>
     {
