@@ -1,8 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using App.Services.ProductAPI.Models;
+using template.Models;
 
-namespace App.Services.ProductAPI.Data.Configuration
+
+namespace template.Data.Configuration
 {
        public class ProductConfiguration : IEntityTypeConfiguration<Product>
        {

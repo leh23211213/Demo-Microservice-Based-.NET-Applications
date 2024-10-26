@@ -1,5 +1,6 @@
-﻿using App.Services.ProductAPI.Data.Configuration;
+﻿
 using Microsoft.EntityFrameworkCore;
+using template.Data.Configuration;
 using template.Models;
 
 namespace template.Data;

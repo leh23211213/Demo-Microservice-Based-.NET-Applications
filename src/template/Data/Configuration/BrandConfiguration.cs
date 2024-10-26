@@ -1,7 +1,8 @@
-using App.Services.ProductAPI.Models;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-namespace App.Services.ProductAPI.Data.Configuration
+using template.Models;
+namespace template.Data.Configuration
 {
     public class BrandConfiguration : IEntityTypeConfiguration<Brand>
     {
