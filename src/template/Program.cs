@@ -58,11 +58,6 @@ builder.Services.AddSwaggerGen(option =>
             Url = new Uri("https://documenter.getpostman.com/view/33236192/2sAXxV5pNK")
         },
     });
-    option.SwaggerDoc("v2", new OpenApiInfo
-    {
-        Version = "v2.0",
-        Title = "App.Services.ProductAPI",
-    });
 });
 
 builder.AddAppAuthetication();
@@ -76,7 +71,6 @@ app.UseSwaggerUI(options =>
         app.UseSwaggerUI(options =>
         {
             options.SwaggerEndpoint("/swagger/v1/swagger.json", "App.Services.ProductAPI V1");
-            options.SwaggerEndpoint("/swagger/v2/swagger.json", "App.Services.ProductAPI V2");
         });
     }
     else
@@ -84,7 +78,7 @@ app.UseSwaggerUI(options =>
         app.UseSwaggerUI(options =>
         {
             options.SwaggerEndpoint("/swagger/v1/swagger.json", "App.Services.ProductAPI V1");
-            options.SwaggerEndpoint("/swagger/v2/swagger.json", "App.Services.ProductAPI V2");
+
             options.RoutePrefix = string.Empty;
         });
     }
