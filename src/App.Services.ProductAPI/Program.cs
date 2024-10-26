@@ -89,17 +89,27 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-ApplyMigration();
+ApplyMigration(app);
 app.Run();
 
-void ApplyMigration()
+
+// 500.30
+void ApplyMigration(WebApplication app)
 {
-    using (var scope = app.Services.CreateScope())
+    using var scope = app.Services.CreateScope();
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+    var _db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    try
     {
-        var _db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         if (_db.Database.GetPendingMigrations().Count() > 0)
         {
             _db.Database.Migrate();
         }
+    }
+    catch (Exception ex)
+    {
+        // Log and handle the migration error
+        logger.LogError(ex, "An error occurred while applying migrations.");
+        // Optional: Handle the error (e.g., rethrow or notify)
     }
 }
