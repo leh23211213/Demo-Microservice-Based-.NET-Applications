@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations.Schema;
-using Swashbuckle.AspNetCore.Annotations;
 namespace template.Models;
 public class Product
 {
@@ -22,9 +20,7 @@ public class Product
         }
     }
     public string? Description { get; set; }
-    [SwaggerIgnore]
     public string? ImageUrl { get; set; }
-    [SwaggerIgnore]
     public string? ImageLocalPath { get; set; }
 
     public int SizeId { get; set; }
@@ -32,15 +28,10 @@ public class Product
     public int CategoryId { get; set; }
     public int BrandId { get; set; }
 
-    [NotMapped]
     public IFormFile? Image { get; set; }
 
-    [NotMapped]
     public virtual Size? Size { get; set; }
-    [NotMapped]
     public virtual Color? Color { get; set; }
-    [NotMapped]
     public virtual Category? Category { get; set; }
-    [NotMapped]
     public virtual Brand? Brand { get; set; }
 }
