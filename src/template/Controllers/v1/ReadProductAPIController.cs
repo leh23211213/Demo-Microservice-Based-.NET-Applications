@@ -1,9 +1,7 @@
 
-using System.Net;
+
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using template.Data;
-using template.Models;
+
 namespace template.Controllers
 {
     [ApiController]
