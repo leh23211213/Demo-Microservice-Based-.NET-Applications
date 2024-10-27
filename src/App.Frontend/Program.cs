@@ -36,7 +36,6 @@ It stores the user's authentication ticket (e.g., login status) in a cookie.
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        //options.ExpireTimeSpan = TimeSpan.FromSeconds(20); // the expiration time for the authentication cookie
         options.ExpireTimeSpan = TimeSpan.FromDays(1); // the expiration time for the authentication cookie
         options.LoginPath = "/Account/Login";
         options.AccessDeniedPath = "/Account/AccessDenied";
@@ -49,17 +48,12 @@ Session: Used to store user-specific data on the server (such as shopping cart i
  The session can be used to store non-authentication-related information temporarily and is tied to the user’s session ID.
  This handles storing session-specific data (like cart items or temporary form data) and sets an idle
 */
-
 builder.Services.AddSession(options =>
 {
-    // options.IdleTimeout = TimeSpan.FromSeconds(20);
     options.IdleTimeout = TimeSpan.FromDays(1);
-
     options.Cookie.HttpOnly = true;
-    options.Cookie.IsEssential = true;
+    options.Cookie.IsEssential = true;  // Make the session cookie essential
 });
-
-
 
 var app = builder.Build();
 

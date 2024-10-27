@@ -11,9 +11,8 @@ namespace App.Services.AuthAPI.Controllers
     [ApiVersionNeutral]
     public class TokenController : Controller
     {
-        private readonly IAuthAPIService _authAPIService;
         protected Response _response;
-
+        private readonly IAuthAPIService _authAPIService;
         public TokenController(IAuthAPIService authAPIService)
         {
             _response = new Response();
@@ -21,27 +20,30 @@ namespace App.Services.AuthAPI.Controllers
         }
 
         [HttpPost("Refresh")]
-        public async Task<IActionResult> GetNewTokenFromRefreshToken([FromBody] Token token)
+        public async Task<ActionResult<Response>> GetNewTokenFromRefreshToken([FromBody] Token token)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var tokenResponse = await _authAPIService.RefreshAccessToken(token);
-                if (tokenResponse == null || string.IsNullOrEmpty(tokenResponse.AccessToken))
+                if (ModelState.IsValid)
                 {
-                    _response.StatusCode = HttpStatusCode.BadRequest;
-                    _response.IsSuccess = false;
-                    _response.Message = "Token Invalid";
-                    return BadRequest(_response);
+                    var tokenResponse = await _authAPIService.RefreshAccessToken(token);
+                    if (tokenResponse == null || string.IsNullOrEmpty(tokenResponse.AccessToken))
+                    {
+                        _response.StatusCode = HttpStatusCode.BadRequest;
+                        _response.IsSuccess = false;
+                        _response.Message = "Token Invalid";
+                        return _response;
+                    }
+                    _response.Result = tokenResponse;
                 }
-                _response.Result = tokenResponse;
-                return Ok(_response);
             }
-            else
+            catch (Exception ex)
             {
                 _response.IsSuccess = false;
-                _response.Result = "Invalid Input";
-                return BadRequest(_response);
+                _response.Result = ex.Message;
+                _response.StatusCode = HttpStatusCode.BadRequest;
             }
+            return _response;
         }
     }
 }

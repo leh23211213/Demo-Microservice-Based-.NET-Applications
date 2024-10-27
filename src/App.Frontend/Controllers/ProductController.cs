@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 
 namespace App.Frontend.Controllers
 {
+    [AllowAnonymous]
     [Authorize(Roles = "ADMIN")]
     public class ProductController : Controller
     {

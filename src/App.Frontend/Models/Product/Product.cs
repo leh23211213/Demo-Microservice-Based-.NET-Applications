@@ -6,7 +6,8 @@ namespace App.Frontend.Models
     public class Product
     {
         public string Id { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Name is required.")]
+        [RegularExpression(@"^[a-zA-Z0-9 ]*$", ErrorMessage = "Name must not contain special characters.")]
         public string Name { get; set; }
         [Required]
         [Range(0, double.MaxValue, ErrorMessage = "Price must be a positive value.")]

@@ -89,7 +89,12 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-ApplyMigration(app);
+if (app.Environment.IsDevelopment())
+{
+    ApplyMigration(app);
+}
+
+
 app.Run();
 
 

@@ -8,8 +8,7 @@
 
 4. [API Document](#open-api)
 
-
-# Cloud Architecture
+# Web System Architecture
 
 ![Cloud Architecture](https://github.com/leh23211213/Demo-Microservice-Based-.NET-Applications/blob/main/docs/CloudArchitecture.drawio.png)
 

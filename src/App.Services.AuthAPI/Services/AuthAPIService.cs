@@ -76,10 +76,18 @@ namespace App.Services.AuthAPI.Services
             var user = _dbContext.Users.FirstOrDefault(u => u.Email.ToLower() == loginRequest.Email.ToLower());
             bool isValid = await _userManager.CheckPasswordAsync(user, loginRequest.Password);
 
+            /*
+                if ( !user.EmailConfirmed)
+                {
+                    call email api and send to user for verify
+                }
+            */
+
             if (user == null || !isValid)
             {
                 return new Token() { AccessToken = string.Empty };
             }
+
             //if user was found generate JWT Token
             var jwtTokenId = $"JTI{Guid.NewGuid()}";
             var accessToken = await GetAccessToken(user, jwtTokenId);

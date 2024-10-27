@@ -61,6 +61,8 @@ namespace App.Services.ProductAPI.Controllers.v1
                 _response.Result = null;
                 //  _logger.LogError(ex.Message);
             }
+
+        
             return _response;
         }
 
@@ -103,6 +105,8 @@ namespace App.Services.ProductAPI.Controllers.v1
                 _response.Message = ex.Message;
                 _response.StatusCode = HttpStatusCode.NotFound;
             }
+
+          
             return _response;
         }
 
@@ -132,6 +136,8 @@ namespace App.Services.ProductAPI.Controllers.v1
                     products = _dbContext.Products.Where(p => p.Name.ToLower().Contains(search.ToLower()));
                 }
 
+                Thread.Sleep(1000);
+
                 var totalItems = products.Count();
                 var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
 
@@ -158,6 +164,8 @@ namespace App.Services.ProductAPI.Controllers.v1
                 _response.StatusCode = HttpStatusCode.NotFound;
                 _response.Message = ex.Message;
             }
+
+          
             return _response;
         }
     }
