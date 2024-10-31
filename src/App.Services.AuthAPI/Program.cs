@@ -4,12 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.   
+builder.AddAppAuthetication();
 builder.Services.ConfigureDatabase(builder.Configuration);
 builder.Services.AppServiceCollection(builder.Configuration);
 
-// Configure the HTTP request pipeline.
 builder.Services.AddApiVersioning(options =>
 {
     options.AssumeDefaultVersionWhenUnspecified = true;
@@ -17,13 +15,13 @@ builder.Services.AddApiVersioning(options =>
     options.ReportApiVersions = true;
 });
 
+builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddVersionedApiExplorer(options =>
 {
     options.GroupNameFormat = "'v'VVV";
     options.SubstituteApiVersionInUrl = true;
 });
-
-builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(options =>
 {
@@ -33,6 +31,8 @@ builder.Services.AddSwaggerGen(options =>
         Title = "App.Services.AuthAPI",
     });
 });
+
+builder.Services.AddDistributedMemoryCache();
 
 var app = builder.Build();
 app.UseSwagger();
@@ -55,6 +55,8 @@ app.UseSwaggerUI(options =>
     }
 });
 
+
+app.UseSession();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
