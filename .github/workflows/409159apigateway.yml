@@ -6,7 +6,6 @@ name: Build and deploy ASP.Net Core app to Azure Web App - 409159apigateway
 on:
   push:
     branches:
-      - main
       - 409159apigateway
 
 env:
