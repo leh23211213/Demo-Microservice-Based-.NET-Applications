@@ -8,6 +8,8 @@ using App.Frontend.Utility;
 
 namespace App.Frontend.Controllers
 {
+    [Authorize]
+    [AllowAnonymous]
     public class OrderController : Controller
     {
         private readonly IOrderService _orderService;
@@ -17,13 +19,11 @@ namespace App.Frontend.Controllers
             _orderService = orderService;
         }
 
-        [Authorize]
         public IActionResult Index()
         {
             return View();
         }
 
-        [Authorize]
         public async Task<IActionResult> Details(string orderId)
         {
             OrderHeader orderHeader = new OrderHeader();

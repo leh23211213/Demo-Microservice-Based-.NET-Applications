@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-
-namespace App.Services.ShoppingCartAPI.Extensions
+﻿namespace App.Services.ShoppingCartAPI.Extensions
 {
     public static class WebApplicationBuilderExtensions
     {
@@ -13,27 +9,29 @@ namespace App.Services.ShoppingCartAPI.Extensions
             var secret = settingsSection.GetValue<string>("Secret");
             var issuer = settingsSection.GetValue<string>("Issuer");
             var audience = settingsSection.GetValue<string>("Audience");
-            var key = Encoding.UTF8.GetBytes(secret);
+            var key = Convert.FromBase64String(secret);
 
             builder.Services.AddAuthentication(options =>
             {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme;
             })
             .AddJwtBearer(options =>
             {
                 options.RequireHttpsMetadata = false; // Enable if you're not using HTTPS (for dev environment)
                 options.SaveToken = true;
-                options.TokenValidationParameters = new TokenValidationParameters
+                options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                 {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = true,
                     ValidIssuer = issuer,
                     ValidAudience = audience,
-                    ValidateAudience = true
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(key),
                 };
             });
+
             builder.Services.AddAuthorization();
             builder.Services.AddControllers();
             builder.Services.AddAuthentication();

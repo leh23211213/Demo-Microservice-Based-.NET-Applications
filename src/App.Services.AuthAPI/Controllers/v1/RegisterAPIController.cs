@@ -28,18 +28,29 @@ namespace App.Services.AuthAPI.Controllers
             _authAPIService = authAPIService;
         }
 
-        [HttpPost("register")]
+        [HttpPost("Register")]
         public async Task<ActionResult<Response>> Register([FromBody] RegistrationRequest model)
         {
-            var errorMessage = await _authAPIService.Register(model);
-            if (!string.IsNullOrEmpty(errorMessage))
+            try
             {
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                _response.IsSuccess = false;
-                _response.Message = errorMessage;
-                return _response;
+                if (ModelState.IsValid)
+                {
+                    var errorMessage = await _authAPIService.Register(model);
+                    if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        _response.StatusCode = HttpStatusCode.BadRequest;
+                        _response.IsSuccess = false;
+                        _response.Message = errorMessage;
+                        return _response;
+                    }
+                    await _messageBus.PublishMessage(model.Email, _configuration.GetValue<string>("TopicAndQueueNames:RegisterUserQueue"));
+                }
             }
-            await _messageBus.PublishMessage(model.Email, _configuration.GetValue<string>("TopicAndQueueNames:RegisterUserQueue"));
+            catch (Exception ex)
+            {
+                _response.Message = ex.Message;
+                _response.StatusCode = HttpStatusCode.Unauthorized;
+            }
             return _response;
         }
     }

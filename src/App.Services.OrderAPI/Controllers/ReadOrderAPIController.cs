@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace App.Services.OrderAPI.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/order")]

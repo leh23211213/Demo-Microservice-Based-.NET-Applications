@@ -7,6 +7,8 @@ using Newtonsoft.Json;
 
 namespace App.Frontend.Controllers
 {
+    [Authorize]
+    [AllowAnonymous]
     public class CartController : Controller
     {
         private readonly IOrderService _orderService;
@@ -18,19 +20,16 @@ namespace App.Frontend.Controllers
             _orderService = orderService;
         }
 
-        [Authorize]
         public async Task<IActionResult> Index()
         {
             return View(await LoadCart());
         }
 
-        [Authorize]
         public async Task<IActionResult> Checkout()
         {
             return View(await LoadCart());
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Checkout(Cart cartInfomation)
         {
@@ -44,7 +43,6 @@ namespace App.Frontend.Controllers
 
                 //get stripe session and redirect to stripe to place order
                 var domain = Request.Scheme + "://" + Request.Host.Value + "/";
-
                 StripeRequest stripeRequest = new()
                 {
                     ApprovedUrl = domain + "cart/Confirmation/orderId=" + orderHeader?.Id,
@@ -58,7 +56,6 @@ namespace App.Frontend.Controllers
                     var stripeResponseResult = JsonConvert.DeserializeObject<StripeRequest>(Convert.ToString(stripeResponse.Result));
                     Response.Headers?.Add("Location", stripeResponseResult.StripeSessionUrl);
                 }
-
                 return new StatusCodeResult(303);
             }
             return View(cart);
@@ -74,7 +71,6 @@ namespace App.Frontend.Controllers
             return View(orderId);
         }
 
-        [Authorize]
         public async Task<IActionResult> Delete(string cartDetailsId)
         {
             Response? response = await _cartService.DeleteAsync(cartDetailsId);

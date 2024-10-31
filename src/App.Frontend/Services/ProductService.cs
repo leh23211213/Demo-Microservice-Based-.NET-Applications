@@ -19,7 +19,7 @@ namespace App.Frontend.Services
             {
                 ApiType = StaticDetail.ApiType.GET,
                 Url = StaticDetail.ProductAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/product"
-            }, withBearer: false);
+            }, withBearer: true);
         }
 
         public async Task<Response?> Get(string id)
@@ -28,7 +28,7 @@ namespace App.Frontend.Services
             {
                 ApiType = StaticDetail.ApiType.GET,
                 Url = StaticDetail.ProductAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/product/" + id,
-            }, withBearer: false);
+            }, withBearer: true);
         }
 
         public async Task<Response?> Get(int pageSize, int currentPage, string? search)
@@ -37,7 +37,7 @@ namespace App.Frontend.Services
             {
                 ApiType = StaticDetail.ApiType.GET,
                 Url = StaticDetail.ProductAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/product/Pagination/" + $"?pageSize={pageSize}&search={search}&currentPage={currentPage}",
-            }, withBearer: false);
+            }, withBearer: true);
         }
 
         public async Task<Response?> CreateAsync(Product product)

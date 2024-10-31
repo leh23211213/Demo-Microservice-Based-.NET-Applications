@@ -7,6 +7,8 @@ using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 namespace App.Frontend.Controllers
 {
+    [Authorize]
+    [AllowAnonymous]
     public class HomeController : Controller
     {
         private readonly ICartService _cartService;
@@ -17,7 +19,6 @@ namespace App.Frontend.Controllers
             _cartService = cartService;
             _productService = productService;
         }
-
         public async Task<IActionResult> Index(
                                                 [FromQuery] int pageSize = 6,
                                                 [FromQuery] int currentPage = 1,
@@ -26,7 +27,6 @@ namespace App.Frontend.Controllers
         {
             Response? response = await _productService.Get(pageSize, currentPage, search);
             Pagination pagination = new();
-
             if (response.IsSuccess && response != null && response.Result != null)
             {
                 pagination = JsonConvert.DeserializeObject<Pagination>(Convert.ToString(response.Result));
@@ -55,7 +55,6 @@ namespace App.Frontend.Controllers
             return View(product);
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Details(Product product)
         {

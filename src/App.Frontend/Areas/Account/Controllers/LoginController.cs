@@ -1,13 +1,13 @@
 using System.Diagnostics;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using App.Frontend.Areas.Account.Models;
 using App.Frontend.Models;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
 using App.Frontend.Services.IServices;
+using System.IdentityModel.Tokens.Jwt;
+using App.Frontend.Areas.Account.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace App.Frontend.Areas.Account.Controllers
@@ -19,7 +19,10 @@ namespace App.Frontend.Areas.Account.Controllers
     {
         private readonly IAuthService _authService;
         private readonly ITokenProvider _tokenProvider;
-        public LoginController(IAuthService authService, ITokenProvider tokenProvider)
+        public LoginController(
+                                IAuthService authService,
+                                ITokenProvider tokenProvider
+                            )
         {
             _authService = authService;
             _tokenProvider = tokenProvider;
@@ -39,34 +42,31 @@ namespace App.Frontend.Areas.Account.Controllers
         [HttpGet]
         public async Task<ActionResult> Login()
         {
-            var model = new LoginRequest()
+            var token = _tokenProvider.GetToken();
+            if (token != null)
             {
-            };
+                await SignInUser(token.AccessToken);
+                return RedirectToAction("Index", "Home");
+            }
+
+            var model = new LoginRequest() { };
             return View(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> Login(LoginRequest model)
         {
-            // Clear token before login
-            var webToken = _tokenProvider.GetToken();
-            if (webToken != null)
-            {
-                _tokenProvider.ClearToken();
-            }
-
             Response response = await _authService.LoginAsync(model);
-
             if (response.IsSuccess && response != null)
             {
                 var token = JsonConvert.DeserializeObject<Token>(Convert.ToString(response.Result));
                 if (token != null)
                 {
-                    await SignInUser(token);
+                    await SignInUser(token.AccessToken);
                     _tokenProvider.SetToken(token);
                     return RedirectToAction("Index", "Home");
                 }
-                return RedirectToAction("Error", new AccountErrorModel { Message = "Token Bug" });
+                return RedirectToAction("Error", new AccountErrorModel { Message = "Login Bug" });
             }
             else
             {
@@ -85,11 +85,10 @@ namespace App.Frontend.Areas.Account.Controllers
             return RedirectToAction("Login", "Login", new { area = "Account" });
         }
 
-        private async Task SignInUser(Token token)
+        private async Task SignInUser(string AccessToken)
         {
             var handler = new JwtSecurityTokenHandler();
-            var jwt = handler.ReadJwtToken(token.AccessToken);
-
+            var jwt = handler.ReadJwtToken(AccessToken);
             var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
 
             identity.AddClaim(new Claim(JwtRegisteredClaimNames.Email,
@@ -100,7 +99,6 @@ namespace App.Frontend.Areas.Account.Controllers
                 jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Name).Value));
             identity.AddClaim(new Claim(ClaimTypes.Role,
                 jwt.Claims.FirstOrDefault(u => u.Type == "role").Value));
-
             // for render information
             identity.AddClaim(new Claim(ClaimTypes.Name,
             jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Email).Value));

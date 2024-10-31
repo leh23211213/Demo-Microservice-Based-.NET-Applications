@@ -17,11 +17,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.APIGateway", "App.APIGa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Services.EmailAPI", "App.Services.EmailAPI\App.Services.EmailAPI.csproj", "{9ABB39C4-CDBE-42E0-B5A1-4A40BD60AE7D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Services.RewardAPI", "App.Services.RewardAPI\App.Services.RewardAPI.csproj", "{B93C81C4-D4FF-4BEC-B9AB-A85D2DF968DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Services.RewardAPI", "App.Services.RewardAPI\App.Services.RewardAPI.csproj", "{B93C81C4-D4FF-4BEC-B9AB-A85D2DF968DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Services.CouponAPI", "App.Services.CouponAPI\App.Services.CouponAPI.csproj", "{11199D60-2324-45C5-922E-D1DCD76B7D01}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Services.CouponAPI", "App.Services.CouponAPI\App.Services.CouponAPI.csproj", "{11199D60-2324-45C5-922E-D1DCD76B7D01}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Services.Bus", "App.Services.Bus\App.Services.Bus.csproj", "{63E530B2-7DCB-4F75-A547-1D3EBB9B29DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Services.Bus", "App.Services.Bus\App.Services.Bus.csproj", "{63E530B2-7DCB-4F75-A547-1D3EBB9B29DD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

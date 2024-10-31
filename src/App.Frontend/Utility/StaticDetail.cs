@@ -7,7 +7,7 @@ public static class StaticDetail
     public static string? CouponAPIBase { get; set; }
     public static string? ShoppingCartAPIBase { get; set; }
     public static string? OrderAPIBase { get; set; }
-    public static string AccessToken = "JWTToken";
+    public static string AccessToken = "AccessToken";
     public static string RefreshToken = "RefreshToken";
     public const string RoleAdmin = "ADMIN";
     public const string RoleCustomer = "CUSTOMER";

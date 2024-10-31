@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using System.Net.Http.Headers;
 
-namespace App.Services.ShoppingCartAPI.Utility
+namespace App.Frontend.Utility
 {
     public class ApiAuthenticationHttpClientHandler : DelegatingHandler
     {
@@ -14,7 +14,7 @@ namespace App.Services.ShoppingCartAPI.Utility
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            /*
+             /*
             {
                 "access_token": "...",
                 "refresh_token": "",

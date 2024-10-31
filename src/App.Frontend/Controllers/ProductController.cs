@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 
 namespace App.Frontend.Controllers
 {
+
     [Authorize(Roles = "ADMIN")]
     public class ProductController : Controller
     {
@@ -18,14 +19,13 @@ namespace App.Frontend.Controllers
         }
 
         public async Task<IActionResult> Index(
-                                                [FromQuery] int pageSize = 10,
-                                                [FromQuery] int currentPage = 1,
-                                                [FromQuery] string? search = ""
-                                                )
+                                                      [FromQuery] int pageSize = 10,
+                                                      [FromQuery] int currentPage = 1,
+                                                      [FromQuery] string? search = ""
+                                                      )
         {
             Response? response = await _productService.Get(pageSize, currentPage, search);
             Pagination pagination = new();
-
             if (response.IsSuccess && response != null)
             {
                 pagination = JsonConvert.DeserializeObject<Pagination>(Convert.ToString(response.Result));
@@ -34,7 +34,6 @@ namespace App.Frontend.Controllers
             {
                 TempData["error"] = response?.Message;
             }
-
             return View(pagination);
         }
 
@@ -118,9 +117,7 @@ namespace App.Frontend.Controllers
             ViewBag.ColorList = colorList;
             ViewBag.SizeList = sizeList;
 
-
             Response? response = await _productService.Get(Id);
-
             if (response.IsSuccess && response != null)
             {
                 Product product = JsonConvert.DeserializeObject<Product>(Convert.ToString(response.Result));
@@ -142,7 +139,6 @@ namespace App.Frontend.Controllers
             product.Brand.Id = product.Brand.Name == "Apple" ? 1 : 0;
 
             Response? response = await _productService.UpdateAsync(product);
-
             if (response.IsSuccess && response != null)
             {
                 TempData["success"] = response?.Message;
@@ -176,7 +172,6 @@ namespace App.Frontend.Controllers
         public async Task<IActionResult> Delete(string Id)
         {
             Response? response = await _productService.Get(Id);
-
             if (response.IsSuccess && response != null)
             {
                 Product product = JsonConvert.DeserializeObject<Product>(Convert.ToString(response.Result));
@@ -193,7 +188,6 @@ namespace App.Frontend.Controllers
         public async Task<IActionResult> DeleteAsync(Product product)
         {
             Response? response = await _productService.DeleteAsync(product.Id);
-
             if (response.IsSuccess && response != null)
             {
                 TempData["success"] = response?.Message;

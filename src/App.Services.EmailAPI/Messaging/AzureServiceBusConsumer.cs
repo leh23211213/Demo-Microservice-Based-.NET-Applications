@@ -31,6 +31,7 @@ namespace App.Services.EmailAPI.Messaging
         {
             _registerUserProcessor.ProcessMessageAsync += OnUserRegisterRequestReceived;
             _registerUserProcessor.ProcessErrorAsync += ErrorHandler;
+           
             await _registerUserProcessor.StartProcessingAsync();
         }
 

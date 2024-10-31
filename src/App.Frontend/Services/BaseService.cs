@@ -1,35 +1,37 @@
 ﻿
+using System.Net;
+using System.Text;
+using Newtonsoft.Json;
 using App.Frontend.Models;
-using App.Frontend.Services.IServices;
 using App.Frontend.Utility;
+using System.Security.Claims;
+using System.Net.Http.Headers;
+using System.IdentityModel.Tokens.Jwt;
+using App.Frontend.Services.IServices;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Newtonsoft.Json;
-using System.IdentityModel.Tokens.Jwt;
-using System.Net;
-using System.Net.Http.Headers;
-using System.Security.Claims;
-using System.Text;
 
 namespace App.Frontend.Services
 {
     public class BaseService : IBaseService
     {
-        public Response _response { get; set; }
-        public IHttpClientFactory _httpClientFactory { get; set; }
-        private readonly ITokenProvider _tokenProvider;
-        private readonly IApiMessageRequestBuilder _apiMessageRequestBuilder;
         protected readonly string _url = null!;
+        private readonly ITokenProvider _tokenProvider;
         private IHttpContextAccessor _httpContextAccessor;
-        public BaseService(IHttpClientFactory httpClientFactory, ITokenProvider tokenProvider, IConfiguration configuration
-            , IHttpContextAccessor httpContextAccessor, IApiMessageRequestBuilder apiMessageRequestBuilder)
+        public IHttpClientFactory _httpClientFactory { get; set; }
+        private readonly IApiMessageRequestBuilder _apiMessageRequestBuilder;
+        public BaseService(
+                            IConfiguration configuration,
+                            ITokenProvider tokenProvider,
+                            IHttpClientFactory httpClientFactory,
+                            IHttpContextAccessor httpContextAccessor,
+                            IApiMessageRequestBuilder apiMessageRequestBuilder)
         {
-            _httpContextAccessor = httpContextAccessor;
             _tokenProvider = tokenProvider;
-            _response = new();
-            _url = configuration.GetValue<string>("ServiceUrls:authAPI");
             _httpClientFactory = httpClientFactory;
+            _httpContextAccessor = httpContextAccessor;
             _apiMessageRequestBuilder = apiMessageRequestBuilder;
+            _url = configuration.GetValue<string>("ServiceUrls:authAPI");
         }
 
         public async Task<Response?> SendAsync(Request request, bool withBearer = true)
@@ -44,10 +46,7 @@ namespace App.Frontend.Services
 
                 HttpResponseMessage httpResponseMessage = null;
                 httpResponseMessage = await SendWithRefreshTokenAsync(client, messageFactory, withBearer);
-                Response FinalApiResponse = new()
-                {
-                    IsSuccess = false
-                };
+                Response FinalApiResponse = new(){ IsSuccess = false };
 
                 try
                 {
@@ -100,7 +99,6 @@ namespace App.Frontend.Services
         private async Task<HttpResponseMessage> SendWithRefreshTokenAsync(HttpClient httpClient,
             Func<HttpRequestMessage> httpRequestMessageFactory, bool withBearer = true)
         {
-
             if (!withBearer)
             {
                 return await httpClient.SendAsync(httpRequestMessageFactory());
@@ -204,6 +202,5 @@ namespace App.Frontend.Services
 
             _tokenProvider.SetToken(token);
         }
-
     }
 }
