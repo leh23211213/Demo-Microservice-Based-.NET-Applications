@@ -1,8 +1,7 @@
 
 using App.Frontend.Models;
-using App.Frontend.Services.IServices;
 using App.Frontend.Utility;
-
+using App.Frontend.Services.IServices;
 namespace App.Frontend.Services
 {
     /// <summary>
@@ -22,7 +21,6 @@ namespace App.Frontend.Services
             _httpContextAccessor.HttpContext?.Response.Cookies.Delete(StaticDetail.AccessToken);
             _httpContextAccessor.HttpContext?.Response.Cookies.Delete(StaticDetail.RefreshToken);
         }
-
         public Token GetToken()
         {
             try
@@ -42,12 +40,23 @@ namespace App.Frontend.Services
                 return null;
             }
         }
-
         public void SetToken(Token token)
         {
-            var cookieOptions = new CookieOptions { Expires = DateTime.UtcNow.AddDays(1) };
-            _httpContextAccessor.HttpContext?.Response.Cookies.Append(StaticDetail.AccessToken, token.AccessToken, cookieOptions);
-            _httpContextAccessor.HttpContext?.Response.Cookies.Append(StaticDetail.RefreshToken, token.RefreshToken, cookieOptions);
+            _httpContextAccessor.HttpContext?.Response.Cookies.Append(StaticDetail.AccessToken, token.AccessToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,  // Nên dùng HTTPS
+                SameSite = SameSiteMode.None, // Để trình duyệt cho phép chia sẻ cookie
+                Expires = DateTime.UtcNow.AddDays(7)
+            });
+
+            _httpContextAccessor.HttpContext?.Response.Cookies.Append(StaticDetail.RefreshToken, token.RefreshToken, new CookieOptions
+            {
+                Expires = DateTime.UtcNow.AddDays(7),
+                Secure = true,  // Nên dùng HTTPS
+                HttpOnly = true,
+                SameSite = SameSiteMode.None, // Để trình duyệt cho phép chia sẻ cookie
+            });
         }
     }
 }

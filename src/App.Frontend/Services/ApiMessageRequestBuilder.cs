@@ -1,8 +1,7 @@
-﻿using App.Frontend.Models;
-using App.Frontend.Services.IServices;
-using App.Frontend.Utility;
+﻿using System.Text;
 using Newtonsoft.Json;
-using System.Text;
+using App.Frontend.Models;
+using App.Frontend.Services.IServices;
 using static App.Frontend.Utility.StaticDetail;
 
 namespace App.Frontend.Services

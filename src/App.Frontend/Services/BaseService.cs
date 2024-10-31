@@ -15,7 +15,6 @@ namespace App.Frontend.Services
 {
     public class BaseService : IBaseService
     {
-        public Response _response { get; set; }
         protected readonly string _url = null!;
         private readonly ITokenProvider _tokenProvider;
         private IHttpContextAccessor _httpContextAccessor;
@@ -28,7 +27,6 @@ namespace App.Frontend.Services
                             IHttpContextAccessor httpContextAccessor,
                             IApiMessageRequestBuilder apiMessageRequestBuilder)
         {
-            _response = new();
             _tokenProvider = tokenProvider;
             _httpClientFactory = httpClientFactory;
             _httpContextAccessor = httpContextAccessor;
@@ -48,10 +46,7 @@ namespace App.Frontend.Services
 
                 HttpResponseMessage httpResponseMessage = null;
                 httpResponseMessage = await SendWithRefreshTokenAsync(client, messageFactory, withBearer);
-                Response FinalApiResponse = new()
-                {
-                    IsSuccess = false
-                };
+                Response FinalApiResponse = new(){ IsSuccess = false };
 
                 try
                 {
@@ -104,7 +99,6 @@ namespace App.Frontend.Services
         private async Task<HttpResponseMessage> SendWithRefreshTokenAsync(HttpClient httpClient,
             Func<HttpRequestMessage> httpRequestMessageFactory, bool withBearer = true)
         {
-
             if (!withBearer)
             {
                 return await httpClient.SendAsync(httpRequestMessageFactory());
@@ -208,6 +202,5 @@ namespace App.Frontend.Services
 
             _tokenProvider.SetToken(token);
         }
-
     }
 }
