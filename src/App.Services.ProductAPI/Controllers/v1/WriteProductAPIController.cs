@@ -32,7 +32,7 @@ namespace App.Services.ProductAPI.Controllers.v1
         {
             try
             {
-                var existingProduct = await _dbContext.Products.FirstOrDefaultAsync(p => p.Id == product.Id);
+                var existingProduct = await _dbContext.Products.FirstOrDefaultAsync(p => p.Name == product.Name);
                 if (existingProduct != null)
                 {
                     _response.Message = "Product already exists.";
@@ -95,7 +95,7 @@ namespace App.Services.ProductAPI.Controllers.v1
             }
             return _response;
         }
-
+        // TODO : bug lost category,colorr,size,brand ID
         [HttpPut("Update")]
         public async Task<ActionResult<Response>> Update(Product product)
         {

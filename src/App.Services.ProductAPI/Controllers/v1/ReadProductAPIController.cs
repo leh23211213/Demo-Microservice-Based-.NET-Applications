@@ -62,7 +62,7 @@ namespace App.Services.ProductAPI.Controllers.v1
                 //  _logger.LogError(ex.Message);
             }
 
-        
+
             return _response;
         }
 
@@ -106,7 +106,7 @@ namespace App.Services.ProductAPI.Controllers.v1
                 _response.StatusCode = HttpStatusCode.NotFound;
             }
 
-          
+
             return _response;
         }
 
@@ -165,7 +165,7 @@ namespace App.Services.ProductAPI.Controllers.v1
                 _response.Message = ex.Message;
             }
 
-          
+
             return _response;
         }
     }

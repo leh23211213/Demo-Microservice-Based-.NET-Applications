@@ -6,6 +6,7 @@ using App.Services.ProductAPI.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.AddAppAuthetication();
 builder.Services.ConfigureDatabase(builder.Configuration);
 builder.Services.AppServiceCollection(builder.Configuration);
 
@@ -24,6 +25,7 @@ builder.Services.AddVersionedApiExplorer(options =>
 });
 
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(option =>
 {
     option.AddSecurityDefinition(name: JwtBearerDefaults.AuthenticationScheme, securityScheme: new OpenApiSecurityScheme
@@ -59,9 +61,19 @@ builder.Services.AddSwaggerGen(option =>
             Url = new Uri("https://documenter.getpostman.com/view/33236192/2sAXxV5pNK")
         },
     });
+    option.SwaggerDoc("v2", new OpenApiInfo
+    {
+        Version = "v2.0",
+        Title = "App.Services.ProductAPI",
+        Description = "product API version 2",
+        Contact = new OpenApiContact
+        {
+            Name = "Postman Document",
+            Url = new Uri("https://documenter.getpostman.com/view/33236192/2sAXxV5pNK")
+        },
+    });
 });
 
-builder.AddAppAuthetication();
 var app = builder.Build();
 
 app.UseSwagger();
@@ -72,6 +84,7 @@ app.UseSwaggerUI(options =>
         app.UseSwaggerUI(options =>
         {
             options.SwaggerEndpoint("/swagger/v1/swagger.json", "App.Services.ProductAPI V1");
+            options.SwaggerEndpoint("/swagger/v2/swagger.json", "App.Services.ProductAPI V2");
         });
     }
     else
@@ -79,6 +92,7 @@ app.UseSwaggerUI(options =>
         app.UseSwaggerUI(options =>
         {
             options.SwaggerEndpoint("/swagger/v1/swagger.json", "App.Services.ProductAPI V1");
+            options.SwaggerEndpoint("/swagger/v2/swagger.json", "App.Services.ProductAPI V2");
             options.RoutePrefix = string.Empty;
         });
     }
@@ -94,9 +108,7 @@ if (app.Environment.IsDevelopment())
     ApplyMigration(app);
 }
 
-
 app.Run();
-
 
 // 500.30
 void ApplyMigration(WebApplication app)

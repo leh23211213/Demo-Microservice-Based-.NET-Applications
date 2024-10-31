@@ -1,18 +1,16 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.RegularExpressions;
 using Swashbuckle.AspNetCore.Annotations;
 namespace App.Services.ProductAPI.Models;
 
-[Serializable]
 public class Product
 {
     public string Id { get; set; } = null!;
 
     [Required(ErrorMessage = "Name is required.")]
     [RegularExpression(@"^[a-zA-Z0-9 ]*$", ErrorMessage = "Name must not contain special characters.")]
-    public string Name { get; set; }
-    
+    public string Name { get; set; } = "";
+
     private double _price = 0;
     public double Price
     {
