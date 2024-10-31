@@ -1,7 +1,3 @@
-using App.Services.ShoppingCartAPI.Models;
-using App.Services.ShoppingCartAPI.Services;
-using App.Services.ShoppingCartAPI.Services.IServices;
-
 namespace App.Services.ShoppingCartAPI.Extensions
 {
     public static class ServiceExtensions
@@ -9,8 +5,8 @@ namespace App.Services.ShoppingCartAPI.Extensions
         public static IServiceCollection AppServiceCollection(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<Utility.ApiAuthenticationHttpClientHandler>();
-            services.AddScoped<IProductService, ProductService>();
-            services.AddScoped<Response>();
+            services.AddScoped<Services.IServices.IProductService, Services.ProductService>();
+            services.AddScoped<Models.Response>();
             services.AddHttpContextAccessor();
             services.AddHttpClient("Product", u => u.BaseAddress = new Uri(configuration["ServiceUrls:ProductAPI"])).AddHttpMessageHandler<Utility.ApiAuthenticationHttpClientHandler>();
 
@@ -31,6 +27,8 @@ namespace App.Services.ShoppingCartAPI.Extensions
                 options.Providers.Add<Microsoft.AspNetCore.ResponseCompression.GzipCompressionProvider>();
                 options.EnableForHttps = true;
             });
+
+
             return services;
         }
     }
