@@ -1,0 +1,59 @@
+﻿@model Pagination
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="~/css/Home/Index.css" asp-append-version="true">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<div class="page-content">
+    <div class="Content">
+        <div class="Left-Content">
+        </div>
+        <div class="Right-Content">
+            <div class="box-filter top-box  block-scroll-main cate-42">
+                <section>
+                    <h3 class="Title">All Product</h3>
+                    <form class="input-group w-50 float-right" method="get" asp-controller="Home" asp-action="Index">
+                        <input type="text" class="form-control" placeholder="Search for" name="search" />
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="submit">Search</button>
+                        </div>
+                    </form>
+                </section>
+            </div>
+            <section id="CategoryPage" data-name="Phone" data-template="cate">
+                <div class="Product-Box">
+                    <ul class="List-Product">
+                        @foreach (var item in Model.Products)
+                        {
+                            <li class="Item">
+                                <div class="Item-Img">
+                                    <img src="@Url.Content(item.ImageUrl)" />
+                                </div>
+                                <div class="Product-Info">
+                                    <h3 class="Name">@item.Name</h3>
+                                    <strong class="price"> @string.Format("{0:c}", @item.Price)</strong>
+                                </div>
+                                <div>
+                                    <a asp-action="Details" asp-route-Id="@item.Id"
+                                        class="btn btn-primary btn-lg ">Detail</a>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </div>
+                <div class="pagination">
+                    @for (int i = 1; i <= Model.totalPages; i++)
+                    {
+                        <a asp-controller="Home" asp-action="Index" asp-route-currentPage="@i"
+                            class="pagination-link @(i == Model.currentPage ? "active" : "")">
+                            @i
+                        </a>
+                    }
+                </div>
+            </section>
+        </div>
+    </div>
+</div>

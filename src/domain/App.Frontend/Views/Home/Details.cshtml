@@ -1,0 +1,62 @@
+﻿@model Product
+
+<head>
+    <link rel="stylesheet" href="~/css/Product/Detail.css" asp-append-version="true">
+</head>
+
+<form method="post">
+    <input asp-for="Id" hidden />
+    <div class="page-content">
+        <section class="landing-page-section">
+            <div class="top">
+                <h2 class="Product-Name">
+                    @Model.Name
+                </h2>
+            </div>
+            <div class="divider"></div>
+            <div></div>
+            <div class="detail-content">
+                <div class="pricing-card">
+                    <img src="@Url.Content(@Model.ImageUrl)" alt="">
+                    <div class="divider"></div>
+                    <ul>
+                        <li>
+                            <div class="row pl-3">
+                                <div class="col-12">
+                                    <p class="form-control">Category: @(Model.Category != null ? Model.Category.Name :
+                                        "N/A")</p>
+                                    <p class="form-control">Size: @(Model.Size != null ? Model.Size.RAM : "N/A")</p>
+                                    <p class="form-control">Color: @(Model.Color != null ? Model.Color.Name : "N/A")</p>
+                                    <p class="form-control">Brand: @(Model.Brand != null ? Model.Brand.Name : "N/A")</p>
+                                    <p class="form-control">Description: @(Model.Description != null ? Model.Description
+                                        : "N/A")</p>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="pricing-card pricing-card--primary">
+                    <div class="pricing-card__price">
+                        @string.Format("{0:c}", Model.Price)
+                    </div>
+                    <div class="divider"></div>
+                    <div class="group-button">
+                        <ul>
+                            <li>
+                                <button type="submit" class="btn btn-primary form-control btn-lg"
+                                    style="height:50px;">Add to Cart</button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <a asp-action="Index" class="btn btn-primary btn-lg">Back to List</a>
+            </div>
+        </section>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
