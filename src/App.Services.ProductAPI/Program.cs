@@ -6,7 +6,7 @@ using App.Services.ProductAPI.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
-// builder.AddAppAuthetication();
+builder.AddAppAuthetication();
 builder.Services.ConfigureDatabase(builder.Configuration);
 builder.Services.AppServiceCollection(builder.Configuration);
 
