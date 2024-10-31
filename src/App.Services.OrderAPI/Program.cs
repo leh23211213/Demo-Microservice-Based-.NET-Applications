@@ -7,6 +7,7 @@ using Microsoft.OpenApi.Models;
 using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.AddAppAuthetication();
 builder.Services.ConfigureDatabase(builder.Configuration);
 builder.Services.AppServiceCollection(builder.Configuration);
 
@@ -57,9 +58,7 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
-builder.AddAppAuthetication();
 var app = builder.Build();
-
 
 app.UseSwagger();
 app.UseSwaggerUI(options =>
