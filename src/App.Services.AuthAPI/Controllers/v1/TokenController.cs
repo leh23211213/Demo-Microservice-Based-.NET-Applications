@@ -67,5 +67,13 @@ namespace App.Services.AuthAPI.Controllers
             _response.StatusCode = HttpStatusCode.BadRequest;
             return _response;
         }
+
+        [HttpDelete("warning remove token")]
+        public async Task<ActionResult<Response>> warning()
+        {
+            _tokenProvider.ClearToken();
+            _response.Message = " Already Clear Token!!!";
+            return _response;
+        }
     }
 }
