@@ -93,7 +93,7 @@ namespace App.Frontend.Controllers
             var userId = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
             var userEmail = User.FindFirst(JwtRegisteredClaimNames.Email)?.Value;
             var userName = User.FindFirst(JwtRegisteredClaimNames.Name)?.Value;
-
+            
             Response? response = await _cartService.GetAsync(userId);
             if (response != null && response.IsSuccess)
             {

@@ -34,6 +34,20 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddDistributedMemoryCache();
 
+//30-1-2024
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigins", builder =>
+    {
+        builder.WithOrigins("http://localhost:6999")  // replace with your frontend URL
+               .AllowAnyMethod()
+               .AllowAnyHeader()
+               .AllowCredentials(); // only if needed for cookies or credentials
+    });
+});
+
+
+
 var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI(options =>
@@ -55,6 +69,8 @@ app.UseSwaggerUI(options =>
     }
 });
 
+//30-1-2024
+app.UseCors("AllowSpecificOrigins");
 
 app.UseSession();
 app.UseHttpsRedirection();

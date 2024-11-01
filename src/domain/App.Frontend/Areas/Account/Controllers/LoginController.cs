@@ -1,5 +1,7 @@
+using Newtonsoft.Json;
 using System.Diagnostics;
 using App.Frontend.Models;
+using App.Frontend.Utility;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using App.Frontend.Services.IServices;
@@ -8,7 +10,6 @@ using App.Frontend.Areas.Account.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Newtonsoft.Json;
 
 namespace App.Frontend.Areas.Account.Controllers
 {
@@ -19,13 +20,21 @@ namespace App.Frontend.Areas.Account.Controllers
     {
         private readonly IAuthService _authService;
         private readonly ITokenProvider _tokenProvider;
+        private readonly IConfiguration _configuration;
+        private readonly string AdminUrl;
+        private readonly string ProtectedCustomerUrl;
         public LoginController(
                                 IAuthService authService,
-                                ITokenProvider tokenProvider
+                                ITokenProvider tokenProvider,
+                                 IConfiguration configuration
                             )
         {
             _authService = authService;
             _tokenProvider = tokenProvider;
+            _configuration = configuration;
+
+            AdminUrl = _configuration.GetValue<string>("ServiceUrls:AdminUrl");
+            ProtectedCustomerUrl = _configuration.GetValue<string>("ServiceUrls:ProtectedCustomerUrl");
         }
 
         // 20 minutes = 1200;
@@ -46,7 +55,18 @@ namespace App.Frontend.Areas.Account.Controllers
             if (token != null)
             {
                 await SignInUser(token.AccessToken);
-                return RedirectToAction("Index", "Home");
+                var roles = User.FindFirst(ClaimTypes.Role)?.Value;
+                // redirect to customer domain
+                if (roles == StaticDetail.RoleCustomer)
+                {
+                    return Redirect(ProtectedCustomerUrl);
+                }
+                // redirect to admin domain
+                if (roles == StaticDetail.RoleAdmin)
+                {
+                    return Redirect(AdminUrl);
+                }
+                return RedirectToAction("AccessDenied", "Account");
             }
 
             var model = new LoginRequest() { };
@@ -63,8 +83,20 @@ namespace App.Frontend.Areas.Account.Controllers
                 if (token != null)
                 {
                     await SignInUser(token.AccessToken);
-                    _tokenProvider.SetToken(token);
-                    return RedirectToAction("Index", "Home");
+                    //_tokenProvider.SetToken(token);
+                    var roles = User.FindFirst(ClaimTypes.Role)?.Value;
+                    // redirect to customer domain
+                    if (roles == StaticDetail.RoleCustomer)
+                    {
+                        return Redirect(ProtectedCustomerUrl);
+                    }
+                    // redirect to admin domain
+                    if (roles == StaticDetail.RoleAdmin)
+                    {
+                        string adminRedirectUrl = $"{AdminUrl}?accessToken={token.AccessToken}";
+                        return Redirect(adminRedirectUrl);
+                    }
+                    return RedirectToAction("AccessDenied", "Account");
                 }
                 return RedirectToAction("Error", new AccountErrorModel { Message = "Login Bug" });
             }
@@ -78,11 +110,12 @@ namespace App.Frontend.Areas.Account.Controllers
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
+            var domain = User.FindFirst(JwtRegisteredClaimNames.Aud)?.Value;
             await HttpContext.SignOutAsync();
             var token = _tokenProvider.GetToken();
             await _authService.LogoutAsync(token);
             _tokenProvider.ClearToken();
-            return RedirectToAction("Login", "Login", new { area = "Account" });
+            return Redirect(domain);
         }
 
         private async Task SignInUser(string AccessToken)
@@ -97,6 +130,8 @@ namespace App.Frontend.Areas.Account.Controllers
                 jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Sub).Value));
             identity.AddClaim(new Claim(JwtRegisteredClaimNames.Name,
                 jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Name).Value));
+            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Aud,
+                jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Aud).Value));
             identity.AddClaim(new Claim(ClaimTypes.Role,
                 jwt.Claims.FirstOrDefault(u => u.Type == "role").Value));
             // for render information

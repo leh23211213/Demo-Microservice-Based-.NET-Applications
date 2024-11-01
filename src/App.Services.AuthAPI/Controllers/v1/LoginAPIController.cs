@@ -11,14 +11,17 @@ namespace App.Services.AuthAPI.Controllers
     public class LoginAPIController : ControllerBase
     {
         protected Response _response;
+        private readonly ITokenProvider _tokenProvider;
         private readonly IAuthAPIService _authAPIService;
 
         public LoginAPIController(
-                                IAuthAPIService authAPIService
+                                IAuthAPIService authAPIService,
+                                ITokenProvider tokenProvider
                                 )
         {
             _response = new();
             _authAPIService = authAPIService;
+            _tokenProvider = tokenProvider;
         }
 
         [HttpPost("Login")]
@@ -35,6 +38,7 @@ namespace App.Services.AuthAPI.Controllers
                     return _response;
                 }
                 _response.Result = token;
+                _tokenProvider.SetToken(token);
             }
             return _response;
         }
