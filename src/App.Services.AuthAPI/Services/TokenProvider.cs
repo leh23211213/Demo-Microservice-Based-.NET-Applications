@@ -40,7 +40,7 @@ namespace App.Services.AuthAPI.Services
         }
         public void SetToken(Token token)
         {
-            _httpContextAccessor.HttpContext?.Response.Cookies.Append(StaticDetail.AccessToken, token.AccessToken, new CookieOptions
+            _httpContextAccessor.HttpContext?.Response.Cookies.Append(StaticDetail.AccessToken, token.AccessToken ?? "null", new CookieOptions
             {
                 HttpOnly = true,
                 Secure = true,  // Nên dùng HTTPS
@@ -48,7 +48,7 @@ namespace App.Services.AuthAPI.Services
                 Expires = DateTime.UtcNow.AddDays(7)
             });
 
-            _httpContextAccessor.HttpContext?.Response.Cookies.Append(StaticDetail.RefreshToken, token.RefreshToken, new CookieOptions
+            _httpContextAccessor.HttpContext?.Response.Cookies.Append(StaticDetail.RefreshToken, token.RefreshToken ?? "null", new CookieOptions
             {
                 Expires = DateTime.UtcNow.AddDays(7),
                 Secure = true,  // Nên dùng HTTPS

@@ -11,15 +11,15 @@ on:
 
 env:
   AZURE_WEBAPP_NAME: 409159admin
-  AZURE_WEBAPP_PACKAGE_PATH: App.Frontend\published
+  AZURE_WEBAPP_PACKAGE_PATH: domain\App.Frontend\published
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
-  WORKING_DIRECTORY: ./src/App.Frontend
+  WORKING_DIRECTORY: ./src/domain/App.Domain.Admin
 
 jobs:
   build:
     runs-on: windows-latest
-    
+
     steps:
       - uses: actions/checkout@v4
 
@@ -68,4 +68,3 @@ jobs:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_DE209224E97646FA93328174214D9067 }}
           package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-          

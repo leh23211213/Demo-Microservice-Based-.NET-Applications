@@ -34,7 +34,8 @@ namespace App.Services.AuthAPI.Services
         public async Task<string> CreateNewAccessToken(ApplicationUser user, string jwtTokenId)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Convert.FromBase64String(secretKey);
+            //var key = Convert.FromBase64String(secret); The input is not a valid Base-64 string as it contains a non-base 64 character
+            var key = Encoding.ASCII.GetBytes(secretKey);
             var roles = await _userManager.GetRolesAsync(user);
 
             var claimList = new List<Claim>
@@ -86,7 +87,7 @@ namespace App.Services.AuthAPI.Services
             }
 
             // Compare data from existing refresh and access token provided and if there is any missmatch then consider it as a fraud
-            var isTokenValid = GetAccessTokenData(token.AccessToken, existingRefreshToken.UserId, existingRefreshToken.JwtTokenId);
+            var isTokenValid = GetAccessTokenData(token.AccessToken ?? "null", existingRefreshToken.UserId, existingRefreshToken.JwtTokenId);
             if (!isTokenValid)
             {
                 await MarkTokenAsInvalid(existingRefreshToken);
@@ -132,7 +133,7 @@ namespace App.Services.AuthAPI.Services
                 return;
             // Compare data from existing refresh and access token provided and
             // if there is any missmatch then we should do nothing with refresh token
-            var isTokenValid = GetAccessTokenData(token.AccessToken, existingRefreshToken.UserId, existingRefreshToken.JwtTokenId);
+            var isTokenValid = GetAccessTokenData(token.AccessToken ?? "null", existingRefreshToken.UserId, existingRefreshToken.JwtTokenId);
             if (!isTokenValid)
             {
                 return;
