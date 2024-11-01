@@ -43,6 +43,7 @@ namespace App.Services.AuthAPI.Services
                 new Claim(JwtRegisteredClaimNames.Name, user.Name),
                 new Claim(JwtRegisteredClaimNames.Jti, jwtTokenId),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.Aud, audience),
                 new Claim(ClaimTypes.Role, roles.FirstOrDefault()),
             };
 
