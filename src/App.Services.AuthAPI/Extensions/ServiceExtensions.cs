@@ -4,7 +4,7 @@ using App.Services.AuthAPI.Models;
 using App.Services.AuthAPI.Services;
 using Microsoft.AspNetCore.Identity;
 using App.Services.AuthAPI.Services.IServices;
-using Microsoft.AspNetCore.Authentication.Cookies;
+
 namespace App.Services.AuthAPI.Extensions
 {
     public static class ServiceExtensions
@@ -19,7 +19,6 @@ namespace App.Services.AuthAPI.Extensions
                                 .AddEntityFrameworkStores<ApplicationDbContext>()
                                 .AddDefaultTokenProviders();
             services.AddScoped<IMessageBus, MessageBus>();
-            // *************
             return services;
         }
     }
