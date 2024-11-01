@@ -38,7 +38,7 @@ namespace App.Services.AuthAPI.Controllers
                     return _response;
                 }
                 _response.Result = token;
-                _tokenProvider.SetToken(token);
+                // _tokenProvider.SetToken(token);
             }
             return _response;
         }
