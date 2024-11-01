@@ -1,15 +1,17 @@
-name: Build and deploy .NET Core application
+name: Build and deploy .NET Core application - levanhiep409159
 
 on:
   push:
     branches:
       - frontend
+  workflow_dispatch:
+
 env:
   AZURE_WEBAPP_NAME: levanhiep409159
-  AZURE_WEBAPP_PACKAGE_PATH: App.Frontend\published
+  AZURE_WEBAPP_PACKAGE_PATH: domain\App.Frontend\published
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
-  WORKING_DIRECTORY: ./src/App.Frontend
+  WORKING_DIRECTORY: ./src/domain/App.Frontend
   GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
 
 jobs:
