@@ -75,5 +75,12 @@ namespace App.Services.AuthAPI.Controllers
             _response.Message = " Already Clear Token!!!";
             return _response;
         }
+
+        [HttpDelete("warning get token")]
+        public async Task<ActionResult<Response>> getTokenWarning()
+        {
+            _response.Result = _tokenProvider.GetToken();
+            return _response;
+        }
     }
 }
