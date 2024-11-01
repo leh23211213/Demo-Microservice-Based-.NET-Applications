@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
 namespace App.Services.ProductAPI.Models;
 public class Color
@@ -5,6 +6,6 @@ public class Color
     public int Id { get; set; }
     public string? Name { get; set; }
 
-    [JsonIgnore]
+     [NotMapped,JsonIgnore]
     public ICollection<Product>? Products { get; set; }
 }
