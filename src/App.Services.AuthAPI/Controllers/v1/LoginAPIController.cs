@@ -27,18 +27,27 @@ namespace App.Services.AuthAPI.Controllers
         [HttpPost("Login")]
         public async Task<ActionResult<Response>> Login([FromBody] LoginRequest model)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var token = await _authAPIService.Login(model);
-                if (token == null || string.IsNullOrEmpty(token.AccessToken))
+                if (ModelState.IsValid)
                 {
-                    _response.IsSuccess = false;
-                    _response.Message = "Email or password is incorrect";
-                    _response.StatusCode = HttpStatusCode.BadRequest;
-                    return _response;
+                    var token = await _authAPIService.Login(model);
+                    if (token == null || string.IsNullOrEmpty(token.AccessToken))
+                    {
+                        _response.IsSuccess = false;
+                        _response.Message = "Email or password is incorrect";
+                        _response.StatusCode = HttpStatusCode.BadRequest;
+                        return _response;
+                    }
+                    _response.Result = token;
+                    _tokenProvider.SetToken(token);
                 }
-                _response.Result = token;
-                _tokenProvider.SetToken(token);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
+                _response.StatusCode = HttpStatusCode.BadRequest;
             }
             return _response;
         }
