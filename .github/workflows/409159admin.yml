@@ -7,7 +7,6 @@ on:
   push:
     branches:
       - frontend
-  workflow_dispatch:
 
 env:
   AZURE_WEBAPP_NAME: 409159admin
@@ -27,7 +26,6 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
-          include-prerelease: true
 
       - name: Restore Dependencies
         run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
