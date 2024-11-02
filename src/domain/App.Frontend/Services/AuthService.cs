@@ -13,6 +13,15 @@ namespace App.Frontend.Services
             _baseService = baseService;
         }
 
+        public async Task<Response?> LoginAsync()
+        {
+            return await _baseService.SendAsync(new Request()
+            {
+                ApiType = StaticDetail.ApiType.GET,
+                Url = StaticDetail.AuthAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/auth/ReLogin"
+            });
+        }
+
         public async Task<Response?> LoginAsync(LoginRequest loginRequest)
         {
             return await _baseService.SendAsync(new Request()
@@ -20,15 +29,6 @@ namespace App.Frontend.Services
                 ApiType = StaticDetail.ApiType.POST,
                 Data = loginRequest,
                 Url = StaticDetail.AuthAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/auth/Login"
-            });
-        }
-        
-        public async Task<Response?> LoginAsync()
-        {
-            return await _baseService.SendAsync(new Request()
-            {
-                ApiType = StaticDetail.ApiType.POST,
-                Url = StaticDetail.AuthAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/auth/LoginAsync"
             });
         }
 
