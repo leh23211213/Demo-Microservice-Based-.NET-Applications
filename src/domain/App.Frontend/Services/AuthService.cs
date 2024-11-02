@@ -22,6 +22,15 @@ namespace App.Frontend.Services
                 Url = StaticDetail.AuthAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/auth/Login"
             });
         }
+        
+        public async Task<Response?> LoginAsync()
+        {
+            return await _baseService.SendAsync(new Request()
+            {
+                ApiType = StaticDetail.ApiType.POST,
+                Url = StaticDetail.AuthAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/auth/LoginAsync"
+            });
+        }
 
         public async Task<Response?> RegisterAsync(RegistrationRequest registerRequest)
         {

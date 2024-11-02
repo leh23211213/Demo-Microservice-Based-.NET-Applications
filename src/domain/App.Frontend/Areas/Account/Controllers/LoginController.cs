@@ -21,7 +21,7 @@ namespace App.Frontend.Areas.Account.Controllers
         private readonly IAuthService _authService;
         private readonly ITokenProvider _tokenProvider;
         private readonly IConfiguration _configuration;
-        private readonly string AdminUrl;
+        private readonly string ProtectedAdminUrl;
         private readonly string ProtectedCustomerUrl;
         public LoginController(
                                 IAuthService authService,
@@ -33,7 +33,7 @@ namespace App.Frontend.Areas.Account.Controllers
             _tokenProvider = tokenProvider;
             _configuration = configuration;
 
-            AdminUrl = _configuration.GetValue<string>("ServiceUrls:AdminUrl");
+            ProtectedAdminUrl = _configuration.GetValue<string>("ServiceUrls:AdminUrl");
             ProtectedCustomerUrl = _configuration.GetValue<string>("ServiceUrls:ProtectedCustomerUrl");
         }
 
@@ -51,22 +51,26 @@ namespace App.Frontend.Areas.Account.Controllers
         [HttpGet]
         public async Task<ActionResult> Login()
         {
-            var token = _tokenProvider.GetToken();
-            if (token != null)
+            Response response = await _authService.LoginAsync();
+            if (response.IsSuccess && response != null)
             {
-                await SignInUser(token.AccessToken);
-                var roles = User.FindFirst(ClaimTypes.Role)?.Value;
-                // redirect to customer domain
-                if (roles == StaticDetail.RoleCustomer)
+                var token = JsonConvert.DeserializeObject<Token>(Convert.ToString(response.Result));
+                if (token != null)
                 {
-                    return Redirect(ProtectedCustomerUrl);
+                    await SignInUser(token.AccessToken);
+                    var roles = User.FindFirst(ClaimTypes.Role)?.Value;
+                    // redirect to customer domain
+                    if (roles == StaticDetail.RoleCustomer)
+                    {
+                        return Redirect(ProtectedCustomerUrl);
+                    }
+                    // redirect to admin domain
+                    if (roles == StaticDetail.RoleAdmin)
+                    {
+                        return Redirect(ProtectedAdminUrl);
+                    }
+                    return RedirectToAction("AccessDenied", "Account");
                 }
-                // redirect to admin domain
-                if (roles == StaticDetail.RoleAdmin)
-                {
-                    return Redirect(AdminUrl);
-                }
-                return RedirectToAction("AccessDenied", "Account");
             }
 
             var model = new LoginRequest() { };
@@ -93,8 +97,7 @@ namespace App.Frontend.Areas.Account.Controllers
                     // redirect to admin domain
                     if (roles == StaticDetail.RoleAdmin)
                     {
-                        string adminRedirectUrl = $"{AdminUrl}?accessToken={token.AccessToken}";
-                        return Redirect(adminRedirectUrl);
+                        return Redirect(ProtectedAdminUrl);
                     }
                     return RedirectToAction("AccessDenied", "Account");
                 }
@@ -110,12 +113,18 @@ namespace App.Frontend.Areas.Account.Controllers
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
-            var domain = User.FindFirst(JwtRegisteredClaimNames.Aud)?.Value;
-            await HttpContext.SignOutAsync();
-            var token = _tokenProvider.GetToken();
-            await _authService.LogoutAsync(token);
-            _tokenProvider.ClearToken();
-            return Redirect(domain);
+            try
+            {
+                await HttpContext.SignOutAsync();
+                var token = _tokenProvider.GetToken();
+                await _authService.LogoutAsync(token);
+                _tokenProvider.ClearToken();
+                return RedirectToAction("Login", "Login", new { area = "Account" });
+            }
+            catch
+            {
+                return RedirectToAction("Error", new AccountErrorModel { Message = "Unknow" });
+            }
         }
 
         private async Task SignInUser(string AccessToken)
@@ -130,8 +139,7 @@ namespace App.Frontend.Areas.Account.Controllers
                 jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Sub).Value));
             identity.AddClaim(new Claim(JwtRegisteredClaimNames.Name,
                 jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Name).Value));
-            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Aud,
-                jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Aud).Value));
+           
             identity.AddClaim(new Claim(ClaimTypes.Role,
                 jwt.Claims.FirstOrDefault(u => u.Type == "role").Value));
             // for render information
