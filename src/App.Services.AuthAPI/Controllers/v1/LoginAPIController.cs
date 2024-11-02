@@ -24,6 +24,28 @@ namespace App.Services.AuthAPI.Controllers
             _tokenProvider = tokenProvider;
         }
 
+        /// <summary>
+        /// If user already have token in cookie redirect to application again
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("ReLogin")]
+        public async Task<ActionResult<Response>> ReLogin()
+        {
+            try
+            {
+                var token = _tokenProvider.GetToken();
+                _tokenProvider.SetToken(token);
+                _response.Result = token is null ? null : token;
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
+                _response.StatusCode = HttpStatusCode.BadRequest;
+            }
+            return _response;
+        }
+
         [HttpPost("Login")]
         public async Task<ActionResult<Response>> Login([FromBody] LoginRequest model)
         {
