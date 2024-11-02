@@ -18,7 +18,9 @@ jobs:
         id: tab_bump
         uses: anothrNick/github-tag-action@v1
         with:
-          tag_prefix: "v"    # Optional, but helps ensure consistent tagging
+          tag_prefix: "v2"    # Optional, but helps ensure consistent tagging
+          tag_name: ${{ steps.tag_version.outputs.new_tag }}
+          body: ${{ steps.tag_version.outputs.changelog }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           INITIAL_VERSION: 2.0.0  # Set this to enforce starting version
