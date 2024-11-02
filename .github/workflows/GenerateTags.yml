@@ -17,9 +17,11 @@ jobs:
       - name: Github Tag Bump
         id: tab_bump
         uses: anothrNick/github-tag-action@v1
+        with:
+          tag_prefix: "v"    # Optional, but helps ensure consistent tagging
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          INITIAL_VERSION: 2.0.0
+          INITIAL_VERSION: 2.0.0  # Set this to enforce starting version
           DEFAULT_BUMP: patch
 
     outputs:
