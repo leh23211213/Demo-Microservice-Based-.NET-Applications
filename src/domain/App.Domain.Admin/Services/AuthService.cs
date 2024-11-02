@@ -13,6 +13,14 @@ namespace App.Domain.Admin.Services
             _baseService = baseService;
         }
 
+        public async Task<Response?> LoginAsync()
+        {
+            return await _baseService.SendAsync(new Request()
+            {
+                ApiType = StaticDetail.ApiType.POST,
+                Url = StaticDetail.AuthAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/auth/LoginAsync"
+            });
+        }
         public async Task<Response?> LoginAsync(LoginRequest loginRequest)
         {
             return await _baseService.SendAsync(new Request()
