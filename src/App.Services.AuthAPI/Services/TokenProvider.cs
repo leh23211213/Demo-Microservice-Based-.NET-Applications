@@ -33,7 +33,7 @@ namespace App.Services.AuthAPI.Services
                 };
                 return hasAccessToken is true ? token : null;
             }
-            catch (Exception ex)
+            catch
             {
                 return null;
             }

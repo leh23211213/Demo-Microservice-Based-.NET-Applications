@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - frontend
-  workflow_dispatch:
 
 env:
   AZURE_WEBAPP_NAME: levanhiep409159
@@ -12,61 +11,30 @@ env:
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
   WORKING_DIRECTORY: ./src/domain/App.Frontend
-  GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
 
 jobs:
-  generate-version:
-    runs-on: ${{ matrix.os }}
-    permissions:
-      contents: write
-
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
+  build:
+    runs-on: windows-latest
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Github Tag Bump
-        id: tab_bump
-        uses: anothrNick/github-tag-action@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          INITIAL_VERSION: 1.0.0
-          DEFAULT_BUMP: patch
-
-    outputs:
-      new_version: ${{ steps.tab_bump.outputs.new_tag }}
-  build:
-    runs-on: ${{ matrix.os }}
-    needs: generate-version
-
-    strategy:
-      matrix:
-        os: [windows-latest]
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0 # Fetch full history including tags
-
-        # we build, test, and deploy steps here
-      - name: Setup .NET Core SDK
-        uses: actions/setup-dotnet@v3
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v1
         with:
           dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
 
       - name: Restore Dependencies
         run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
+
       - name: Build
-        run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
+        run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration "${{ env.CONFIGURATION }}" --no-restore
 
       - name: Test
         run: dotnet test "${{ env.WORKING_DIRECTORY }}" --no-build
 
       - name: Publish
-        run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
+        run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration "${{ env.CONFIGURATION }}" --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
 
       - name: Publish Artifacts
         uses: actions/upload-artifact@v3

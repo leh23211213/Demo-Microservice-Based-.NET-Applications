@@ -49,12 +49,28 @@ namespace App.Domain.Admin.Areas.Account.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> Login([FromQuery] string accessToken)
+        public async Task<ActionResult> Login()
         {
-            if (ModelState.IsValid)
+            Response response = await _authService.LoginAsync();
+            if (response.IsSuccess && response != null)
             {
-                await SignInUser(accessToken);
-                return Redirect(ProtectedAdminUrl);
+                var token = JsonConvert.DeserializeObject<Token>(Convert.ToString(response.Result));
+                if (token != null)
+                {
+                    await SignInUser(token.AccessToken);
+                    var roles = User.FindFirst(ClaimTypes.Role)?.Value;
+                    // redirect to admin domain
+                    if (roles == StaticDetail.RoleAdmin)
+                    {
+                        return Redirect(ProtectedAdminUrl);
+                    }
+                    // redirect to customer domain
+                    if (roles == StaticDetail.RoleCustomer)
+                    {
+                        return Redirect(ProtectedCustomerUrl);
+                    }
+                    return RedirectToAction("AccessDenied", "Account");
+                }
             }
 
             var model = new LoginRequest() { };
@@ -62,16 +78,48 @@ namespace App.Domain.Admin.Areas.Account.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> Login(LoginRequest model)
+        {
+            Response response = await _authService.LoginAsync(model);
+            if (response.IsSuccess && response != null)
+            {
+                var token = JsonConvert.DeserializeObject<Token>(Convert.ToString(response.Result));
+                if (token != null)
+                {
+                    await SignInUser(token.AccessToken);
+                    var roles = User.FindFirst(ClaimTypes.Role)?.Value;
+                    // redirect to admin domain
+                    if (roles == StaticDetail.RoleAdmin)
+                    {
+                        return Redirect(ProtectedAdminUrl);
+                    }
+                    // redirect to customer domain
+                    if (roles == StaticDetail.RoleCustomer)
+                    {
+                        return Redirect(ProtectedCustomerUrl);
+                    }
+                    return RedirectToAction("AccessDenied", "Account");
+                }
+                return RedirectToAction("Error", new AccountErrorModel { Message = "Login Bug" });
+            }
+            else
+            {
+                TempData["error"] = response.Message;
+                return View(model);
+            }
+        }
+
+
+        [HttpPost]
         public async Task<IActionResult> Logout()
         {
             try
             {
-                var domain = User.FindFirst(JwtRegisteredClaimNames.Aud)?.Value;
                 await HttpContext.SignOutAsync();
                 var token = _tokenProvider.GetToken();
                 await _authService.LogoutAsync(token);
                 _tokenProvider.ClearToken();
-                return Redirect(domain);
+                return RedirectToAction("Login", "Login", new { area = "Account" });
             }
             catch
             {
@@ -91,8 +139,6 @@ namespace App.Domain.Admin.Areas.Account.Controllers
                 jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Sub).Value));
             identity.AddClaim(new Claim(JwtRegisteredClaimNames.Name,
                 jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Name).Value));
-            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Aud,
-                jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Aud).Value));
             identity.AddClaim(new Claim(ClaimTypes.Role,
                 jwt.Claims.FirstOrDefault(u => u.Type == "role").Value));
             // for render information
