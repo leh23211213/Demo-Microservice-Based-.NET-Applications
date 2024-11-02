@@ -17,8 +17,8 @@ namespace App.Domain.Admin.Services
         {
             return await _baseService.SendAsync(new Request()
             {
-                ApiType = StaticDetail.ApiType.POST,
-                Url = StaticDetail.AuthAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/auth/LoginAsync"
+                ApiType = StaticDetail.ApiType.GET,
+                Url = StaticDetail.AuthAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/auth/ReLogin"
             });
         }
         public async Task<Response?> LoginAsync(LoginRequest loginRequest)
