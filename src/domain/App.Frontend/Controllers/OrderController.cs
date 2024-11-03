@@ -21,7 +21,14 @@ namespace App.Frontend.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            if (User.Identity.IsAuthenticated)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Login", "Login", new { area = "Account" });
+            }
         }
 
         public async Task<IActionResult> Details(string orderId)

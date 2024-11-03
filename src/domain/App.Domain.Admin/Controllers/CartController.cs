@@ -22,12 +22,26 @@ namespace App.Domain.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View(await LoadCart());
+            if (User.Identity.IsAuthenticated)
+            {
+                return View(await LoadCart());
+            }
+            else
+            {
+                return RedirectToAction("Login", "Login", new { area = "Account" });
+            }
         }
 
         public async Task<IActionResult> Checkout()
         {
-            return View(await LoadCart());
+            if (User.Identity.IsAuthenticated)
+            {
+                return View(await LoadCart());
+            }
+            else
+            {
+                return RedirectToAction("Login", "Login", new { area = "Account" });
+            }
         }
 
         [HttpPost]

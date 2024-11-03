@@ -33,7 +33,7 @@ namespace App.Frontend.Areas.Account.Controllers
             _tokenProvider = tokenProvider;
             _configuration = configuration;
 
-            ProtectedAdminUrl = _configuration.GetValue<string>("ServiceUrls:AdminUrl");
+            ProtectedAdminUrl = _configuration.GetValue<string>("ServiceUrls:ProtectedAdminUrl");
             ProtectedCustomerUrl = _configuration.GetValue<string>("ServiceUrls:ProtectedCustomerUrl");
         }
 
@@ -51,30 +51,15 @@ namespace App.Frontend.Areas.Account.Controllers
         [HttpGet]
         public async Task<ActionResult> Login()
         {
-            Response response = await _authService.LoginAsync();
-            if (response.IsSuccess && response != null)
+            if (User.Identity.IsAuthenticated)
             {
-                var token = JsonConvert.DeserializeObject<Token>(Convert.ToString(response.Result));
-                if (token != null)
-                {
-                    await SignInUser(token.AccessToken);
-                    var roles = User.FindFirst(ClaimTypes.Role)?.Value;
-                    // redirect to customer domain
-                    if (roles == StaticDetail.RoleCustomer)
-                    {
-                        return Redirect(ProtectedCustomerUrl);
-                    }
-                    // redirect to admin domain
-                    if (roles == StaticDetail.RoleAdmin)
-                    {
-                        return Redirect(ProtectedAdminUrl);
-                    }
-                    return RedirectToAction("AccessDenied", "Account");
-                }
+                return Redirect(ProtectedCustomerUrl);
             }
-
-            var model = new LoginRequest() { };
-            return View(model);
+            else
+            {
+                var model = new LoginRequest() { };
+                return View(model);
+            }
         }
 
         [HttpPost]
@@ -87,17 +72,10 @@ namespace App.Frontend.Areas.Account.Controllers
                 if (token != null)
                 {
                     await SignInUser(token.AccessToken);
-                    //_tokenProvider.SetToken(token);
                     var roles = User.FindFirst(ClaimTypes.Role)?.Value;
-                    // redirect to customer domain
-                    if (roles == StaticDetail.RoleCustomer)
+                    if (roles != null)
                     {
                         return Redirect(ProtectedCustomerUrl);
-                    }
-                    // redirect to admin domain
-                    if (roles == StaticDetail.RoleAdmin)
-                    {
-                        return Redirect(ProtectedAdminUrl);
                     }
                     return RedirectToAction("AccessDenied", "Account");
                 }
@@ -115,7 +93,7 @@ namespace App.Frontend.Areas.Account.Controllers
         {
             try
             {
-                await HttpContext.SignOutAsync();
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
                 var token = _tokenProvider.GetToken();
                 await _authService.LogoutAsync(token);
                 _tokenProvider.ClearToken();
@@ -148,6 +126,7 @@ namespace App.Frontend.Areas.Account.Controllers
 
             var principal = new ClaimsPrincipal(identity);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+            HttpContext.User = principal; // Optionally, update HttpContext.User to reflect the new principal immediately in the current request
         }
     }
 }
