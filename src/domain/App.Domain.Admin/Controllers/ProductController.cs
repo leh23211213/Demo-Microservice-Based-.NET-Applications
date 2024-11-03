@@ -24,17 +24,24 @@ namespace App.Domain.Admin.Controllers
                                                       [FromQuery] string? search = ""
                                                       )
         {
-            Response? response = await _productService.Get(pageSize, currentPage, search);
-            Pagination pagination = new();
-            if (response.IsSuccess && response != null)
+            if (User.Identity.IsAuthenticated)
             {
-                pagination = JsonConvert.DeserializeObject<Pagination>(Convert.ToString(response.Result));
+                Response? response = await _productService.Get(pageSize, currentPage, search);
+                Pagination pagination = new();
+                if (response.IsSuccess && response != null)
+                {
+                    pagination = JsonConvert.DeserializeObject<Pagination>(Convert.ToString(response.Result));
+                }
+                else
+                {
+                    TempData["error"] = response?.Message;
+                }
+                return View(pagination);
             }
             else
             {
-                TempData["error"] = response?.Message;
+                return RedirectToAction("Login", "Login", new { area = "Account" });
             }
-            return View(pagination);
         }
 
         public async Task<IActionResult> Create()
