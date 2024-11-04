@@ -1,7 +1,6 @@
 using Newtonsoft.Json;
 using System.Diagnostics;
 using App.Frontend.Models;
-using App.Frontend.Utility;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using App.Frontend.Services.IServices;
@@ -21,7 +20,7 @@ namespace App.Frontend.Areas.Account.Controllers
         private readonly IAuthService _authService;
         private readonly ITokenProvider _tokenProvider;
         private readonly IConfiguration _configuration;
-        private readonly string ProtectedAdminUrl;
+
         private readonly string ProtectedCustomerUrl;
         public LoginController(
                                 IAuthService authService,
@@ -33,7 +32,6 @@ namespace App.Frontend.Areas.Account.Controllers
             _tokenProvider = tokenProvider;
             _configuration = configuration;
 
-            ProtectedAdminUrl = _configuration.GetValue<string>("ServiceUrls:ProtectedAdminUrl");
             ProtectedCustomerUrl = _configuration.GetValue<string>("ServiceUrls:ProtectedCustomerUrl");
         }
 
@@ -55,16 +53,16 @@ namespace App.Frontend.Areas.Account.Controllers
             {
                 return Redirect(ProtectedCustomerUrl);
             }
-            else
-            {
-                var model = new LoginRequest() { };
-                return View(model);
-            }
+
+            return View(new LoginRequest());
         }
 
         [HttpPost]
         public async Task<IActionResult> Login(LoginRequest model)
         {
+            _tokenProvider.ClearToken();
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
             Response response = await _authService.LoginAsync(model);
             if (response.IsSuccess && response != null)
             {

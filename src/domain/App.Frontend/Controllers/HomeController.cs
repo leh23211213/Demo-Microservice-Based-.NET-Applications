@@ -19,6 +19,8 @@ namespace App.Frontend.Controllers
             _cartService = cartService;
             _productService = productService;
         }
+
+        [HttpGet]
         public async Task<IActionResult> Index(
                                                 [FromQuery] int pageSize = 6,
                                                 [FromQuery] int currentPage = 1,
@@ -45,21 +47,28 @@ namespace App.Frontend.Controllers
             }
         }
 
-
+        [HttpGet]
         public async Task<IActionResult> Details(string id)
         {
-            Response? response = await _productService.Get(id);
-            Product? product = new();
-
-            if (response != null && response.IsSuccess)
+            if (User.Identity.IsAuthenticated)
             {
-                product = JsonConvert.DeserializeObject<Product>(Convert.ToString(response.Result));
+                Response? response = await _productService.Get(id);
+                Product? product = new();
+
+                if (response != null && response.IsSuccess)
+                {
+                    product = JsonConvert.DeserializeObject<Product>(Convert.ToString(response.Result));
+                }
+                else
+                {
+                    TempData["error"] = response?.Message;
+                }
+                return View(product);
             }
             else
             {
-                TempData["error"] = response?.Message;
+                return RedirectToAction("Login", "Login", new { area = "Account" });
             }
-            return View(product);
         }
 
         [HttpPost]

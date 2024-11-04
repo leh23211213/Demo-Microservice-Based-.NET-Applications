@@ -20,6 +20,7 @@ namespace App.Domain.Admin.Controllers
             _orderService = orderService;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             if (User.Identity.IsAuthenticated)
@@ -32,6 +33,7 @@ namespace App.Domain.Admin.Controllers
             }
         }
 
+        [HttpGet]
         public async Task<IActionResult> Checkout()
         {
             if (User.Identity.IsAuthenticated)
@@ -75,6 +77,7 @@ namespace App.Domain.Admin.Controllers
             return View(cart);
         }
 
+        [HttpGet]
         public async Task<IActionResult> Confirmation(string orderId)
         {
             Response response = await _orderService.ValidateStripeSession(orderId);
@@ -85,6 +88,7 @@ namespace App.Domain.Admin.Controllers
             return View(orderId);
         }
 
+        [HttpPost]
         public async Task<IActionResult> Delete(string cartDetailsId)
         {
             Response? response = await _cartService.DeleteAsync(cartDetailsId);

@@ -1,6 +1,9 @@
 ﻿@using App.Frontend.Utility
 <!DOCTYPE html>
 <html lang="en">
+@{
+    string externalUrl = "https://409159admin-b0d0ged3e7efaceg.eastasia-01.azurewebsites.net/Account/Login";
+}
 
 <head>
     <meta charset="utf-8" />
@@ -122,7 +125,7 @@
                                     <line class="st0" x1="9" y1="25" x2="15" y2="25"></line>
                                 </g>
                             </svg>
-                            <span class="link hide">Manage Order</span>
+                            <span class="link hide">Order History</span>
                         </a>
                     </li>
                 </ul>
@@ -132,7 +135,7 @@
         <div class="divider"></div>
         @if (User.IsInRole(StaticDetail.RoleAdmin))
         {
-            <a href="https://409159admin-b0d0ged3e7efaceg.eastasia-01.azurewebsites.net/Account/Login">
+            <a href="#" onclick="javascript:window.open('@externalUrl', '_blank');">
                 <button class="btn-primary btn form-control">Admin Central</button>
             </a>
         }

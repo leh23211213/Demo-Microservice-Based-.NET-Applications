@@ -20,6 +20,7 @@ namespace App.Frontend.Controllers
             _orderService = orderService;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             if (User.Identity.IsAuthenticated)
@@ -32,9 +33,17 @@ namespace App.Frontend.Controllers
             }
         }
 
+        [HttpGet]
         public async Task<IActionResult> Checkout()
         {
-            return View(await LoadCart());
+            if (User.Identity.IsAuthenticated)
+            {
+                return View(await LoadCart());
+            }
+            else
+            {
+                return RedirectToAction("Login", "Login", new { area = "Account" });
+            }
         }
 
         [HttpPost]
@@ -68,16 +77,25 @@ namespace App.Frontend.Controllers
             return View(cart);
         }
 
+        [HttpGet]
         public async Task<IActionResult> Confirmation(string orderId)
         {
-            Response response = await _orderService.ValidateStripeSession(orderId);
-            if (response.IsSuccess && response != null)
+            if (User.Identity.IsAuthenticated)
             {
+                Response response = await _orderService.ValidateStripeSession(orderId);
+                if (response.IsSuccess && response != null)
+                {
+                    return View(orderId);
+                }
                 return View(orderId);
             }
-            return View(orderId);
+            else
+            {
+                return RedirectToAction("Login", "Login", new { area = "Account" });
+            }
         }
 
+        [HttpPost]
         public async Task<IActionResult> Delete(string cartDetailsId)
         {
             Response? response = await _cartService.DeleteAsync(cartDetailsId);
