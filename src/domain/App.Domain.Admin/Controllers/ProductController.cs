@@ -8,8 +8,6 @@ using Newtonsoft.Json;
 
 namespace App.Domain.Admin.Controllers
 {
-
-    [Authorize(Roles = "ADMIN")]
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
@@ -44,25 +42,33 @@ namespace App.Domain.Admin.Controllers
             }
         }
 
+        [HttpGet]
         public async Task<IActionResult> Create()
         {
-            var categoryList = new List<SelectListItem>(){
+            if (User.Identity.IsAuthenticated)
+            {
+                var categoryList = new List<SelectListItem>(){
                 new SelectListItem{Text = StaticDetail.Category , Value = StaticDetail.Category},
             };
-            var brandList = new List<SelectListItem>(){
+                var brandList = new List<SelectListItem>(){
                 new SelectListItem{Text = StaticDetail.Brand , Value = StaticDetail.Brand},
             };
-            var colorList = new List<SelectListItem>(){
+                var colorList = new List<SelectListItem>(){
                 new SelectListItem{Text = StaticDetail.Color , Value = StaticDetail.Color},
             };
-            var sizeList = new List<SelectListItem>(){
+                var sizeList = new List<SelectListItem>(){
                 new SelectListItem{Text = StaticDetail.Size , Value = StaticDetail.Size},
             };
-            ViewBag.CategoryList = categoryList;
-            ViewBag.BrandList = brandList;
-            ViewBag.ColorList = colorList;
-            ViewBag.SizeList = sizeList;
-            return View();
+                ViewBag.CategoryList = categoryList;
+                ViewBag.BrandList = brandList;
+                ViewBag.ColorList = colorList;
+                ViewBag.SizeList = sizeList;
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Login", "Login", new { area = "Account" });
+            }
         }
 
         [HttpPost]
@@ -107,34 +113,42 @@ namespace App.Domain.Admin.Controllers
 
         public async Task<IActionResult> Update(string Id)
         {
-            var categoryList = new List<SelectListItem>(){
+            if (User.Identity.IsAuthenticated)
+            {
+                var categoryList = new List<SelectListItem>(){
                 new SelectListItem{Text = StaticDetail.Category , Value = StaticDetail.Category},
             };
-            var brandList = new List<SelectListItem>(){
+                var brandList = new List<SelectListItem>(){
                 new SelectListItem{Text = StaticDetail.Brand , Value = StaticDetail.Brand},
             };
-            var colorList = new List<SelectListItem>(){
+                var colorList = new List<SelectListItem>(){
                 new SelectListItem{Text = StaticDetail.Color , Value = StaticDetail.Color},
             };
-            var sizeList = new List<SelectListItem>(){
+                var sizeList = new List<SelectListItem>(){
                 new SelectListItem{Text = StaticDetail.Size , Value = StaticDetail.Size},
             };
-            ViewBag.CategoryList = categoryList;
-            ViewBag.BrandList = brandList;
-            ViewBag.ColorList = colorList;
-            ViewBag.SizeList = sizeList;
+                ViewBag.CategoryList = categoryList;
+                ViewBag.BrandList = brandList;
+                ViewBag.ColorList = colorList;
+                ViewBag.SizeList = sizeList;
 
-            Response? response = await _productService.Get(Id);
-            if (response.IsSuccess && response != null)
-            {
-                Product product = JsonConvert.DeserializeObject<Product>(Convert.ToString(response.Result));
-                return View(product);
+                Response? response = await _productService.Get(Id);
+                if (response.IsSuccess && response != null)
+                {
+                    Product product = JsonConvert.DeserializeObject<Product>(Convert.ToString(response.Result));
+                    return View(product);
+                }
+                else
+                {
+                    TempData["error"] = response?.Message;
+                }
+                return RedirectToAction(nameof(Index));
+
             }
             else
             {
-                TempData["error"] = response?.Message;
+                return RedirectToAction("Login", "Login", new { area = "Account" });
             }
-            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
@@ -178,17 +192,24 @@ namespace App.Domain.Admin.Controllers
 
         public async Task<IActionResult> Delete(string Id)
         {
-            Response? response = await _productService.Get(Id);
-            if (response.IsSuccess && response != null)
+            if (User.Identity.IsAuthenticated)
             {
-                Product product = JsonConvert.DeserializeObject<Product>(Convert.ToString(response.Result));
-                return View(product);
+                Response? response = await _productService.Get(Id);
+                if (response.IsSuccess && response != null)
+                {
+                    Product product = JsonConvert.DeserializeObject<Product>(Convert.ToString(response.Result));
+                    return View(product);
+                }
+                else
+                {
+                    TempData["error"] = response?.Message;
+                }
+                return RedirectToAction(nameof(Index));
             }
             else
             {
-                TempData["error"] = response?.Message;
+                return RedirectToAction("Login", "Login", new { area = "Account" });
             }
-            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]

@@ -55,25 +55,23 @@ namespace App.Domain.Admin.Areas.Account.Controllers
             {
                 return Redirect(ProtectedAdminUrl);
             }
-            else
-            {
-                var model = new LoginRequest() { };
-                return View(model);
-            }
+
+            return View(new LoginRequest());
         }
 
         [HttpPost]
         public async Task<IActionResult> Login(LoginRequest model)
         {
+            _tokenProvider.ClearToken();
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
             Response response = await _authService.LoginAsync(model);
             if (response.IsSuccess && response != null)
             {
                 var token = JsonConvert.DeserializeObject<Token>(Convert.ToString(response.Result));
                 if (token != null)
                 {
-                    await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
                     await SignInUser(token.AccessToken);
-
                     var roles = User.FindFirst(ClaimTypes.Role)?.Value;
                     if (roles == StaticDetail.RoleAdmin)
                     {
@@ -133,9 +131,8 @@ namespace App.Domain.Admin.Areas.Account.Controllers
 
             var principal = new ClaimsPrincipal(identity);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+            HttpContext.User = principal;// Optionally, update HttpContext.User to reflect the new principal immediately in the current request
 
-            // Optionally, update HttpContext.User to reflect the new principal immediately in the current request
-            HttpContext.User = principal;
         }
     }
 }

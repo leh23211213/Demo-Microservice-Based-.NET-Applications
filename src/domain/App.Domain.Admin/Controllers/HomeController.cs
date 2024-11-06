@@ -7,7 +7,6 @@ using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 namespace App.Domain.Admin.Controllers
 {
-    [Authorize]
     [AllowAnonymous]
     public class HomeController : Controller
     {
@@ -19,11 +18,13 @@ namespace App.Domain.Admin.Controllers
             _cartService = cartService;
             _productService = productService;
         }
+
+        [HttpGet]
         public async Task<IActionResult> Index(
-                                                [FromQuery] int pageSize = 6,
-                                                [FromQuery] int currentPage = 1,
-                                                [FromQuery] string? search = ""
-                                            )
+                                               [FromQuery] int pageSize = 6,
+                                               [FromQuery] int currentPage = 1,
+                                               [FromQuery] string? search = ""
+                                           )
         {
             if (User.Identity.IsAuthenticated)
             {
@@ -45,7 +46,7 @@ namespace App.Domain.Admin.Controllers
             }
         }
 
-
+        [HttpGet]
         public async Task<IActionResult> Details(string id)
         {
             Response? response = await _productService.Get(id);
