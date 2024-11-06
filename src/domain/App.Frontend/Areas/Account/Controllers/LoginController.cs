@@ -70,6 +70,7 @@ namespace App.Frontend.Areas.Account.Controllers
                 if (token != null)
                 {
                     await SignInUser(token.AccessToken);
+                    _tokenProvider.SetToken(token);
                     var roles = User.FindFirst(ClaimTypes.Role)?.Value;
                     if (roles != null)
                     {

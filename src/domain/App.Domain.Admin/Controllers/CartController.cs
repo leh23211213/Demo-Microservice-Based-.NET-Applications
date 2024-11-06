@@ -7,7 +7,6 @@ using App.Domain.Admin.Services.IServices;
 
 namespace App.Domain.Admin.Controllers
 {
-    [Authorize]
     [AllowAnonymous]
     public class CartController : Controller
     {

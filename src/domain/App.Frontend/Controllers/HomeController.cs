@@ -7,7 +7,6 @@ using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 namespace App.Frontend.Controllers
 {
-    [Authorize]
     [AllowAnonymous]
     public class HomeController : Controller
     {

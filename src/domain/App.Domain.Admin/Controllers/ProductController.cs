@@ -8,8 +8,6 @@ using Newtonsoft.Json;
 
 namespace App.Domain.Admin.Controllers
 {
-
-    [Authorize(Roles = "ADMIN")]
     public class ProductController : Controller
     {
         private readonly IProductService _productService;

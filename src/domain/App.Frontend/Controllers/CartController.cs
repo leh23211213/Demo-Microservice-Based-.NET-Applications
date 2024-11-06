@@ -7,7 +7,6 @@ using Newtonsoft.Json;
 
 namespace App.Frontend.Controllers
 {
-    [Authorize]
     [AllowAnonymous]
     public class CartController : Controller
     {
@@ -95,7 +94,6 @@ namespace App.Frontend.Controllers
             }
         }
 
-        [HttpPost]
         public async Task<IActionResult> Delete(string cartDetailsId)
         {
             Response? response = await _cartService.DeleteAsync(cartDetailsId);

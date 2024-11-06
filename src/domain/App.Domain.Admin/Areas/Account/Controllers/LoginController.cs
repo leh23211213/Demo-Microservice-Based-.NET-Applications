@@ -55,7 +55,7 @@ namespace App.Domain.Admin.Areas.Account.Controllers
             {
                 return Redirect(ProtectedAdminUrl);
             }
-            
+
             return View(new LoginRequest());
         }
 
@@ -131,9 +131,8 @@ namespace App.Domain.Admin.Areas.Account.Controllers
 
             var principal = new ClaimsPrincipal(identity);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+            HttpContext.User = principal;// Optionally, update HttpContext.User to reflect the new principal immediately in the current request
 
-            // Optionally, update HttpContext.User to reflect the new principal immediately in the current request
-            HttpContext.User = principal;
         }
     }
 }

@@ -7,8 +7,8 @@ public static class StaticDetail
     public static string? CouponAPIBase { get; set; }
     public static string? ShoppingCartAPIBase { get; set; }
     public static string? OrderAPIBase { get; set; }
-    public static string AccessToken = "AccessToken";
-    public static string RefreshToken = "RefreshToken";
+    public static string AccessToken = "ac_tk";
+    public static string RefreshToken = "rf_tk";
     public const string RoleAdmin = "ADMIN";
     public const string RoleCustomer = "CUSTOMER";
     public const string Size = "128GB";

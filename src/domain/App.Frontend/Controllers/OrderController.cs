@@ -8,7 +8,6 @@ using App.Frontend.Utility;
 
 namespace App.Frontend.Controllers
 {
-    [Authorize]
     [AllowAnonymous]
     public class OrderController : Controller
     {
