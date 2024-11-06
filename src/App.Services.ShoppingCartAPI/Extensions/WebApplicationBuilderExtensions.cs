@@ -1,5 +1,4 @@
-﻿
-namespace App.Services.ShoppingCartAPI.Extensions
+﻿namespace App.Services.ShoppingCartAPI.Extensions
 {
     public static class WebApplicationBuilderExtensions
     {
@@ -11,13 +10,12 @@ namespace App.Services.ShoppingCartAPI.Extensions
             var issuer = settingsSection.GetValue<string>("Issuer");
             var audience = settingsSection.GetValue<string>("Audience");
             //var key = Convert.FromBase64String(secret); 500.30
-            var key = System.Text.Encoding.ASCII.GetBytes(secret);
+            var key = System.Text.Encoding.UTF8.GetBytes(secret);
 
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultScheme = Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme;
             })
             .AddJwtBearer(options =>
             {
@@ -31,12 +29,15 @@ namespace App.Services.ShoppingCartAPI.Extensions
                     ValidateAudience = true,
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(key),
+                    ClockSkew = TimeSpan.FromMinutes(1),
                 };
             });
 
-            builder.Services.AddAuthorization();
+            builder.Services.AddAuthorization(options =>
+            {
+            });
             builder.Services.AddControllers();
-            builder.Services.AddAuthentication();
+
             return builder;
         }
     }

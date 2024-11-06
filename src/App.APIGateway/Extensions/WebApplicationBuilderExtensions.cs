@@ -9,14 +9,13 @@
             var secret = settingsSection.GetValue<string>("Secret");
             var issuer = settingsSection.GetValue<string>("Issuer");
             var audience = settingsSection.GetValue<string>("Audience");
-             //var key = Convert.FromBase64String(secret); 500.30
-            var key = System.Text.Encoding.ASCII.GetBytes(secret);
+            //var key = Convert.FromBase64String(secret); 500.30
+            var key = System.Text.Encoding.UTF8.GetBytes(secret);
 
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultScheme = Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme;
             })
             .AddJwtBearer(options =>
             {
@@ -30,12 +29,13 @@
                     ValidateAudience = true,
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(key),
+                    ClockSkew = TimeSpan.FromMinutes(1),
                 };
             });
 
             builder.Services.AddAuthorization();
             builder.Services.AddControllers();
-            builder.Services.AddAuthentication();
+
             return builder;
         }
     }

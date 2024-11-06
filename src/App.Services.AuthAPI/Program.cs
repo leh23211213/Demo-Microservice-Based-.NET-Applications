@@ -47,6 +47,8 @@ builder.Services.AddDistributedMemoryCache();
 // });
 
 var app = builder.Build();
+
+
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
@@ -70,7 +72,6 @@ app.UseSwaggerUI(options =>
 //30-1-2024
 // app.UseCors("AllowSpecificOrigins");
 
-app.UseSession();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
