@@ -7,9 +7,9 @@ namespace App.Services.AuthAPI.Services
     /// </summary>
     public class TokenProvider : ITokenProvider
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IConfiguration _configuration;
         private readonly string domain;
+        private readonly IConfiguration _configuration;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         public TokenProvider(
                             IConfiguration configuration,
                             IHttpContextAccessor httpContextAccessor

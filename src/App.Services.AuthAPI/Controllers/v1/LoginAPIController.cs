@@ -1,26 +1,27 @@
 using System.Net;
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using App.Services.AuthAPI.Models;
-using App.Services.AuthAPI.Services.IServices;
-using System.Security.Claims;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authorization;
+using App.Services.AuthAPI.Services.IServices;
 
 namespace App.Services.AuthAPI.Controllers
 {
+    [AllowAnonymous]
     [ApiController]
     [ApiVersionNeutral]
     [Route("api/v{version:apiVersion}/auth")]
     public class LoginAPIController : ControllerBase
     {
         protected Response _response;
-        private readonly string secretKey;
         private readonly string issuer;
         private readonly string audience;
+        private readonly string secretKey;
+        private readonly IConfiguration _configuration;
         private readonly ITokenProvider _tokenProvider;
         private readonly IAuthAPIService _authAPIService;
-        private readonly IConfiguration _configuration;
 
         public LoginAPIController(
                                 IConfiguration configuration,
@@ -54,6 +55,7 @@ namespace App.Services.AuthAPI.Controllers
                         _response.StatusCode = HttpStatusCode.BadRequest;
                         return _response;
                     }
+
                     if (Validate(token.AccessToken))
                     {
                         _response.Result = token;

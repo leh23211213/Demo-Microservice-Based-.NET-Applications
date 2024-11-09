@@ -35,18 +35,8 @@ namespace App.Frontend.Areas.Account.Controllers
             ProtectedCustomerUrl = _configuration.GetValue<string>("ServiceUrls:ProtectedCustomerUrl");
         }
 
-        // 20 minutes = 1200;
-        [ResponseCache(Duration = 1200, Location = ResponseCacheLocation.None, NoStore = true)]
-        public async Task<ActionResult> Error(AccountErrorModel errorModel)
-        {
-            return View(new AccountErrorModel
-            {
-                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
-                Message = errorModel.Message.ToString()
-            });
-        }
-
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult> Login()
         {
             if (User.Identity.IsAuthenticated)
@@ -58,6 +48,7 @@ namespace App.Frontend.Areas.Account.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginRequest model)
         {
             _tokenProvider.ClearToken();
@@ -93,6 +84,7 @@ namespace App.Frontend.Areas.Account.Controllers
             try
             {
                 await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                SignOut(CookieAuthenticationDefaults.AuthenticationScheme, "oidc");
                 var token = _tokenProvider.GetToken();
                 await _authService.LogoutAsync(token);
                 _tokenProvider.ClearToken();
@@ -104,6 +96,16 @@ namespace App.Frontend.Areas.Account.Controllers
             }
         }
 
+        // 20 minutes = 1200;
+        [ResponseCache(Duration = 1200, Location = ResponseCacheLocation.None, NoStore = true)]
+        public async Task<ActionResult> Error(AccountErrorModel errorModel)
+        {
+            return View(new AccountErrorModel
+            {
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+                Message = errorModel.Message.ToString()
+            });
+        }
         private async Task SignInUser(string AccessToken)
         {
             var handler = new JwtSecurityTokenHandler();

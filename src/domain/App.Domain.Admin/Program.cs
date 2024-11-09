@@ -1,10 +1,13 @@
-using App.Domain.Admin.Services;
-using App.Domain.Admin.Services.IServices;
 using App.Domain.Admin.Utility;
+using App.Domain.Admin.Services;
+using App.Domain.Admin.Extensions;
+using App.Domain.Admin.Services.IServices;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
-builder.Services.AddControllersWithViews(u => u.Filters.Add(new App.Domain.Admin.Extensions.AuthExceptionRedirection()));
+builder.Services.AddControllersWithViews(u => u.Filters.Add(new AuthExceptionRedirection()));
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -32,15 +35,43 @@ It stores the user's authentication ticket (e.g., login status) in a cookie.
  This allows the server to know if a user is authenticated on subsequent requests.
 */
 builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = "oidc";
+})
+.AddJwtBearer()
+.AddCookie(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.ExpireTimeSpan = TimeSpan.FromDays(7);
+    options.LoginPath = "/Auth/Login";
+    options.AccessDeniedPath = "/Auth/AccessDenied";
+}).AddOpenIdConnect("oidc", options =>
+{
+    options.Authority = builder.Configuration["ServiceUrls:AuthAPI"];
+    //Claims wil have every detail information
+    options.GetClaimsFromUserInfoEndpoint = true;
+    //
+    options.ClientId = "levanhiep409159";
+    options.ClientSecret = StaticDetail.secret;
+    options.ResponseType = "code";
+    //
+    options.TokenValidationParameters.NameClaimType = "name";
+    options.TokenValidationParameters.RoleClaimType = "role";
+    //
+    options.Scope.Add("levanhiep409159");
+    options.SaveTokens = true;
+    options.ClaimActions.MapJsonKey("role", "role");
+    options.Events = new OpenIdConnectEvents
     {
-        options.DefaultChallengeScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultScheme = Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme;
-    })
-    .AddJwtBearer()
-    .AddCookie(options =>
-    {
-        options.Cookie.HttpOnly = true;
-    });
+        OnRemoteFailure = context =>
+        {
+            context.Response.Redirect("/");
+            context.HandleResponse();
+            return Task.FromResult(0);
+        }
+    };
+});
 
 /*
 Session: Used to store user-specific data on the server (such as shopping cart information, preferences, etc.).
@@ -60,9 +91,9 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseRouting();
 
 app.MapControllerRoute(
     name: "default",

@@ -2,9 +2,9 @@
 
 namespace App.Services.AuthAPI.Extensions
 {
-    public static class WebApplicationBuilderExtensions
+    public static class AppAuthetication
     {
-        public static WebApplicationBuilder AddAppAuthetication(this WebApplicationBuilder builder)
+        public static WebApplicationBuilder AddAppValidate(this WebApplicationBuilder builder)
         {
             // Configure IdentityOptions
             builder.Services.Configure<IdentityOptions>(options =>
@@ -32,7 +32,10 @@ namespace App.Services.AuthAPI.Extensions
             });
 
             builder.Services.AddAuthorization();
-            builder.Services.AddControllers();
+            builder.Services.AddControllersWithViews(options =>
+            {
+                options.Filters.Add<SecurityHeadersAttribute>();
+            });
             // .AddJsonOptions(options =>
             // {
             //     options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;

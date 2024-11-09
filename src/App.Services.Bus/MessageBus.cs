@@ -13,7 +13,7 @@ namespace App.Services.Bus
                         )
         {
             _configuration = configuration;
-            _connectionString = _configuration.GetConnectionString("ConnectionStrings:DefaultConnection");
+            _connectionString = _configuration.GetConnectionString("ConnectionStrings:DefaultSQLConnection");
         }
         public async Task PublishMessage(object message, string topic_queue_Name)
         {
