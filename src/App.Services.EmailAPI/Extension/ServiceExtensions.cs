@@ -9,7 +9,7 @@ namespace App.Services.EmailAPI.Extension
         public static IServiceCollection AppServiceCollection(this IServiceCollection services, IConfiguration configuration)
         {
             var optionBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-            optionBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+            optionBuilder.UseSqlServer(configuration.GetConnectionString("DefaultSQLConnection"));
 
             // Configure Email service
             // services.AddOptions();

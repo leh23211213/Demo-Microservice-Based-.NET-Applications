@@ -68,7 +68,7 @@ namespace App.Services.AuthAPI.Controllers
             return _response;
         }
 
-        [HttpDelete("warning remove token")]
+        [HttpDelete("warning-remove-token")]
         public async Task<ActionResult<Response>> warning()
         {
             _tokenProvider.ClearToken();
