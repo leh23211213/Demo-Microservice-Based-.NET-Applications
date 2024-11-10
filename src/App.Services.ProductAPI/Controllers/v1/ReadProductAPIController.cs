@@ -1,11 +1,13 @@
-
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using App.Services.ProductAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using App.Services.ProductAPI.Models;
+using Microsoft.AspNetCore.Authorization;
+
 namespace App.Services.ProductAPI.Controllers.v1
 {
+    [Authorize]
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/product")]
@@ -49,7 +51,8 @@ namespace App.Services.ProductAPI.Controllers.v1
                 if (products == null)
                 {
                     _response.IsSuccess = false;
-                    _response.StatusCode = HttpStatusCode.NotFound;
+                    _response.StatusCode = HttpStatusCode.InternalServerError;
+                    return _response;
                 }
                 _response.Result = products;
             }
@@ -61,8 +64,6 @@ namespace App.Services.ProductAPI.Controllers.v1
                 _response.Result = null;
                 //  _logger.LogError(ex.Message);
             }
-
-
             return _response;
         }
 
@@ -91,8 +92,9 @@ namespace App.Services.ProductAPI.Controllers.v1
                                                         }).FirstOrDefaultAsync();
                 if (product == null)
                 {
-                    _response.StatusCode = HttpStatusCode.NotFound;
+                    _response.StatusCode = HttpStatusCode.InternalServerError;
                     _response.IsSuccess = false;
+                    return _response;
                 }
                 else
                 {
@@ -105,8 +107,6 @@ namespace App.Services.ProductAPI.Controllers.v1
                 _response.Message = ex.Message;
                 _response.StatusCode = HttpStatusCode.NotFound;
             }
-
-
             return _response;
         }
 
@@ -130,13 +130,17 @@ namespace App.Services.ProductAPI.Controllers.v1
                                                     ImageUrl = p.ImageUrl,
                                                     ImageLocalPath = p.ImageLocalPath
                                                 }).ToListAsync();
+                if (products == null)
+                {
+                    _response.IsSuccess = false;
+                    _response.StatusCode = HttpStatusCode.InternalServerError;
+                    return _response;
+                }
 
                 if (!string.IsNullOrEmpty(search))
                 {
                     products = _dbContext.Products.Where(p => p.Name.ToLower().Contains(search.ToLower()));
                 }
-
-                Thread.Sleep(1000);
 
                 var totalItems = products.Count();
                 var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
@@ -144,6 +148,7 @@ namespace App.Services.ProductAPI.Controllers.v1
                 if (currentPage < 1 || currentPage > totalPages)
                 {
                     _response.IsSuccess = false;
+                    _response.Message = "Not Found";
                     _response.StatusCode = HttpStatusCode.NotFound;
                     return _response;
                 }
@@ -164,8 +169,6 @@ namespace App.Services.ProductAPI.Controllers.v1
                 _response.StatusCode = HttpStatusCode.NotFound;
                 _response.Message = ex.Message;
             }
-
-
             return _response;
         }
     }
