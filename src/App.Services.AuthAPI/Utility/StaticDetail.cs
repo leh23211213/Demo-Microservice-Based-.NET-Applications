@@ -33,13 +33,13 @@ public static class StaticDetail
         new ApiScope(name: "orderapi", displayName: "Order Server"),
     };
 
-    /// <summary>
-    /// https://docs.duendesoftware.com/identityserver/v7/fundamentals/clients/
-    /// </summary>
     private static string secret = "identityserverfundamentalsclients";
     // TODO : production ?
     private static string RedirectUris = "https://localhost:7000/signin-oidc";
     private static string PostLogoutRedirectUris = "https://localhost:7000/signout-callback-oidc";
+    /// <summary>
+    /// https://docs.duendesoftware.com/identityserver/v7/fundamentals/clients/
+    /// </summary>
     public static IEnumerable<Client> Clients =>
     new List<Client>
     {

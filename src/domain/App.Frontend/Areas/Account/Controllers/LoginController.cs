@@ -44,39 +44,39 @@ namespace App.Frontend.Areas.Account.Controllers
                 return Redirect(ProtectedCustomerUrl);
             }
 
-            return View(new LoginRequest());
+            return View(new Models.LoginRequest());
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginRequest model)
-        {
-            _tokenProvider.ClearToken();
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        // [HttpPost]
+        // [ValidateAntiForgeryToken]
+        // public async Task<IActionResult> Login(LoginRequest model)
+        // {
+        //     _tokenProvider.ClearToken();
+        //     await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
-            Response response = await _authService.LoginAsync(model);
-            if (response.IsSuccess && response != null)
-            {
-                var token = JsonConvert.DeserializeObject<Token>(Convert.ToString(response.Result));
-                if (token != null)
-                {
-                    await SignInUser(token.AccessToken);
-                    _tokenProvider.SetToken(token);
-                    var roles = User.FindFirst(ClaimTypes.Role)?.Value;
-                    if (roles != null)
-                    {
-                        return Redirect(ProtectedCustomerUrl);
-                    }
-                    return RedirectToAction("AccessDenied", "Account");
-                }
-                return RedirectToAction("Error", new AccountErrorModel { Message = "Login Bug" });
-            }
-            else
-            {
-                TempData["error"] = response.Message;
-                return View(model);
-            }
-        }
+        //     Response response = await _authService.LoginAsync(model);
+        //     if (response.IsSuccess && response != null)
+        //     {
+        //         var token = JsonConvert.DeserializeObject<Token>(Convert.ToString(response.Result));
+        //         if (token != null)
+        //         {
+        //             await SignInUser(token.AccessToken);
+        //             _tokenProvider.SetToken(token);
+        //             var roles = User.FindFirst(ClaimTypes.Role)?.Value;
+        //             if (roles != null)
+        //             {
+        //                 return Redirect(ProtectedCustomerUrl);
+        //             }
+        //             return RedirectToAction("AccessDenied", "Account");
+        //         }
+        //         return RedirectToAction("Error", new AccountErrorModel { Message = "Login Bug" });
+        //     }
+        //     else
+        //     {
+        //         TempData["error"] = response.Message;
+        //         return View(model);
+        //     }
+        // }
 
         [HttpPost]
         public async Task<IActionResult> Logout()
