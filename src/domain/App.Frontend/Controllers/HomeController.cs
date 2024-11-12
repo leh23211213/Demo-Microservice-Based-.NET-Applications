@@ -25,34 +25,46 @@ namespace App.Frontend.Controllers
                                                 [FromQuery] string? search = ""
                                             )
         {
-            Response? response = await _productService.Get(pageSize, currentPage, search);
-            Pagination pagination = new();
-            if (response.IsSuccess && response != null && response.Result != null)
+            if (User.Identity.IsAuthenticated)
             {
-                pagination = JsonConvert.DeserializeObject<Pagination>(Convert.ToString(response.Result));
+                Response? response = await _productService.Get(pageSize, currentPage, search);
+                Pagination pagination = new();
+                if (response.IsSuccess && response != null && response.Result != null)
+                {
+                    pagination = JsonConvert.DeserializeObject<Pagination>(Convert.ToString(response.Result));
+                }
+                else
+                {
+                    TempData["error"] = response?.Message;
+                }
+                return View(pagination);
             }
             else
             {
-                TempData["error"] = response?.Message;
+                return RedirectToAction("Login", "Authentication");
             }
-            return View(pagination);
         }
 
-
+        [HttpGet]
         public async Task<IActionResult> Details(string id)
         {
             Response? response = await _productService.Get(id);
             Product? product = new();
 
-            if (response != null && response.IsSuccess)
-            {
-                product = JsonConvert.DeserializeObject<Product>(Convert.ToString(response.Result));
+                if (response != null && response.IsSuccess)
+                {
+                    product = JsonConvert.DeserializeObject<Product>(Convert.ToString(response.Result));
+                }
+                else
+                {
+                    TempData["error"] = response?.Message;
+                }
+                return View(product);
             }
             else
             {
-                TempData["error"] = response?.Message;
+                return RedirectToAction("Login", "Authentication");
             }
-            return View(product);
         }
 
         [HttpPost]

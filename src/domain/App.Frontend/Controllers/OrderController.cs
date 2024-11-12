@@ -21,7 +21,14 @@ namespace App.Frontend.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            if (User.Identity.IsAuthenticated)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Login", "Authentication");
+            }
         }
 
         public async Task<IActionResult> Details(string orderId)
@@ -29,16 +36,21 @@ namespace App.Frontend.Controllers
             OrderHeader orderHeader = new OrderHeader();
             var userId = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
 
-            Response response = await _orderService.Get(orderId);
-            if (response.IsSuccess && response != null)
-            {
-                orderHeader = JsonConvert.DeserializeObject<OrderHeader>(Convert.ToString(response.Result));
+                Response response = await _orderService.Get(orderId);
+                if (response.IsSuccess && response != null)
+                {
+                    orderHeader = JsonConvert.DeserializeObject<OrderHeader>(Convert.ToString(response.Result));
+                }
+                if (!User.IsInRole(StaticDetail.RoleAdmin) && userId != orderHeader.UserId)
+                {
+                    return NotFound();
+                }
+                return View(orderHeader);
             }
-            if (!User.IsInRole(StaticDetail.RoleAdmin) && userId != orderHeader.UserId)
+            else
             {
-                return NotFound();
+                return RedirectToAction("Login", "Authentication");
             }
-            return View(orderHeader);
         }
 
         [HttpPost("OrderReadyForPickup")]
@@ -62,33 +74,39 @@ namespace App.Frontend.Controllers
         [HttpGet]
         public IActionResult Get(string status)
         {
-            IEnumerable<OrderHeader> list;
-            string userId = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
-
-            Response response = _orderService.GetAllOrder(userId).GetAwaiter().GetResult();
-            if (response.IsSuccess && response != null)
+            if (User.Identity.IsAuthenticated)
             {
-                list = JsonConvert.DeserializeObject<List<OrderHeader>>(Convert.ToString(response.Result));
-                switch (status)
+                IEnumerable<OrderHeader> list;
+                string userId = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
+                Response response = _orderService.GetAllOrder(userId).GetAwaiter().GetResult();
+                if (response.IsSuccess && response != null)
                 {
-                    case "approved":
-                        list = list.Where(u => u.Status == StaticDetail.Status_Approved);
-                        break;
-                    case "readyforpickup":
-                        list = list.Where(u => u.Status == StaticDetail.Status_ReadyForPickup);
-                        break;
-                    case "cancelled":
-                        list = list.Where(u => u.Status == StaticDetail.Status_Cancelled);
-                        break;
-                    default:
-                        break;
+                    list = JsonConvert.DeserializeObject<List<OrderHeader>>(Convert.ToString(response.Result));
+                    switch (status)
+                    {
+                        case "approved":
+                            list = list.Where(u => u.Status == StaticDetail.Status_Approved);
+                            break;
+                        case "readyforpickup":
+                            list = list.Where(u => u.Status == StaticDetail.Status_ReadyForPickup);
+                            break;
+                        case "cancelled":
+                            list = list.Where(u => u.Status == StaticDetail.Status_Cancelled);
+                            break;
+                        default:
+                            break;
+                    }
                 }
+                else
+                {
+                    list = new List<OrderHeader>();
+                }
+                return Json(new { data = list.OrderByDescending(u => u.Id) });
             }
             else
             {
-                list = new List<OrderHeader>();
+                return RedirectToAction("Login", "Authentication");
             }
-            return Json(new { data = list.OrderByDescending(u => u.Id) });
         }
     }
 }

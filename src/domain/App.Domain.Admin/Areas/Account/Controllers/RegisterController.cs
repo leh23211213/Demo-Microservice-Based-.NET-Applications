@@ -9,8 +9,7 @@ using App.Domain.Admin.Models;
 namespace App.Domain.Admin.Areas.Account.Controllers
 {
     [Area("Account")]
-    [Route("[area]/[action]")]
-    [AllowAnonymous]
+    [Route("user/{controller}")]
     public class RegisterController : Controller
     {
         private readonly IAuthService _authService;
@@ -46,7 +45,7 @@ namespace App.Domain.Admin.Areas.Account.Controllers
                     model.Role = StaticDetail.RoleCustomer;
                 }
                 TempData["success"] = response?.Message;
-                return RedirectToAction("Login", "Login", new { area = "Account" });
+                return RedirectToAction("Login", "Authentication");
             }
             else
             {

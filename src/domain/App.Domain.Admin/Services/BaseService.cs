@@ -198,7 +198,11 @@ namespace App.Domain.Admin.Services
             jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Email).Value));
 
             var principal = new ClaimsPrincipal(identity);
-            await _httpContextAccessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+            await _httpContextAccessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal,
+            new AuthenticationProperties
+            {
+                IsPersistent = true, // Cookie sẽ tồn tại qua nhiều phiên duyệt web
+            });
 
             _tokenProvider.SetToken(token);
         }

@@ -22,12 +22,26 @@ namespace App.Frontend.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View(await LoadCart());
+            if (User.Identity.IsAuthenticated)
+            {
+                return View(await LoadCart());
+            }
+            else
+            {
+                return RedirectToAction("Login", "Authentication");
+            }
         }
 
         public async Task<IActionResult> Checkout()
         {
-            return View(await LoadCart());
+            if (User.Identity.IsAuthenticated)
+            {
+                return View(await LoadCart());
+            }
+            else
+            {
+                return RedirectToAction("Login", "Authentication");
+            }
         }
 
         [HttpPost]
@@ -63,12 +77,19 @@ namespace App.Frontend.Controllers
 
         public async Task<IActionResult> Confirmation(string orderId)
         {
-            Response response = await _orderService.ValidateStripeSession(orderId);
-            if (response.IsSuccess && response != null)
+            if (User.Identity.IsAuthenticated)
             {
+                Response response = await _orderService.ValidateStripeSession(orderId);
+                if (response.IsSuccess && response != null)
+                {
+                    return View(orderId);
+                }
                 return View(orderId);
             }
-            return View(orderId);
+            else
+            {
+                return RedirectToAction("Login", "Authentication");
+            }
         }
 
         public async Task<IActionResult> Delete(string cartDetailsId)

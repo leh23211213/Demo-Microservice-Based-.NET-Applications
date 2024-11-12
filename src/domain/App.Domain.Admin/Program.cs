@@ -1,9 +1,9 @@
 using App.Domain.Admin.Extensions;
 using App.Domain.Admin.Services;
 using App.Domain.Admin.Services.IServices;
-using App.Domain.Admin.Utility;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -58,16 +58,46 @@ Cookie Authentication: Used to manage user authentication.
 It stores the user's authentication ticket (e.g., login status) in a cookie.
  This allows the server to know if a user is authenticated on subsequent requests.
 */
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.ExpireTimeSpan = TimeSpan.FromDays(7); // the expiration time for the authentication cookie
-        options.LoginPath = "/Account/Login";
-        options.AccessDeniedPath = "/Account/AccessDenied";
-        options.Cookie.HttpOnly = true;
-        options.SlidingExpiration = true; // sẽ giúp gia hạn thời gian sống của cookie mỗi khi có hoạt động. Tuy nhiên, nếu không có hoạt động hoặc phiên đã hết hạn, người dùng sẽ bị đăng xuất và chuyển hướng về trang login.
-    });
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+})
+.AddJwtBearer()
+.AddCookie(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.ExpireTimeSpan = TimeSpan.FromDays(7);
+    options.LoginPath = "/Authentication/Login";
+    options.AccessDeniedPath = "/Authentication/AccessDenied";
+})
+.AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
+{
+    options.Authority = builder.Configuration["ServiceUrls:AuthAPI"];
+    //Claims wil have every detail information
+    options.GetClaimsFromUserInfoEndpoint = true;
+    //
+    options.ClientId = "admin_scope";
+    options.ClientSecret = StaticDetail.secret;
+    options.ResponseType = "code";
+    //
+    options.TokenValidationParameters.NameClaimType = "name";
+    options.TokenValidationParameters.RoleClaimType = "role";
+    //
+    options.Scope.Add("admin_scope");
+    options.SaveTokens = true;
 
+    options.ClaimActions.MapJsonKey("role", "role");
+    options.Events = new OpenIdConnectEvents
+    {
+        OnRemoteFailure = context =>
+        {
+            context.Response.Redirect("/");
+            context.HandleResponse();
+            return Task.FromResult(0);
+        }
+    };
+});
 /*
 Session: Used to store user-specific data on the server (such as shopping cart information, preferences, etc.).
  The session can be used to store non-authentication-related information temporarily and is tied to the user’s session ID.
@@ -84,21 +114,21 @@ builder.Services.AddSession(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
-app.UseSession();
-app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseHttpsRedirection();
+
 app.UseRouting();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
+// Default route
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=CoverPage}/{id?}");
