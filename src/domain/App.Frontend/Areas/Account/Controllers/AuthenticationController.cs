@@ -1,99 +1,102 @@
 using Newtonsoft.Json;
-using System.Diagnostics;
 using App.Frontend.Models;
+using System.Diagnostics;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
-using App.Frontend.Services.IServices;
 using System.IdentityModel.Tokens.Jwt;
-using App.Frontend.Areas.Account.Models;
+using App.Frontend.Services.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-
+using App.Frontend.Areas.Account.Models;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 namespace App.Frontend.Areas.Account.Controllers
 {
     [Area("Account")]
-    [Route("[Area]/[action]")]
-    [AllowAnonymous]
-    public class LoginController : Controller
+    [Route("user")]
+    public class AuthenticationController : Controller
     {
         private readonly IAuthService _authService;
         private readonly ITokenProvider _tokenProvider;
         private readonly IConfiguration _configuration;
-
+        private readonly string ProtectedAdminUrl;
         private readonly string ProtectedCustomerUrl;
-        public LoginController(
+        public AuthenticationController(
                                 IAuthService authService,
                                 ITokenProvider tokenProvider,
-                                 IConfiguration configuration
+                                IConfiguration configuration
                             )
         {
             _authService = authService;
             _tokenProvider = tokenProvider;
             _configuration = configuration;
-
-            ProtectedCustomerUrl = _configuration.GetValue<string>("ServiceUrls:ProtectedCustomerUrl");
         }
 
         [HttpGet]
-        [Authorize]
+        [Route("login")]
+        //[Authorize]
         public async Task<ActionResult> Login()
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                return Redirect(ProtectedCustomerUrl);
-            }
-
-            return View(new Models.LoginRequest());
+            return View(new LoginRequest());
+            var accessToken = await HttpContext.GetTokenAsync("access_token");
+            return RedirectToAction(nameof(Index), "Home");
+            // var authenticateResult = await HttpContext.AuthenticateAsync();
+            // if (authenticateResult.Succeeded)
         }
 
-        // [HttpPost]
-        // [ValidateAntiForgeryToken]
-        // public async Task<IActionResult> Login(LoginRequest model)
-        // {
-        //     _tokenProvider.ClearToken();
-        //     await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(LoginRequest model)
+        {
+            _tokenProvider.ClearToken();
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
-        //     Response response = await _authService.LoginAsync(model);
-        //     if (response.IsSuccess && response != null)
-        //     {
-        //         var token = JsonConvert.DeserializeObject<Token>(Convert.ToString(response.Result));
-        //         if (token != null)
-        //         {
-        //             await SignInUser(token.AccessToken);
-        //             _tokenProvider.SetToken(token);
-        //             var roles = User.FindFirst(ClaimTypes.Role)?.Value;
-        //             if (roles != null)
-        //             {
-        //                 return Redirect(ProtectedCustomerUrl);
-        //             }
-        //             return RedirectToAction("AccessDenied", "Account");
-        //         }
-        //         return RedirectToAction("Error", new AccountErrorModel { Message = "Login Bug" });
-        //     }
-        //     else
-        //     {
-        //         TempData["error"] = response.Message;
-        //         return View(model);
-        //     }
-        // }
+            Response response = await _authService.LoginAsync(model);
+            if (response.IsSuccess && response != null)
+            {
+                var token = JsonConvert.DeserializeObject<Token>(Convert.ToString(response.Result));
+                if (token != null)
+                {
+                    await SignInUser(token.AccessToken);
+                    _tokenProvider.SetToken(token);
+                    var roles = User.FindFirst(ClaimTypes.Role)?.Value;
+                    if (roles != null)
+                    {
+                        return RedirectToAction(nameof(Index), "Home");
+                    }
+                    return RedirectToAction("AccessDenied", "Authentication");
+                }
+                return RedirectToAction("Error", new AccountErrorModel { Message = "Login Bug" });
+            }
+            else
+            {
+                TempData["error"] = response.Message;
+                return View(model);
+            }
+        }
 
         [HttpPost]
+        [Route("logout")]
         public async Task<IActionResult> Logout()
         {
             try
             {
                 await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-                SignOut(CookieAuthenticationDefaults.AuthenticationScheme, "oidc");
+                SignOut(CookieAuthenticationDefaults.AuthenticationScheme, OpenIdConnectDefaults.AuthenticationScheme);
                 var token = _tokenProvider.GetToken();
                 await _authService.LogoutAsync(token);
                 _tokenProvider.ClearToken();
-                return RedirectToAction("Login", "Login", new { area = "Account" });
+                return Redirect("~/");
             }
             catch
             {
                 return RedirectToAction("Error", new AccountErrorModel { Message = "Unknow" });
             }
+        }
+
+        public IActionResult AccessDenied()
+        {
+            return View();
         }
 
         // 20 minutes = 1200;
@@ -126,7 +129,11 @@ namespace App.Frontend.Areas.Account.Controllers
             jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Email).Value));
 
             var principal = new ClaimsPrincipal(identity);
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal,
+            new AuthenticationProperties
+            {
+                IsPersistent = true, // Cookie sẽ tồn tại qua nhiều phiên duyệt web
+            });
             HttpContext.User = principal; // Optionally, update HttpContext.User to reflect the new principal immediately in the current request
         }
     }

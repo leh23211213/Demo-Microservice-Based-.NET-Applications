@@ -14,8 +14,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 namespace App.Domain.Admin.Areas.Account.Controllers
 {
     [Area("Account")]
-    [Route("[Area]/[action]")]
-    [AllowAnonymous]
+    [Route("user/{controller}")]
     public class LoginController : Controller
     {
         private readonly IAuthService _authService;
@@ -37,18 +36,12 @@ namespace App.Domain.Admin.Areas.Account.Controllers
             ProtectedCustomerUrl = _configuration.GetValue<string>("ServiceUrls:ProtectedCustomerUrl");
         }
 
-
-
         [HttpGet]
         [Authorize]
         public async Task<ActionResult> Login()
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction(nameof(Index), "Home");
-            }
-
-            return View(new LoginRequest());
+            var accessToken = await HttpContext.GetTokenAsync("access_token");
+            return RedirectToAction(nameof(Index), "Home");
         }
 
         [HttpPost]
@@ -56,7 +49,7 @@ namespace App.Domain.Admin.Areas.Account.Controllers
         public async Task<IActionResult> Login(LoginRequest model)
         {
             _tokenProvider.ClearToken();
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            await HttpContext.SignOutAsync("Cookies");
 
             Response response = await _authService.LoginAsync(model);
             if (response.IsSuccess && response != null)
@@ -75,7 +68,7 @@ namespace App.Domain.Admin.Areas.Account.Controllers
                         return Redirect(ProtectedCustomerUrl);
                     }
 
-                    return RedirectToAction("AccessDenied", "Account");
+                    return RedirectToAction("AccessDenied", "Authentication");
                 }
                 return RedirectToAction("Error", new AccountErrorModel { Message = "Login Bug" });
             }
@@ -92,12 +85,12 @@ namespace App.Domain.Admin.Areas.Account.Controllers
         {
             try
             {
-                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-                SignOut(CookieAuthenticationDefaults.AuthenticationScheme, "oidc");
+                await HttpContext.SignOutAsync("Cookies");
+                SignOut("Cookies", "OpenIdConnect");
                 var token = _tokenProvider.GetToken();
                 await _authService.LogoutAsync(token);
                 _tokenProvider.ClearToken();
-                return RedirectToAction("Login", "Login", new { area = "Account" });
+                return Redirect("~/");
             }
             catch
             {
@@ -134,7 +127,11 @@ namespace App.Domain.Admin.Areas.Account.Controllers
             jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Email).Value));
 
             var principal = new ClaimsPrincipal(identity);
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal,
+            new AuthenticationProperties
+            {
+                IsPersistent = true, // Cookie sẽ tồn tại qua nhiều phiên duyệt web
+            });
             HttpContext.User = principal;// Optionally, update HttpContext.User to reflect the new principal immediately in the current request
 
         }

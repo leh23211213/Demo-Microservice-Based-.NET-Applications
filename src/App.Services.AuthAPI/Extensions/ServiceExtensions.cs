@@ -1,7 +1,6 @@
 using App.Services.Bus;
 using App.Services.AuthAPI.Services;
 using App.Services.AuthAPI.Services.IServices;
-using Duende.IdentityServer.Services;
 
 namespace App.Services.AuthAPI.Extensions
 {

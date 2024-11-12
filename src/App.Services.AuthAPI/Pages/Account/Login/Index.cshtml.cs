@@ -49,7 +49,6 @@ public class Index : PageModel
                  )
     {
         // this is where you would plug in your own custom identity management library (e.g. ASP.NET Identity)
-
         _interaction = interaction;
         _schemeProvider = schemeProvider;
         _identityProviderStore = identityProviderStore;
@@ -164,13 +163,11 @@ public class Index : PageModel
                 else
                 {
                     // user might have clicked on a malicious link - should be logged
-                    throw new ArgumentException("invalid return URL");
+                    throw new Exception("invalid return URL");
                 }
             }
 
-            const string error = "invalid credentials";
-            await _events.RaiseAsync(new UserLoginFailureEvent(Input.Username, error, clientId: context?.Client.ClientId));
-            Telemetry.Metrics.UserLoginFailure(context?.Client.ClientId, IdentityServerConstants.LocalIdentityProvider, error);
+            await _events.RaiseAsync(new UserLoginFailureEvent(Input.Username, "invalid credentials", clientId: context?.Client.ClientId));
             ModelState.AddModelError(string.Empty, LoginOptions.InvalidCredentialsErrorMessage);
         }
 

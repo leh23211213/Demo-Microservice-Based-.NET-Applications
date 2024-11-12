@@ -27,7 +27,7 @@ namespace App.Domain.Admin.Controllers
             }
             else
             {
-                return RedirectToAction("Login", "Login", new { area = "Account" });
+                return RedirectToAction("Login", "Authentication");
             }
         }
 

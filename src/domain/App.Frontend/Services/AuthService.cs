@@ -1,3 +1,4 @@
+using App.Frontend.Areas.Account.Models;
 using App.Frontend.Models;
 using App.Frontend.Services.IServices;
 using App.Frontend.Utility;
@@ -31,15 +32,15 @@ namespace App.Frontend.Services
             });
         }
 
-        // public async Task<Response?> RegisterAsync(RegistrationRequest registerRequest)
-        // {
-        //     return await _baseService.SendAsync(new Request()
-        //     {
-        //         ApiType = StaticDetail.ApiType.POST,
-        //         Data = registerRequest,
-        //         Url = StaticDetail.AuthAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/auth/Register"
-        //     }, withBearer: false);
-        // }
+        public async Task<Response?> RegisterAsync(RegistrationRequest registerRequest)
+        {
+            return await _baseService.SendAsync(new Request()
+            {
+                ApiType = StaticDetail.ApiType.POST,
+                Data = registerRequest,
+                Url = StaticDetail.AuthAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/auth/Register"
+            }, withBearer: false);
+        }
 
         public async Task<Response?> LogoutAsync(Token token)
         {
