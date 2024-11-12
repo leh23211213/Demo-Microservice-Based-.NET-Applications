@@ -14,8 +14,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 namespace App.Domain.Admin.Areas.Account.Controllers
 {
     [Area("Account")]
-    [Route("[Area]/[action]")]
-    [AllowAnonymous]
+    [Route("user/{controller}")]
     public class LoginController : Controller
     {
         private readonly IAuthService _authService;
@@ -37,49 +36,21 @@ namespace App.Domain.Admin.Areas.Account.Controllers
             ProtectedCustomerUrl = _configuration.GetValue<string>("ServiceUrls:ProtectedCustomerUrl");
         }
 
-        // 20 minutes = 1200;
-        [ResponseCache(Duration = 1200, Location = ResponseCacheLocation.None, NoStore = true)]
-        public async Task<ActionResult> Error(AccountErrorModel errorModel)
-        {
-            return View(new AccountErrorModel
-            {
-                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
-                Message = errorModel.Message.ToString()
-            });
-        }
-
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult> Login()
         {
-            Response response = await _authService.LoginAsync();
-            if (response.IsSuccess && response != null)
-            {
-                var token = JsonConvert.DeserializeObject<Token>(Convert.ToString(response.Result));
-                if (token != null)
-                {
-                    await SignInUser(token.AccessToken);
-                    var roles = User.FindFirst(ClaimTypes.Role)?.Value;
-                    // redirect to admin domain
-                    if (roles == StaticDetail.RoleAdmin)
-                    {
-                        return Redirect(ProtectedAdminUrl);
-                    }
-                    // redirect to customer domain
-                    if (roles == StaticDetail.RoleCustomer)
-                    {
-                        return Redirect(ProtectedCustomerUrl);
-                    }
-                    return RedirectToAction("AccessDenied", "Account");
-                }
-            }
-
-            var model = new LoginRequest() { };
-            return View(model);
+            var accessToken = await HttpContext.GetTokenAsync("access_token");
+            return RedirectToAction(nameof(Index), "Home");
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginRequest model)
         {
+            _tokenProvider.ClearToken();
+            await HttpContext.SignOutAsync("Cookies");
+
             Response response = await _authService.LoginAsync(model);
             if (response.IsSuccess && response != null)
             {
@@ -88,17 +59,16 @@ namespace App.Domain.Admin.Areas.Account.Controllers
                 {
                     await SignInUser(token.AccessToken);
                     var roles = User.FindFirst(ClaimTypes.Role)?.Value;
-                    // redirect to admin domain
                     if (roles == StaticDetail.RoleAdmin)
                     {
-                        return Redirect(ProtectedAdminUrl);
+                        return RedirectToAction(nameof(Index), "Home");
                     }
-                    // redirect to customer domain
                     if (roles == StaticDetail.RoleCustomer)
                     {
                         return Redirect(ProtectedCustomerUrl);
                     }
-                    return RedirectToAction("AccessDenied", "Account");
+
+                    return RedirectToAction("AccessDenied", "Authentication");
                 }
                 return RedirectToAction("Error", new AccountErrorModel { Message = "Login Bug" });
             }
@@ -115,11 +85,12 @@ namespace App.Domain.Admin.Areas.Account.Controllers
         {
             try
             {
-                await HttpContext.SignOutAsync();
+                await HttpContext.SignOutAsync("Cookies");
+                SignOut("Cookies", "OpenIdConnect");
                 var token = _tokenProvider.GetToken();
                 await _authService.LogoutAsync(token);
                 _tokenProvider.ClearToken();
-                return RedirectToAction("Login", "Login", new { area = "Account" });
+                return Redirect("~/");
             }
             catch
             {
@@ -127,6 +98,16 @@ namespace App.Domain.Admin.Areas.Account.Controllers
             }
         }
 
+        // 20 minutes = 1200;
+        [ResponseCache(Duration = 1200, Location = ResponseCacheLocation.None, NoStore = true)]
+        public async Task<ActionResult> Error(AccountErrorModel errorModel)
+        {
+            return View(new AccountErrorModel
+            {
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+                Message = errorModel.Message.ToString()
+            });
+        }
         private async Task SignInUser(string AccessToken)
         {
             var handler = new JwtSecurityTokenHandler();
@@ -146,7 +127,13 @@ namespace App.Domain.Admin.Areas.Account.Controllers
             jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Email).Value));
 
             var principal = new ClaimsPrincipal(identity);
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal,
+            new AuthenticationProperties
+            {
+                IsPersistent = true, // Cookie sẽ tồn tại qua nhiều phiên duyệt web
+            });
+            HttpContext.User = principal;// Optionally, update HttpContext.User to reflect the new principal immediately in the current request
+
         }
     }
 }

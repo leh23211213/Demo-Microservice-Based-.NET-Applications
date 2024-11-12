@@ -1,4 +1,5 @@
 using App.Services.AuthAPI.Models;
+using App.Services.AuthAPI.Utility;
 using App.Services.AuthAPI.Services.IServices;
 namespace App.Services.AuthAPI.Services
 {
@@ -7,11 +8,18 @@ namespace App.Services.AuthAPI.Services
     /// </summary>
     public class TokenProvider : ITokenProvider
     {
+        private readonly string domain;
+        private readonly IConfiguration _configuration;
         private readonly IHttpContextAccessor _httpContextAccessor;
-
-        public TokenProvider(IHttpContextAccessor httpContextAccessor)
+        public TokenProvider(
+                            IConfiguration configuration,
+                            IHttpContextAccessor httpContextAccessor
+                            )
         {
             _httpContextAccessor = httpContextAccessor;
+            _configuration = configuration;
+
+            domain = _configuration.GetValue<string>("SetToken:domain");
         }
 
         public void ClearToken()
@@ -40,16 +48,20 @@ namespace App.Services.AuthAPI.Services
         }
         public void SetToken(Token token)
         {
-            _httpContextAccessor.HttpContext?.Response.Cookies.Append(StaticDetail.AccessToken, token.AccessToken ?? "null", new CookieOptions
+            _httpContextAccessor.HttpContext?.Response.Cookies.Append(StaticDetail.AccessToken, token.AccessToken ?? "", new CookieOptions
             {
+                Domain = domain,
+                Path = "/",
                 HttpOnly = true,
                 Secure = true,  // Nên dùng HTTPS
                 SameSite = SameSiteMode.None, // Để trình duyệt cho phép chia sẻ cookie
                 Expires = DateTime.UtcNow.AddDays(7)
             });
 
-            _httpContextAccessor.HttpContext?.Response.Cookies.Append(StaticDetail.RefreshToken, token.RefreshToken ?? "null", new CookieOptions
+            _httpContextAccessor.HttpContext?.Response.Cookies.Append(StaticDetail.RefreshToken, token.RefreshToken ?? "", new CookieOptions
             {
+                Domain = domain,
+                Path = "/",
                 Expires = DateTime.UtcNow.AddDays(7),
                 Secure = true,  // Nên dùng HTTPS
                 HttpOnly = true,

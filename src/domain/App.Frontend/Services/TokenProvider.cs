@@ -11,7 +11,7 @@ namespace App.Frontend.Services
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-            public TokenProvider(IHttpContextAccessor httpContextAccessor)
+        public TokenProvider(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
         }

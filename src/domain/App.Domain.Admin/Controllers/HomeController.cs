@@ -7,7 +7,6 @@ using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 namespace App.Domain.Admin.Controllers
 {
-    [Authorize]
     [AllowAnonymous]
     public class HomeController : Controller
     {
@@ -19,26 +18,35 @@ namespace App.Domain.Admin.Controllers
             _cartService = cartService;
             _productService = productService;
         }
+
+        [HttpGet]
         public async Task<IActionResult> Index(
-                                                [FromQuery] int pageSize = 6,
-                                                [FromQuery] int currentPage = 1,
-                                                [FromQuery] string? search = ""
-                                            )
+                                               [FromQuery] int pageSize = 6,
+                                               [FromQuery] int currentPage = 1,
+                                               [FromQuery] string? search = ""
+                                           )
         {
-            Response? response = await _productService.Get(pageSize, currentPage, search);
-            Pagination pagination = new();
-            if (response.IsSuccess && response != null && response.Result != null)
+            if (User.Identity.IsAuthenticated)
             {
-                pagination = JsonConvert.DeserializeObject<Pagination>(Convert.ToString(response.Result));
+                Response? response = await _productService.Get(pageSize, currentPage, search);
+                Pagination pagination = new();
+                if (response.IsSuccess && response != null && response.Result != null)
+                {
+                    pagination = JsonConvert.DeserializeObject<Pagination>(Convert.ToString(response.Result));
+                }
+                else
+                {
+                    TempData["error"] = response?.Message;
+                }
+                return View(pagination);
             }
             else
             {
-                TempData["error"] = response?.Message;
+                return RedirectToAction("Login", "Authentication");
             }
-            return View(pagination);
         }
 
-
+        [HttpGet]
         public async Task<IActionResult> Details(string id)
         {
             Response? response = await _productService.Get(id);

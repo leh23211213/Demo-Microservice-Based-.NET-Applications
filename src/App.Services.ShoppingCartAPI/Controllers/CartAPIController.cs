@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace App.Services.ShoppingCartAPI.Controllers
 {
-    // [Authorize]
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/cart")]
@@ -27,7 +26,6 @@ namespace App.Services.ShoppingCartAPI.Controllers
             _response = new Response();
             _productService = productService;
         }
-
 
         [HttpGet("Checkout/{userId}")]
         public async Task<ActionResult<Response>> Checkout(string userId)
@@ -143,10 +141,8 @@ namespace App.Services.ShoppingCartAPI.Controllers
             try
             {
                 CartDetails cartDetails = await _dbContext.CartDetails.FirstOrDefaultAsync(u => u.Id == cartDetailsId);
-
                 _dbContext.CartDetails.Remove(cartDetails);
                 await _dbContext.SaveChangesAsync();
-
                 _response.Message = "Remove product successfully";
             }
             catch (Exception ex)

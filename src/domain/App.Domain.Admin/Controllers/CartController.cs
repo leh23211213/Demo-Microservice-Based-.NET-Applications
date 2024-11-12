@@ -7,7 +7,6 @@ using App.Domain.Admin.Services.IServices;
 
 namespace App.Domain.Admin.Controllers
 {
-    [Authorize]
     [AllowAnonymous]
     public class CartController : Controller
     {
@@ -20,14 +19,30 @@ namespace App.Domain.Admin.Controllers
             _orderService = orderService;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
-            return View(await LoadCart());
+            if (User.Identity.IsAuthenticated)
+            {
+                return View(await LoadCart());
+            }
+            else
+            {
+                return RedirectToAction("Login", "Authentication");
+            }
         }
 
+        [HttpGet]
         public async Task<IActionResult> Checkout()
         {
-            return View(await LoadCart());
+            if (User.Identity.IsAuthenticated)
+            {
+                return View(await LoadCart());
+            }
+            else
+            {
+                return RedirectToAction("Login", "Authentication");
+            }
         }
 
         [HttpPost]
@@ -61,6 +76,7 @@ namespace App.Domain.Admin.Controllers
             return View(cart);
         }
 
+        [HttpGet]
         public async Task<IActionResult> Confirmation(string orderId)
         {
             Response response = await _orderService.ValidateStripeSession(orderId);
@@ -71,6 +87,7 @@ namespace App.Domain.Admin.Controllers
             return View(orderId);
         }
 
+        [HttpPost]
         public async Task<IActionResult> Delete(string cartDetailsId)
         {
             Response? response = await _cartService.DeleteAsync(cartDetailsId);

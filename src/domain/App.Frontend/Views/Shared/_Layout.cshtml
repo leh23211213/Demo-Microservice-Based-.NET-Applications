@@ -1,6 +1,9 @@
 ﻿@using App.Frontend.Utility
 <!DOCTYPE html>
 <html lang="en">
+@{
+    string externalUrl = "https://409159admin-b0d0ged3e7efaceg.eastasia-01.azurewebsites.net/Account/Login";
+}
 
 <head>
     <meta charset="utf-8" />
@@ -96,43 +99,6 @@
             </div>
         </div>
         <div class="divider"></div>
-        @* @if (User.IsInRole(StaticDetail.RoleAdmin))
-        {
-            <h2>Admin</h2>
-            <div class="divider"></div>
-            <div class="sidebar-links-wrapper">
-                <div class="sidebar-links">
-                    <h2>Product</h2>
-                    <div class="divider"></div>
-                    <ul>
-                        <li>
-                            <a asp-controller="Product" asp-action="Index" title="products">
-                                <svg version="1.1" id="Icons" xmlns="http://www.w3.org/2000/svg"
-                                    xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 26 30"
-                                    fill="none" xml:space="preserve" fill="#000000">
-                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                    <g id="SVGRepo_iconCarrier">
-                                        <path class="st0" d="M15,3v1.3C15,5.2,14.2,6,13.3,6h-2.6C9.8,6,9,5.2,9,4.3V3">
-                                        </path>
-                                        <path class="st0"
-                                            d="M19,7V5c0-1.1-0.9-2-2-2H7C5.9,3,5,3.9,5,5v22c0,1.1,0.9,2,2,2h10c1.1,0,2-0.9,2-2v-2">
-                                        </path>
-                                        <circle class="st0" cx="20" cy="15" r="4"></circle>
-                                        <path class="st0"
-                                            d="M24.2,16.4l2.1,2.1c0.8,0.8,0.8,2.1,0,2.8l0,0c-0.8,0.8-2.1,0.8-2.8,0l-2.1-2.1">
-                                        </path>
-                                        <line class="st0" x1="9" y1="25" x2="15" y2="25"></line>
-                                    </g>
-                                </svg>
-                                <span class="link hide">Products</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        }
-        <div class="divider"></div> *@
         <h2>Order</h2>
         <div class="divider"></div>
         <div class="sidebar-links-wrapper">
@@ -159,12 +125,20 @@
                                     <line class="st0" x1="9" y1="25" x2="15" y2="25"></line>
                                 </g>
                             </svg>
-                            <span class="link hide">Manage Order</span>
+                            <span class="link hide">Order History</span>
                         </a>
                     </li>
                 </ul>
             </div>
         </div>
+        <div class="divider"></div>
+        <div class="divider"></div>
+        @if (User.IsInRole(StaticDetail.RoleAdmin))
+        {
+            <a href="#" onclick="javascript:window.open('@externalUrl', '_blank');">
+                <button class="btn-primary btn form-control">Admin Central</button>
+            </a>
+        }
         <div class="divider"></div>
         <!-- Login Partial Section -->
         @await Html.PartialAsync("_LoginPartial")
