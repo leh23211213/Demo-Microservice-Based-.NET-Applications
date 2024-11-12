@@ -1,15 +1,14 @@
-using Newtonsoft.Json;
 using System.Diagnostics;
-using System.Security.Claims;
 using App.Domain.Admin.Models;
-using App.Domain.Admin.Utility;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Authorization;
 using App.Domain.Admin.Services.IServices;
-using Microsoft.AspNetCore.Authentication;
+using System.IdentityModel.Tokens.Jwt;
 using App.Domain.Admin.Areas.Account.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Newtonsoft.Json;
 
 namespace App.Domain.Admin.Areas.Account.Controllers
 {
@@ -19,25 +18,27 @@ namespace App.Domain.Admin.Areas.Account.Controllers
     {
         private readonly IAuthService _authService;
         private readonly ITokenProvider _tokenProvider;
-        private readonly IConfiguration _configuration;
-        private readonly string ProtectedAdminUrl;
-        private readonly string ProtectedCustomerUrl;
         public LoginController(
                                 IAuthService authService,
-                                ITokenProvider tokenProvider,
-                                 IConfiguration configuration
+                                ITokenProvider tokenProvider
                             )
         {
             _authService = authService;
             _tokenProvider = tokenProvider;
-            _configuration = configuration;
+        }
 
-            ProtectedAdminUrl = _configuration.GetValue<string>("ServiceUrls:ProtectedAdminUrl");
-            ProtectedCustomerUrl = _configuration.GetValue<string>("ServiceUrls:ProtectedCustomerUrl");
+        // 20 minutes = 1200;
+        [ResponseCache(Duration = 1200, Location = ResponseCacheLocation.None, NoStore = true)]
+        public async Task<ActionResult> Error(AccountErrorModel errorModel)
+        {
+            return View(new AccountErrorModel
+            {
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+                Message = errorModel.Message.ToString()
+            });
         }
 
         [HttpGet]
-        [Authorize]
         public async Task<ActionResult> Login()
         {
             var accessToken = await HttpContext.GetTokenAsync("access_token");
@@ -45,7 +46,6 @@ namespace App.Domain.Admin.Areas.Account.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginRequest model)
         {
             _tokenProvider.ClearToken();
@@ -78,7 +78,6 @@ namespace App.Domain.Admin.Areas.Account.Controllers
                 return View(model);
             }
         }
-
 
         [HttpPost]
         public async Task<IActionResult> Logout()

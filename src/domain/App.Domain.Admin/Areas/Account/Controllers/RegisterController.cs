@@ -1,10 +1,10 @@
-using App.Domain.Admin.Models;
-using App.Domain.Admin.Utility;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using App.Domain.Admin.Services.IServices;
 using App.Domain.Admin.Areas.Account.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using App.Domain.Admin.Utility;
+using App.Domain.Admin.Models;
 
 namespace App.Domain.Admin.Areas.Account.Controllers
 {
@@ -36,6 +36,7 @@ namespace App.Domain.Admin.Areas.Account.Controllers
         public async Task<IActionResult> Register(RegistrationRequest model)
         {
             Response response = await _authService.RegisterAsync(model);
+            Response assignRole;
 
             if (response.IsSuccess && response != null)
             {

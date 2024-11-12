@@ -8,6 +8,7 @@ using App.Frontend.Utility;
 
 namespace App.Frontend.Controllers
 {
+    [Authorize]
     [AllowAnonymous]
     public class OrderController : Controller
     {
@@ -18,7 +19,6 @@ namespace App.Frontend.Controllers
             _orderService = orderService;
         }
 
-        [HttpGet]
         public IActionResult Index()
         {
             if (User.Identity.IsAuthenticated)
@@ -31,13 +31,10 @@ namespace App.Frontend.Controllers
             }
         }
 
-        [HttpGet]
         public async Task<IActionResult> Details(string orderId)
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                OrderHeader orderHeader = new OrderHeader();
-                var userId = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
+            OrderHeader orderHeader = new OrderHeader();
+            var userId = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
 
                 Response response = await _orderService.Get(orderId);
                 if (response.IsSuccess && response != null)

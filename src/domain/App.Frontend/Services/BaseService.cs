@@ -46,7 +46,7 @@ namespace App.Frontend.Services
 
                 HttpResponseMessage httpResponseMessage = null;
                 httpResponseMessage = await SendWithRefreshTokenAsync(client, messageFactory, withBearer);
-                Response FinalApiResponse = new() { IsSuccess = false };
+                Response FinalApiResponse = new(){ IsSuccess = false };
 
                 try
                 {

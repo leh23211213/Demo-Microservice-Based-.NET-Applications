@@ -1,9 +1,8 @@
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
-using App.APIGateway.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.AddAppAuthetication();
+builder.Services.AddAuthentication();
 if (builder.Environment.EnvironmentName.ToString().ToLower().Equals("production"))
 {
     builder.Configuration.AddJsonFile("ocelot.Production.json", optional: false, reloadOnChange: true);
