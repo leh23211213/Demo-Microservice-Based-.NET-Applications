@@ -10,7 +10,6 @@ public static class StaticDetail
     public static string? ShoppingCartAPIBase { get; set; }
     public static string? OrderAPIBase { get; set; }
     // Tokens
-
     public static string AccessToken = "ac_tk";
     public static string RefreshToken = "rf_tk";
     // Roles

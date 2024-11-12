@@ -3,6 +3,7 @@ using App.Services.AuthAPI.Models;
 using App.Services.AuthAPI.Data;
 using System.Security.Cryptography.X509Certificates;
 using Duende.IdentityServer.Services;
+using App.Services.AuthAPI.Utility;
 namespace App.Services.AuthAPI.Extensions
 {
     public static class IdentityServer
@@ -13,6 +14,7 @@ namespace App.Services.AuthAPI.Extensions
             // var certificate = GetSigningCertificate(configuration);
             // use the dotnet identity 
             builder.Services.AddRazorPages();
+
             builder.Services.AddScoped<IProfileService, ProfileService>();
 
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>()

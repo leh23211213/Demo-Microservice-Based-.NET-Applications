@@ -2,14 +2,13 @@ using Duende.IdentityServer;
 using Duende.IdentityServer.Models;
 using IdentityModel;
 
-namespace App.Services.AuthAPI;
+namespace App.Services.AuthAPI.Utility;
 public static class StaticDetail
 {
     public static string AccessToken = "ac_tk";
     public static string RefreshToken = "rf_tk";
     public static string Admin = "ADMIN";
     public static string Customer = "CUSTOMER";
-
     /// <summary>
     /// [standard scopes] https://docs.duendesoftware.com/identityserver/v7/fundamentals/resources/identity/
     /// </summary>
@@ -22,34 +21,34 @@ public static class StaticDetail
     };
 
     /// <summary>
-    /// [ApiScope] fadocs.duendesoftware.com/identityserver/v7/fundamentals/resources/api_scopes/
+    /// [ApiScope] adocs.duendesoftware.com/identityserver/v7/fundamentals/resources/api_scopes/
     /// </summary>
     public static IEnumerable<ApiScope> ApiScopes =>
     new List<ApiScope>
     {
-        new ApiScope("levanhiep409159", "levanhiep409159 Server"),
-        new ApiScope(name: "productapi", displayName: "Product Server"),
-        new ApiScope(name: "cartapi", displayName: "Cart Server"),
-        new ApiScope(name: "orderapi", displayName: "Order Server"),
+        new ApiScope("user_scope", "user server"),
+        new ApiScope("admin_scope", "admin Server"),
     };
 
+    private static string secret = "identityserverfundamentalsclients";
+    // TODO : production ?
+    private static string RedirectUris = "/signin-oidc";
+    private static string PostLogoutRedirectUris = "/signout-oidc";
     /// <summary>
     /// https://docs.duendesoftware.com/identityserver/v7/fundamentals/clients/
     /// </summary>
-    private static string secret = "identityserverfundamentalsclients";
-    // TODO : production ?
-    private static string RedirectUris = "https://localhost:7000/signin-oidc";
-    private static string PostLogoutRedirectUris = "https://localhost:7000/signout-callback-oidc";
     public static IEnumerable<Client> Clients =>
     new List<Client>
     {
         new Client
         {
-            ClientId = "levanhiep409159",
+            ClientId = "admin_scope",
+            ClientName = "admin client",
             ClientSecrets = { new Secret(secret.Sha256()) },
             AllowedGrantTypes = GrantTypes.Code,
+            RequirePkce = true,
             AllowedScopes = {
-                "levanhiep409159",
+               "user_scope", "admin_scope",
                 IdentityServerConstants.StandardScopes.OpenId,
                 IdentityServerConstants.StandardScopes.Profile,
                 IdentityServerConstants.StandardScopes.Email,
@@ -58,48 +57,22 @@ public static class StaticDetail
             RedirectUris={ RedirectUris },
             PostLogoutRedirectUris = { PostLogoutRedirectUris },
         },
-        // new Client
-        // {
-        //     ClientId = "productapi",
-        //     ClientSecrets = { new Secret(secret.Sha256()) },
-        //     AllowedGrantTypes = GrantTypes.Code,
-        //     AllowedScopes = {
-        //         "productapi",
-        //         IdentityServerConstants.StandardScopes.OpenId,
-        //         IdentityServerConstants.StandardScopes.Profile,
-        //         IdentityServerConstants.StandardScopes.Email,
-        //         JwtClaimTypes.Role
-        //     },
-        //      RedirectUris={ RedirectUris },
-        //     PostLogoutRedirectUris={PostLogoutRedirectUris},
-        // },
-        // new Client
-        // {
-        //     ClientId = "cartapi",
-        //     ClientSecrets = { new Secret(secret.Sha256()) },
-        //     AllowedGrantTypes = GrantTypes.Code,
-        //     AllowedScopes = { "cartapi",
-        //         IdentityServerConstants.StandardScopes.OpenId,
-        //         IdentityServerConstants.StandardScopes.Profile,
-        //         IdentityServerConstants.StandardScopes.Email,
-        //         JwtClaimTypes.Role
-        //     },
-        //     RedirectUris={ RedirectUris },
-        //     PostLogoutRedirectUris={PostLogoutRedirectUris},
-        // },
-        // new Client
-        // {
-        //     ClientId = "orderapi",
-        //     ClientSecrets = { new Secret(secret.Sha256()) },
-        //     AllowedGrantTypes = GrantTypes.Code,
-        //     AllowedScopes = { "orderapi",
-        //         IdentityServerConstants.StandardScopes.OpenId,
-        //         IdentityServerConstants.StandardScopes.Profile,
-        //         IdentityServerConstants.StandardScopes.Email,
-        //         JwtClaimTypes.Role
-        //     },
-        //     RedirectUris={ RedirectUris },
-        //     PostLogoutRedirectUris={PostLogoutRedirectUris},
-        // },
+        new Client
+        {
+            ClientId = "user_scope",
+            ClientName = "user client",
+            ClientSecrets = { new Secret(secret.Sha256()) },
+            AllowedGrantTypes = GrantTypes.Code,
+            RequirePkce = true,
+            AllowedScopes = {
+                "user_scope", "admin_scope",
+                IdentityServerConstants.StandardScopes.OpenId,
+                IdentityServerConstants.StandardScopes.Profile,
+                IdentityServerConstants.StandardScopes.Email,
+                JwtClaimTypes.Role
+            },
+            RedirectUris={ RedirectUris },
+            PostLogoutRedirectUris = { PostLogoutRedirectUris },
+        },
     };
 }

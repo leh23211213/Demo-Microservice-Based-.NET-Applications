@@ -7,9 +7,11 @@ namespace App.Services.AuthAPI.Pages.Login;
 
 public class InputModel
 {
-    [Required]
+    [Required(ErrorMessage = "Email is required.")]
+    [EmailAddress(ErrorMessage = "Invalid email format.")]
     public string? Username { get; set; }
-    [Required]
+    [Required(ErrorMessage = "Password is required.")]
+    [StringLength(100, ErrorMessage = "The password must be at least {2} characters long.", MinimumLength = 6)]
     public string? Password { get; set; }
     public bool RememberLogin { get; set; }
     public string? ReturnUrl { get; set; }

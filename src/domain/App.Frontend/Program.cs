@@ -3,8 +3,8 @@ using App.Frontend.Services;
 using App.Frontend.Extensions;
 using App.Frontend.Services.IServices;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using IdentityModel;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -35,75 +35,99 @@ Cookie Authentication: Used to manage user authentication.
 It stores the user's authentication ticket (e.g., login status) in a cookie.
  This allows the server to know if a user is authenticated on subsequent requests.
 */
-builder.Logging.AddConsole();
 
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = "oidc";
+    options.DefaultScheme = "Cookies";
+    options.DefaultChallengeScheme = "OpenIdConnect";
 })
 .AddJwtBearer()
 .AddCookie(options =>
 {
     options.Cookie.HttpOnly = true;
     options.ExpireTimeSpan = TimeSpan.FromDays(7);
-    options.LoginPath = "/Account/Login";
-    options.AccessDeniedPath = "/Account/AccessDenied";
+    options.LoginPath = "/Authentication/Login";
+    options.AccessDeniedPath = "/Authentication/AccessDenied";
 })
-.AddOpenIdConnect("oidc", options =>
+.AddOpenIdConnect("OpenIdConnect", options =>
 {
     options.Authority = builder.Configuration["ServiceUrls:AuthAPI"];
     //Claims wil have every detail information
     options.GetClaimsFromUserInfoEndpoint = true;
     //
-    options.ClientId = "levanhiep409159";
+    options.ClientId = "user_scope";
     options.ClientSecret = StaticDetail.secret;
     options.ResponseType = "code";
-    //
+    options.SignInScheme = "Cookies";
+    //  
     options.TokenValidationParameters.NameClaimType = "name";
     options.TokenValidationParameters.RoleClaimType = "role";
     //
-    options.Scope.Add("levanhiep409159");
+    options.Scope.Add("user_scope");
     options.SaveTokens = true;
-
+    options.RequireHttpsMetadata = false;
     options.ClaimActions.MapJsonKey("role", "role");
     options.Events = new OpenIdConnectEvents
     {
         OnRemoteFailure = context =>
         {
             context.Response.Redirect("/");
-            context.HandleResponse();
+            context.HandleResponse(); // Chặn xử lý mặc định và thực hiện điều hướng tùy chỉnh
             return Task.FromResult(0);
+        },
+        OnTokenValidated = context =>
+        {
+            // Redirect to a specific action after successful login
+            context.Response.Redirect("/user/login");
+            context.HandleResponse();
+            return Task.CompletedTask;
         }
+
     };
+    options.CallbackPath = new PathString("/Account/Authentication/signin-oidc");
+    options.RemoteSignOutPath = new PathString("/Account/Authentication/signout-oidc");
+    options.SignedOutCallbackPath = new PathString("/Account/Authentication/signout-callback-oidc");
 });
+
+
 /*
 Session: Used to store user-specific data on the server (such as shopping cart information, preferences, etc.).
  The session can be used to store non-authentication-related information temporarily and is tied to the user’s session ID.
  This handles storing session-specific data (like cart items or temporary form data) and sets an idle
 */
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.Name = "ids"; // Cùng tên cookie cho cả hai
+    options.Cookie.SameSite = SameSiteMode.Lax;
+});
+
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseStaticFiles();
-
 app.UseHttpsRedirection();
+
 app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
+// app.UseEndpoints(endpoints =>
+// {
+//     endpoints.MapControllerRoute(
+//         name: "areas",
+//         pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+//     );
 
+// });
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=CoverPage}/{id?}");
+    pattern: "{controller=Home}/{action=coverPage}/{id?}");
 
 app.Run();
