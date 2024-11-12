@@ -8,6 +8,7 @@ using App.Domain.Admin.Utility;
 
 namespace App.Domain.Admin.Controllers
 {
+    [Authorize]
     [AllowAnonymous]
     public class OrderController : Controller
     {
@@ -18,7 +19,6 @@ namespace App.Domain.Admin.Controllers
             _orderService = orderService;
         }
 
-        [HttpGet]
         public IActionResult Index()
         {
             if (User.Identity.IsAuthenticated)
@@ -31,7 +31,6 @@ namespace App.Domain.Admin.Controllers
             }
         }
 
-        [HttpGet]
         public async Task<IActionResult> Details(string orderId)
         {
             OrderHeader orderHeader = new OrderHeader();

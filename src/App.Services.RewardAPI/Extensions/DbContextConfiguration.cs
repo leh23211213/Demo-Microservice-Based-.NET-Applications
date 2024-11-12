@@ -8,7 +8,7 @@ namespace App.Services.RewardAPI.Extensions
         public static IServiceCollection ConfigureDatabase(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("DefaultSQLConnection")));
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
             return services;
         }
