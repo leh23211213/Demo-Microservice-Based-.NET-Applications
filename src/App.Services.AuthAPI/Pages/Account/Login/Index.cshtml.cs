@@ -30,12 +30,9 @@ public class Index : PageModel
     private readonly IEventService _events;
     private readonly IAuthenticationSchemeProvider _schemeProvider;
     private readonly IIdentityProviderStore _identityProviderStore;
-
     public ViewModel View { get; set; } = default!;
-
     [BindProperty]
     public InputModel Input { get; set; } = default!;
-
     public Index(
                 UserManager<ApplicationUser> userManager,
                 SignInManager<ApplicationUser> signInManager,
@@ -69,12 +66,21 @@ public class Index : PageModel
             // we only have one option for logging in and it's an external provider
             return RedirectToPage("/ExternalLogin/Challenge", new { scheme = View.ExternalLoginScheme, returnUrl });
         }
+        Input = new InputModel
+        {
+            GeneratedCode = new Random().Next(1000, 9999).ToString()
+        };
 
         return Page();
     }
 
     public async Task<IActionResult> OnPost()
     {
+        if (Input.GeneratedCode != Input.EnteredCode)
+        {
+            ModelState.AddModelError("EnteredCode", "The code you entered is incorrect.");
+            return Page();
+        }
         // check if we are in the context of an authorization request
         var context = await _interaction.GetAuthorizationContextAsync(Input.ReturnUrl);
 

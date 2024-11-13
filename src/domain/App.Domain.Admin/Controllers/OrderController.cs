@@ -8,7 +8,6 @@ using App.Domain.Admin.Utility;
 
 namespace App.Domain.Admin.Controllers
 {
-    [AllowAnonymous]
     public class OrderController : Controller
     {
         private readonly IOrderService _orderService;

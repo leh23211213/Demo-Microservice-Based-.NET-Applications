@@ -4,19 +4,22 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.AddAppValidate();
+builder.AddIdentityServer7(builder.Configuration);
 builder.Services.AppServiceCollection(builder.Configuration);
 builder.Services.ConfigureDatabase(builder.Configuration);
 builder.Services.ApiVersionConfiguration();
-builder.AddIdentityServer7(builder.Configuration);
 builder.Services.AddDistributedMemoryCache();
 
 var app = builder.Build();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
 app.UseIdentityServer();
+
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
 app.MapRazorPages();
 

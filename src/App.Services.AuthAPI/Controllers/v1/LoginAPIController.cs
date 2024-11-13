@@ -4,12 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using App.Services.AuthAPI.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Authorization;
 using App.Services.AuthAPI.Services.IServices;
 
 namespace App.Services.AuthAPI.Controllers
 {
-    [AllowAnonymous]
     [ApiController]
     [ApiVersionNeutral]
     [Route("api/v{version:apiVersion}/auth")]

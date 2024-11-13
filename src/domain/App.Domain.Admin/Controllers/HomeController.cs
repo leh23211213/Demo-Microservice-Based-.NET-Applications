@@ -7,7 +7,6 @@ using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 namespace App.Domain.Admin.Controllers
 {
-    [AllowAnonymous]
     public class HomeController : Controller
     {
         private readonly ICartService _cartService;

@@ -7,7 +7,6 @@ using Newtonsoft.Json;
 
 namespace App.Frontend.Controllers
 {
-    [AllowAnonymous]
     public class CartController : Controller
     {
         private readonly IOrderService _orderService;

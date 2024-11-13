@@ -45,61 +45,52 @@ builder.Services.AddAuthentication(options =>
 .AddCookie(options =>
 {
     options.Cookie.HttpOnly = true;
-    options.ExpireTimeSpan = TimeSpan.FromDays(7);
+    options.ExpireTimeSpan = TimeSpan.FromSeconds(20);
     options.LoginPath = "/Authentication/Login";
     options.AccessDeniedPath = "/Authentication/AccessDenied";
 })
 .AddOpenIdConnect("OpenIdConnect", options =>
 {
-    options.Authority = builder.Configuration["ServiceUrls:AuthAPI"];
     //Claims wil have every detail information
+    //options.SignInScheme = "Cookies";
+    options.Authority = builder.Configuration["ServiceUrls:AuthAPI"];
     options.GetClaimsFromUserInfoEndpoint = true;
     //
     options.ClientId = "user_scope";
     options.ClientSecret = StaticDetail.secret;
     options.ResponseType = "code";
-    options.SignInScheme = "Cookies";
     //  
     options.TokenValidationParameters.NameClaimType = "name";
     options.TokenValidationParameters.RoleClaimType = "role";
     //
     options.Scope.Add("user_scope");
+    //
     options.SaveTokens = true;
     options.RequireHttpsMetadata = false;
     options.ClaimActions.MapJsonKey("role", "role");
+    //
     options.Events = new OpenIdConnectEvents
     {
         OnRemoteFailure = context =>
-        {
-            context.Response.Redirect("/");
-            context.HandleResponse(); // Chặn xử lý mặc định và thực hiện điều hướng tùy chỉnh
-            return Task.FromResult(0);
-        },
-        OnTokenValidated = context =>
-        {
-            // Redirect to a specific action after successful login
-            context.Response.Redirect("/user/login");
-            context.HandleResponse();
-            return Task.CompletedTask;
-        }
-
+            {
+                context.Response.Redirect("/");
+                context.HandleResponse(); // Chặn xử lý mặc định và thực hiện điều hướng tùy chỉnh
+                return Task.CompletedTask;
+            },
     };
     options.CallbackPath = new PathString("/Account/Authentication/signin-oidc");
-    options.RemoteSignOutPath = new PathString("/Account/Authentication/signout-oidc");
     options.SignedOutCallbackPath = new PathString("/Account/Authentication/signout-callback-oidc");
 });
-
-
 /*
 Session: Used to store user-specific data on the server (such as shopping cart information, preferences, etc.).
  The session can be used to store non-authentication-related information temporarily and is tied to the user’s session ID.
  This handles storing session-specific data (like cart items or temporary form data) and sets an idle
 */
-builder.Services.ConfigureApplicationCookie(options =>
-{
-    options.Cookie.Name = "ids"; // Cùng tên cookie cho cả hai
-    options.Cookie.SameSite = SameSiteMode.Lax;
-});
+// builder.Services.ConfigureApplicationCookie(options =>
+// {
+//     options.Cookie.Name = "ids"; // Cùng tên cookie cho cả hai
+//     options.Cookie.SameSite = SameSiteMode.Lax;
+// });
 
 
 var app = builder.Build();

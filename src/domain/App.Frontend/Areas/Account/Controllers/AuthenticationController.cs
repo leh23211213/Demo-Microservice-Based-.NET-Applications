@@ -12,8 +12,6 @@ using App.Frontend.Areas.Account.Models;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 namespace App.Frontend.Areas.Account.Controllers
 {
-    [Area("Account")]
-    [Route("user")]
     public class AuthenticationController : Controller
     {
         private readonly IAuthService _authService;
@@ -33,11 +31,9 @@ namespace App.Frontend.Areas.Account.Controllers
         }
 
         [HttpGet]
-        [Route("login")]
-        //[Authorize]
+        [Authorize]
         public async Task<ActionResult> Login()
         {
-            return View(new LoginRequest());
             var accessToken = await HttpContext.GetTokenAsync("access_token");
             return RedirectToAction(nameof(Index), "Home");
             // var authenticateResult = await HttpContext.AuthenticateAsync();
@@ -76,7 +72,6 @@ namespace App.Frontend.Areas.Account.Controllers
         }
 
         [HttpPost]
-        [Route("logout")]
         public async Task<IActionResult> Logout()
         {
             try

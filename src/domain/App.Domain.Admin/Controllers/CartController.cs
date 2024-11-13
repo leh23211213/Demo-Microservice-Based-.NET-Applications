@@ -7,7 +7,6 @@ using App.Domain.Admin.Services.IServices;
 
 namespace App.Domain.Admin.Controllers
 {
-    [AllowAnonymous]
     public class CartController : Controller
     {
         private readonly IOrderService _orderService;

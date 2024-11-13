@@ -15,7 +15,7 @@ namespace App.Services.AuthAPI.Pages.Account.Register
         private readonly RoleManager<IdentityRole> _roleManager;
 
         public IndexModel(
-            UserManager<ApplicationUser> userManager,
+                UserManager<ApplicationUser> userManager,
                 SignInManager<ApplicationUser> signInManager,
                 RoleManager<IdentityRole> roleInManager
               )
@@ -25,11 +25,8 @@ namespace App.Services.AuthAPI.Pages.Account.Register
             _signInManager = signInManager;
         }
 
-
         [BindProperty]
         public RegisterViewModel Input { get; set; }
-
-
         public async Task<IActionResult> OnGet(string returnUrl)
         {
             List<string> roles = new()
@@ -38,9 +35,10 @@ namespace App.Services.AuthAPI.Pages.Account.Register
                 StaticDetail.Customer
             };
             ViewData["roles_message"] = roles;
+            
             Input = new RegisterViewModel
             {
-                ReturnUrl = returnUrl
+                ReturnUrl = returnUrl,
             };
             return Page();
         }
@@ -58,7 +56,6 @@ namespace App.Services.AuthAPI.Pages.Account.Register
                 };
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
-
                 if (result.Succeeded)
                 {
                     if (!_roleManager.RoleExistsAsync(Input.RoleName).GetAwaiter().GetResult())
@@ -72,7 +69,6 @@ namespace App.Services.AuthAPI.Pages.Account.Register
                         await _roleManager.CreateAsync(userRole);
                     }
                     await _userManager.AddToRoleAsync(user, Input.RoleName);
-
 
                     await _userManager.AddClaimsAsync(user, new Claim[] {
                         new Claim(JwtClaimTypes.Name,Input.Email),
@@ -97,11 +93,8 @@ namespace App.Services.AuthAPI.Pages.Account.Register
                         {
                             throw new Exception("invalid return URL");
                         }
-
                     }
-
                 }
-
             }
             return Page();
         }

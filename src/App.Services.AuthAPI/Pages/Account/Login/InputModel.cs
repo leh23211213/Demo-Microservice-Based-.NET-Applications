@@ -2,6 +2,7 @@
 // See LICENSE in the project root for license information.
 
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 
 namespace App.Services.AuthAPI.Pages.Login;
 
@@ -16,4 +17,12 @@ public class InputModel
     public bool RememberLogin { get; set; }
     public string? ReturnUrl { get; set; }
     public string? Button { get; set; }
+
+    [Required(ErrorMessage = "Security code is required.")]
+    [StringLength(4, ErrorMessage = "The code must be exactly 4 digits.", MinimumLength = 4)]
+    public string? EnteredCode { get; set; }
+
+    // The code that will be generated and compared during validation.
+    [HiddenInput]
+    public string? GeneratedCode { get; set; }
 }
