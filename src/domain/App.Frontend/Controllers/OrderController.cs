@@ -1,10 +1,9 @@
-using Microsoft.AspNetCore.Mvc;
-using App.Frontend.Services.IServices;
-using Microsoft.AspNetCore.Authorization;
-using App.Frontend.Models;
 using Newtonsoft.Json;
-using System.IdentityModel.Tokens.Jwt;
+using App.Frontend.Models;
+using App.Frontend.Services;
 using App.Frontend.Utility;
+using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace App.Frontend.Controllers
 {
@@ -26,7 +25,7 @@ namespace App.Frontend.Controllers
             }
             else
             {
-                return RedirectToAction("Login", "Authentication");
+                return RedirectToAction("Login", "Authentication", new { area = "Account" });
             }
         }
 
@@ -51,7 +50,7 @@ namespace App.Frontend.Controllers
             }
             else
             {
-                return RedirectToAction("Login", "Authentication");
+                return RedirectToAction("Login", "Authentication", new { area = "Account" });
             }
         }
 
@@ -107,7 +106,7 @@ namespace App.Frontend.Controllers
             }
             else
             {
-                return RedirectToAction("Login", "Authentication");
+                return RedirectToAction("Login", "Authentication", new { area = "Account" });
             }
         }
     }

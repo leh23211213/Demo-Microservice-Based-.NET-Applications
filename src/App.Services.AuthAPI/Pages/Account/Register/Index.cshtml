@@ -1,95 +1,95 @@
 ﻿@page
 @model App.Services.AuthAPI.Pages.Account.Register.IndexModel
-
 @{
     ViewData["Title"] = "Register";
     var role_list = (List<string>?)ViewData["roles_message"];
 }
 
-<partial name="_ValidationSummary" />
-
-<div class="account-pages my-5 pt-sm-5">
-    <div class="justify-content-center row">
-        <div class="col-md-8 col-lg-6 col-xl-5">
-            <div class="overflow-hidden card">
-                <div class="bg-primary-subtle">
-                    <div class="row">
-                        <div class="col col-7">
-                            <div class="text-primary p-4">
-                                <h4>Welcome &#128079;</h4>
-                                <p>
-                                    Create a new account.
-                                </p>
+<div class="login-page">
+    <div class="account-pages my-5 pt-sm-5">
+        <div class="justify-content-center row">
+            <div class="col-md-8 col-lg-6 col-xl-5">
+                <div class="overflow-hidden card">
+                    <div class="bg-primary-subtle">
+                        <div class="row">
+                            <div class="col col-7">
+                                <div class="text-primary p-4">
+                                    <h4>Welcome &#128079;</h4>
+                                    <p>
+                                        Create a new account.
+                                    </p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col col-5 align-self-end">
-                            <img src="~/lib/image/Login/profile-img.png" alt="" class="img-fluid">
+                            <div class="col col-5 align-self-end">
+                                <img src="~/lib/image/Login/profile-img.png" alt="" class="img-fluid">
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="pt-0 card-body">
-                    <div class="auth-logo">
-                        <div class="avatar-md profile-user-wid mb-4">
-                            <span class="avatar-title rounded-circle bg-light">
-                                <img src="~/lib/image/Login/Cshapr-icon-purple-logo.png" alt="CSharp Logo"
-                                    class="rounded-circle" height="55">
-                            </span>
+                    <div class="pt-0 card-body">
+                        <div class="auth-logo">
+                            <div class="avatar-md profile-user-wid mb-4">
+                                <span class="avatar-title rounded-circle bg-light">
+                                    <img src="~/lib/image/Login/Cshapr-icon-purple-logo.png" alt="CSharp Logo"
+                                        class="rounded-circle" height="55">
+                                </span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="p-2">
-                        <form method="post" id="register">
-                            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert" />
-                            <div class="form-floating mb-3">
-                                <label asp-for="Input.Email">Email</label>
-                                <input asp-for="Input.Email" class="form-control" autocomplete="Email"
-                                    aria-required="true" placeholder="Email@example.com" />
-                                <span asp-validation-for="Input.Email" class="text-danger"></span>
-                            </div>
 
-                            <div class="form-floating mb-3">
-                                <label asp-for="Input.Password">Password</label>
-                                <input asp-for="Input.Password" class="form-control" autocomplete="new-password"
-                                    aria-required="true" placeholder="Password" />
-                                <span asp-validation-for="Input.Password" class="text-danger"></span>
-                            </div>
+                        <div class="p-2">
+                            <form asp-page="Register">
+                                <input type="hidden" asp-for="Input.ReturnUrl" />
 
-                            <div class="form-floating mb-3">
-                                <label asp-for="Input.ConfirmPassword">Confirm Password</label>
-                                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password"
-                                    aria-required="true" placeholder="password" />
-                                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-                            </div>
+                                <div class="form-floating mb-3">
+                                    <label asp-for="Input.Email" class="form-label">Email</label>
+                                    <input asp-for="Input.Email" class="form-control" placeholder="email@example.com"
+                                        autofocus>
+                                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                                </div>
 
-                            <div class="form-floating mb-3">
-                                <label asp-for="Input.Name">Name</label>
-                                <input asp-for="Input.Name" class="form-control" autocomplete="new-password"
-                                    aria-required="true" placeholder="password" />
-                                <span asp-validation-for="Input.Name" class="text-danger"></span>
-                            </div>
+                                <div class="form-floating mb-3">
+                                    <label asp-for="Input.Password" class="form-label">Password</label>
+                                    <input asp-for="Input.Password" class="form-control" placeholder="Password" />
+                                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                                </div>
 
-                            <div class="form-floating mb-3">
-                                <label asp-for="Input.PhoneNumber">Phone Number</label>
-                                <input asp-for="Input.PhoneNumber" class="form-control" autocomplete="new-password"
-                                    aria-required="true" placeholder="password" />
-                                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
-                            </div>
+                                <div class="form-floating mb-3">
+                                    <label asp-for="Input.ConfirmPassword" class="form-label">Confirm Password</label>
+                                    <input asp-for="Input.ConfirmPassword" class="form-control"
+                                        placeholder="Confirm Password" autocomplete="off" />
+                                    <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                                </div>
 
-                            <div class="form-floating mb-3">
-                                <label asp-for="Input.RoleName">Role</label>
-                                <select asp-for="Input.RoleName" class="form-control"
-                                    asp-items="@(new SelectList(role_list))">
-                                    <option disabled selected>--Select Role--</option>
-                                </select>
-                            </div>
+                                <div class="form-floating mb-3">
+                                    <label asp-for="Input.Name" class="form-label">Name</label>
+                                    <input asp-for="Input.Name" class="form-control" placeholder="Name"
+                                        autocomplete="off" />
+                                    <span asp-validation-for="Input.Name" class="text-danger"></span>
+                                </div>
 
-                            <button id="registerSubmit" type="submit"
-                                class="w-100 btn btn-lg btn-primary">Register</button>
+                                <div class="form-floating mb-3">
+                                    <label asp-for="Input.PhoneNumber" class="form-label">Phone Number</label>
+                                    <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Phone Number"
+                                        autocomplete="off" />
+                                    <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+                                </div>
 
-                        </form>
-                        <div class="mt-4 text-center">
-                            <div class="socials-row">
-                                <p>
-                                    @* <section>
+                                <div class="form-floating mb-3">
+                                    <label asp-for="Input.RoleName" class="form-label">Role</label>
+                                    <select asp-for="Input.RoleName" class="form-control"
+                                        asp-items="@(new SelectList(role_list))">
+                                        <option disabled selected>--Select Role--</option>
+                                    </select>
+                                    <span asp-validation-for="Input.RoleName" class="text-danger"></span>
+                                </div>
+
+                                <button type="submit" class="w-100 btn btn-lg btn-primary" value="register"
+                                    name="Input.Button" value="register">Register</button>
+
+                            </form>
+                            <div class="mt-4 text-center">
+                                <div class="socials-row">
+                                    <p>
+                                        @* <section>
                                         @{
                                             if ((Model.ExternalLogins?.Count ?? 0) == 0)
                                             {
@@ -120,12 +120,14 @@
                                             }
                                         }
                                 </section> *@
-                                </p>
-                                <p>
-                                    <a asp-page="../Login/Index" asp-route-returnUrl="@Model.Input.ReturnUrl">Already
-                                        have
-                                        account</a>
-                                </p>
+                                    </p>
+                                    <p>
+                                        <a asp-page="../Login/Index"
+                                            asp-route-returnUrl="@Model.Input.ReturnUrl">Already
+                                            have
+                                            account</a>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>

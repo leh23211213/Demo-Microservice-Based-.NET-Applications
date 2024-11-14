@@ -1,6 +1,5 @@
 // Copyright (c) Duende Software. All rights reserved.
 // See LICENSE in the project root for license information.
-
 using App.Services.AuthAPI.Data;
 using App.Services.AuthAPI.Models;
 using Duende.IdentityServer;
@@ -68,6 +67,7 @@ public class Index : PageModel
         }
         Input = new InputModel
         {
+            ReturnUrl = returnUrl,
             GeneratedCode = new Random().Next(1000, 9999).ToString()
         };
 
@@ -117,12 +117,13 @@ public class Index : PageModel
         if (ModelState.IsValid)
         {
             var result = await _signInManager.PasswordSignInAsync
-                (Input.Username, Input.Password, Input.RememberLogin, lockoutOnFailure: false);
-            // validate username/password against in-memory store
+                (Input.Email, Input.Password, Input.RememberLogin, lockoutOnFailure: false);
+
+            // validate Email/password against in-memory store
             if (result.Succeeded)
             {
-                var user = _dbContext.Users.FirstOrDefault(u => u.UserName.ToLower() == Input.Username.ToLower());
-                await _events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.Id, user.UserName, clientId: context?.Client.ClientId));
+                var user = _dbContext.Users.FirstOrDefault(u => u.Email.ToLower() == Input.Email.ToLower());
+                await _events.RaiseAsync(new UserLoginSuccessEvent(user.Email, user.Id, user.Email, clientId: context?.Client.ClientId));
 
                 // only set explicit expiration here if user chooses "remember me". 
                 // otherwise we rely upon expiration configured in cookie middleware.
@@ -136,10 +137,10 @@ public class Index : PageModel
                     };
                 };
 
-                // issue authentication cookie with subject ID and username
+                // issue authentication cookie with subject ID and Email
                 var isuser = new IdentityServerUser(user.Id)
                 {
-                    DisplayName = user.UserName
+                    DisplayName = user.Email
                 };
 
                 //await HttpContext.SignInAsync(isuser, props);
@@ -164,7 +165,7 @@ public class Index : PageModel
                 }
                 else if (string.IsNullOrEmpty(Input.ReturnUrl))
                 {
-                    return Redirect("~/");
+                    return Redirect("~/Account/Authentication/Login");
                 }
                 else
                 {
@@ -173,7 +174,7 @@ public class Index : PageModel
                 }
             }
 
-            await _events.RaiseAsync(new UserLoginFailureEvent(Input.Username, "invalid credentials", clientId: context?.Client.ClientId));
+            await _events.RaiseAsync(new UserLoginFailureEvent(Input.Email, "invalid credentials", clientId: context?.Client.ClientId));
             ModelState.AddModelError(string.Empty, LoginOptions.InvalidCredentialsErrorMessage);
         }
 
@@ -200,7 +201,7 @@ public class Index : PageModel
                 EnableLocalLogin = local,
             };
 
-            Input.Username = context.LoginHint;
+            Input.Email = context.LoginHint;
 
             if (!local)
             {

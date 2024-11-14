@@ -1,17 +1,16 @@
-using App.Frontend.Models;
-using App.Frontend.Services.IServices;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using App.Frontend.Models;
+using App.Frontend.Services;
+using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
+
 namespace App.Frontend.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ICartService _cartService;
         private readonly IProductService _productService;
-
         public HomeController(ICartService cartService, IProductService productService)
         {
             _cartService = cartService;
@@ -41,7 +40,7 @@ namespace App.Frontend.Controllers
             }
             else
             {
-                return RedirectToAction("Login", "Authentication");
+                return RedirectToAction("Login", "Authentication", new { area = "Account" });
             }
         }
 
@@ -65,7 +64,7 @@ namespace App.Frontend.Controllers
             }
             else
             {
-                return RedirectToAction("Login", "Authentication");
+                return RedirectToAction("Login", "Authentication", new { area = "Account" });
             }
         }
 

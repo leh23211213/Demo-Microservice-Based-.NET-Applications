@@ -15,7 +15,7 @@ namespace App.Services.AuthAPI.Extensions
             // use the dotnet identity 
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
-                
+
             builder.Services.AddRazorPages();
 
             builder.Services.AddIdentityServer(options =>

@@ -2,8 +2,7 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using App.Services.AuthAPI.Models;
-using App.Services.AuthAPI.Services.IServices;
-
+using App.Services.AuthAPI.Services;
 namespace App.Services.AuthAPI.Controllers
 {
     [ApiController]
