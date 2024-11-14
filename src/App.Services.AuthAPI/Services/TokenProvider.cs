@@ -1,7 +1,13 @@
 using App.Services.AuthAPI.Models;
-using App.Services.AuthAPI.Services.IServices;
+using App.Services.AuthAPI.Utility;
 namespace App.Services.AuthAPI.Services
 {
+    public interface ITokenProvider
+    {
+        void SetToken(Token token);
+        Token? GetToken();
+        void ClearToken();
+    }
     /// <summary>
     ///  working with cookies
     /// </summary>

@@ -7,7 +7,6 @@ using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 namespace App.Domain.Admin.Controllers
 {
-    [AllowAnonymous]
     public class HomeController : Controller
     {
         private readonly ICartService _cartService;
@@ -42,7 +41,7 @@ namespace App.Domain.Admin.Controllers
             }
             else
             {
-                return RedirectToAction("Login", "Login", new { area = "Account" });
+                return RedirectToAction("Login", "Authentication", new { area = "Account" });
             }
         }
 

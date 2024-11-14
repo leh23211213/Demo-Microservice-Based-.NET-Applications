@@ -1,13 +1,11 @@
-using System.IdentityModel.Tokens.Jwt;
-using App.Frontend.Models;
-using App.Frontend.Services.IServices;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using App.Frontend.Models;
+using App.Frontend.Services;
+using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace App.Frontend.Controllers
 {
-    [AllowAnonymous]
     public class CartController : Controller
     {
         private readonly IOrderService _orderService;
@@ -28,7 +26,7 @@ namespace App.Frontend.Controllers
             }
             else
             {
-                return RedirectToAction("Login", "Login", new { area = "Account" });
+                return RedirectToAction("Login", "Authentication", new { area = "Account" });
             }
         }
 
@@ -41,7 +39,7 @@ namespace App.Frontend.Controllers
             }
             else
             {
-                return RedirectToAction("Login", "Login", new { area = "Account" });
+                return RedirectToAction("Login", "Authentication", new { area = "Account" });
             }
         }
 
@@ -90,7 +88,7 @@ namespace App.Frontend.Controllers
             }
             else
             {
-                return RedirectToAction("Login", "Login", new { area = "Account" });
+                return RedirectToAction("Login", "Authentication", new { area = "Account" });
             }
         }
 

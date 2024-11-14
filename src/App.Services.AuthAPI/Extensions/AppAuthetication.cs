@@ -31,11 +31,9 @@ namespace App.Services.AuthAPI.Extensions
                 options.SignIn.RequireConfirmedPhoneNumber = false;
             });
 
+            builder.Services.AddAuthentication();
             builder.Services.AddAuthorization();
-            builder.Services.AddControllersWithViews(options =>
-            {
-                options.Filters.Add<SecurityHeadersAttribute>();
-            });
+            builder.Services.AddControllersWithViews();
             // .AddJsonOptions(options =>
             // {
             //     options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;

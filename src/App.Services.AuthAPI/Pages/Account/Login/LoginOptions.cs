@@ -2,7 +2,6 @@
 // See LICENSE in the project root for license information.
 
 namespace App.Services.AuthAPI.Pages.Login;
-
 public static class LoginOptions
 {
     public static readonly bool AllowLocalLogin = true;

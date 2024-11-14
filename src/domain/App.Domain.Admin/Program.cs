@@ -3,6 +3,7 @@ using App.Domain.Admin.Services;
 using App.Domain.Admin.Extensions;
 using App.Domain.Admin.Services.IServices;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -36,31 +37,33 @@ It stores the user's authentication ticket (e.g., login status) in a cookie.
 */
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultScheme = Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = "oidc";
+    options.DefaultScheme = "Cookies";
+    options.DefaultChallengeScheme = "OpenIdConnect";
 })
 .AddJwtBearer()
 .AddCookie(options =>
 {
     options.Cookie.HttpOnly = true;
     options.ExpireTimeSpan = TimeSpan.FromDays(7);
-    options.LoginPath = "/Auth/Login";
-    options.AccessDeniedPath = "/Auth/AccessDenied";
-}).AddOpenIdConnect("oidc", options =>
+    options.LoginPath = "/Authentication/Login";
+    options.AccessDeniedPath = "/Authentication/AccessDenied";
+})
+.AddOpenIdConnect("OpenIdConnect", options =>
 {
     options.Authority = builder.Configuration["ServiceUrls:AuthAPI"];
     //Claims wil have every detail information
     options.GetClaimsFromUserInfoEndpoint = true;
     //
-    options.ClientId = "levanhiep409159";
+    options.ClientId = "admin_scope";
     options.ClientSecret = StaticDetail.secret;
     options.ResponseType = "code";
     //
     options.TokenValidationParameters.NameClaimType = "name";
     options.TokenValidationParameters.RoleClaimType = "role";
     //
-    options.Scope.Add("levanhiep409159");
+    options.Scope.Add("admin_scope");
     options.SaveTokens = true;
+
     options.ClaimActions.MapJsonKey("role", "role");
     options.Events = new OpenIdConnectEvents
     {
@@ -72,7 +75,6 @@ builder.Services.AddAuthentication(options =>
         }
     };
 });
-
 /*
 Session: Used to store user-specific data on the server (such as shopping cart information, preferences, etc.).
  The session can be used to store non-authentication-related information temporarily and is tied to the user’s session ID.
@@ -81,20 +83,21 @@ Session: Used to store user-specific data on the server (such as shopping cart i
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseHttpsRedirection();
+
 app.UseRouting();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
+// Default route
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=CoverPage}/{id?}");

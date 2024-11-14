@@ -1,6 +1,5 @@
 // Copyright (c) Duende Software. All rights reserved.
 // See LICENSE in the project root for license information.
-
 using App.Services.AuthAPI.Data;
 using App.Services.AuthAPI.Models;
 using Duende.IdentityServer;
@@ -30,12 +29,9 @@ public class Index : PageModel
     private readonly IEventService _events;
     private readonly IAuthenticationSchemeProvider _schemeProvider;
     private readonly IIdentityProviderStore _identityProviderStore;
-
     public ViewModel View { get; set; } = default!;
-
     [BindProperty]
     public InputModel Input { get; set; } = default!;
-
     public Index(
                 UserManager<ApplicationUser> userManager,
                 SignInManager<ApplicationUser> signInManager,
@@ -49,7 +45,6 @@ public class Index : PageModel
                  )
     {
         // this is where you would plug in your own custom identity management library (e.g. ASP.NET Identity)
-
         _interaction = interaction;
         _schemeProvider = schemeProvider;
         _identityProviderStore = identityProviderStore;
@@ -70,12 +65,22 @@ public class Index : PageModel
             // we only have one option for logging in and it's an external provider
             return RedirectToPage("/ExternalLogin/Challenge", new { scheme = View.ExternalLoginScheme, returnUrl });
         }
+        Input = new InputModel
+        {
+            ReturnUrl = returnUrl,
+            GeneratedCode = new Random().Next(1000, 9999).ToString()
+        };
 
         return Page();
     }
 
     public async Task<IActionResult> OnPost()
     {
+        if (Input.GeneratedCode != Input.EnteredCode)
+        {
+            ModelState.AddModelError("EnteredCode", "The code you entered is incorrect.");
+            return Page();
+        }
         // check if we are in the context of an authorization request
         var context = await _interaction.GetAuthorizationContextAsync(Input.ReturnUrl);
 
@@ -112,12 +117,13 @@ public class Index : PageModel
         if (ModelState.IsValid)
         {
             var result = await _signInManager.PasswordSignInAsync
-                (Input.Username, Input.Password, Input.RememberLogin, lockoutOnFailure: false);
-            // validate username/password against in-memory store
+                (Input.Email, Input.Password, Input.RememberLogin, lockoutOnFailure: false);
+
+            // validate Email/password against in-memory store
             if (result.Succeeded)
             {
-                var user = _dbContext.Users.FirstOrDefault(u => u.UserName.ToLower() == Input.Username.ToLower());
-                await _events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.Id, user.UserName, clientId: context?.Client.ClientId));
+                var user = _dbContext.Users.FirstOrDefault(u => u.Email.ToLower() == Input.Email.ToLower());
+                await _events.RaiseAsync(new UserLoginSuccessEvent(user.Email, user.Id, user.Email, clientId: context?.Client.ClientId));
 
                 // only set explicit expiration here if user chooses "remember me". 
                 // otherwise we rely upon expiration configured in cookie middleware.
@@ -131,10 +137,10 @@ public class Index : PageModel
                     };
                 };
 
-                // issue authentication cookie with subject ID and username
+                // issue authentication cookie with subject ID and Email
                 var isuser = new IdentityServerUser(user.Id)
                 {
-                    DisplayName = user.UserName
+                    DisplayName = user.Email
                 };
 
                 //await HttpContext.SignInAsync(isuser, props);
@@ -159,18 +165,16 @@ public class Index : PageModel
                 }
                 else if (string.IsNullOrEmpty(Input.ReturnUrl))
                 {
-                    return Redirect("~/");
+                    return Redirect("~/Account/Authentication/Login");
                 }
                 else
                 {
                     // user might have clicked on a malicious link - should be logged
-                    throw new ArgumentException("invalid return URL");
+                    throw new Exception("invalid return URL");
                 }
             }
 
-            const string error = "invalid credentials";
-            await _events.RaiseAsync(new UserLoginFailureEvent(Input.Username, error, clientId: context?.Client.ClientId));
-            Telemetry.Metrics.UserLoginFailure(context?.Client.ClientId, IdentityServerConstants.LocalIdentityProvider, error);
+            await _events.RaiseAsync(new UserLoginFailureEvent(Input.Email, "invalid credentials", clientId: context?.Client.ClientId));
             ModelState.AddModelError(string.Empty, LoginOptions.InvalidCredentialsErrorMessage);
         }
 
@@ -197,7 +201,7 @@ public class Index : PageModel
                 EnableLocalLogin = local,
             };
 
-            Input.Username = context.LoginHint;
+            Input.Email = context.LoginHint;
 
             if (!local)
             {

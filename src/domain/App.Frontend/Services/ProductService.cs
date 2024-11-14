@@ -1,9 +1,30 @@
 using App.Frontend.Models;
-using App.Frontend.Services.IServices;
 using App.Frontend.Utility;
 
 namespace App.Frontend.Services
 {
+    public interface IProductService
+    {
+        /// <summary>
+        /// Get
+        /// </summary>
+        Task<Response?> Get();
+
+        /// <summary>
+        /// Get product by Id
+        /// </summary>
+        Task<Response?> Get(string id);
+
+        /// <summary>
+        ///  Pagination/$"?pageSize={pageSize}+search={search}+currentPage={currentPage} 
+        /// </summary>
+        Task<Response?> Get(int pageSize, int currentPage, string? search);
+
+        Task<Response?> CreateAsync(Product product);
+        Task<Response?> UpdateAsync(Product product);
+        Task<Response?> DeleteAsync(string id);
+    }
+
     public class ProductService : IProductService
     {
         private readonly IBaseService _baseService;

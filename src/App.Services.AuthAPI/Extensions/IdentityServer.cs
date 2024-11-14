@@ -3,6 +3,7 @@ using App.Services.AuthAPI.Models;
 using App.Services.AuthAPI.Data;
 using System.Security.Cryptography.X509Certificates;
 using Duende.IdentityServer.Services;
+using App.Services.AuthAPI.Utility;
 namespace App.Services.AuthAPI.Extensions
 {
     public static class IdentityServer
@@ -12,11 +13,10 @@ namespace App.Services.AuthAPI.Extensions
             // Lấy chứng chỉ từ Windows Certificate Store hoặc file PFX
             // var certificate = GetSigningCertificate(configuration);
             // use the dotnet identity 
-            builder.Services.AddRazorPages();
-            builder.Services.AddScoped<IProfileService, ProfileService>();
-
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
+
+            builder.Services.AddRazorPages();
 
             builder.Services.AddIdentityServer(options =>
             {
@@ -25,14 +25,20 @@ namespace App.Services.AuthAPI.Extensions
                 options.Events.RaiseFailureEvents = true;
                 options.Events.RaiseSuccessEvents = true;
                 options.EmitStaticAudienceClaim = true;
+                // Specify custom user interaction URLs
+                // options.UserInteraction.LoginUrl = "/user/login";
+                // options.UserInteraction.LogoutUrl = "/user/logout";
             })
             .AddInMemoryIdentityResources(StaticDetail.IdentityResources)
             .AddInMemoryApiScopes(StaticDetail.ApiScopes)
             .AddInMemoryClients(StaticDetail.Clients)
             .AddAspNetIdentity<ApplicationUser>() // use the dotnet identity 
             .AddDeveloperSigningCredential() // For Development
-            //.AddSigningCredential(certificate)
             .AddProfileService<ProfileService>();
+            //.AddSigningCredential(certificate)
+
+            builder.Services.AddScoped<IProfileService, ProfileService>();
+
             return builder;
         }
 
