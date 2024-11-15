@@ -2,6 +2,10 @@
 <!DOCTYPE html>
 <html lang="en">
 
+@{
+    var externalUrl = "";
+}
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -170,7 +174,7 @@
         </div>
         @if (User.IsInRole(StaticDetail.RoleAdmin))
         {
-            <a href="#" onclick="javascript:window.open('@externalUrl', '_blank');">
+            <a href="#" onclick="javascript:window.open('@externalUrl', '_blank');" disabled>
                 <button class="btn-primary btn form-control">Admin Central</button>
             </a>
         }

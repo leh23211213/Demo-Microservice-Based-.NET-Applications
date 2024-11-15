@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using Newtonsoft.Json;
 using App.Frontend.Models;
-using App.Frontend.Utility.StaticDetail;
+using static App.Frontend.Utility.StaticDetail;
 
 namespace App.Frontend.Services
 {
