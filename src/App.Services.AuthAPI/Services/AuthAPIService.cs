@@ -2,10 +2,15 @@ using App.Services.AuthAPI.Data;
 using App.Services.AuthAPI.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using App.Services.AuthAPI.Services.IServices;
-
+using App.Services.AuthAPI.Services;
 namespace App.Services.AuthAPI.Services
 {
+    public interface IAuthAPIService
+    {
+        Task<string> Register(RegistrationRequest RegistrationRequest);
+        Task<Token> Login(LoginRequest loginRequest);
+    }
+
     public class AuthAPIService : IAuthAPIService
     {
         private readonly ApplicationDbContext _dbContext;

@@ -1,9 +1,16 @@
 
 using App.Frontend.Models;
 using App.Frontend.Utility;
-using App.Frontend.Services.IServices;
 namespace App.Frontend.Services
 {
+    public interface ITokenProvider
+    {
+        void SetToken(Token token);
+        Token? GetToken();
+        void ClearToken();
+    }
+
+
     /// <summary>
     ///  working with cookies
     /// </summary>

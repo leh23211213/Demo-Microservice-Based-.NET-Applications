@@ -1,76 +1,87 @@
 @page
-@model App.Services.AuthAPI.Pages.Login.Index
+@model App.Services.AuthAPI.Pages.Login.Index;
 @{
-    ViewData["Title"] = "Log in";
+    ViewData["Title"] = "Login";
 }
-<div class="account-pages my-5 pt-sm-5">
-    <div class="justify-content-center row">
-        <div class="col-md-8 col-lg-6 col-xl-5">
-            <div class="overflow-hidden card">
-                <div class="bg-primary-subtle">
-                    <div class="row">
-                        <div class="col col-7">
-                            <div class="text-primary p-4">
-                                <h4>Welcome &#128079;</h4>
+
+<div class="login-page">
+    <div class="account-pages my-5 pt-sm-5">
+        <div class="justify-content-center row">
+            <div class="col-md-8 col-lg-6 col-xl-5">
+                <div class="overflow-hidden card">
+                    <div class="bg-primary-subtle">
+                        <div class="row">
+                            <div class="col col-7">
+                                <div class="text-primary p-4">
+                                    <h4>Welcome &#128079;</h4>
+                                    <p>
+                                        Login with your account!
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col col-5 align-self-end">
+                                <img src="~/lib/image/Login/profile-img.png" alt="" class="img-fluid">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pt-0 card-body">
+                        <div class="auth-logo">
+                            <div class="avatar-md profile-user-wid mb-4">
+                                <span class="avatar-title rounded-circle bg-light">
+                                    <img src="~/lib/image/Login/Cshapr-icon-purple-logo.png" alt="CSharp Logo"
+                                        class="rounded-circle" height="55">
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="p-2">
+                            <form asp-page="Login">
+                                <input type="hidden" asp-for="Input.ReturnUrl" />
+
+                                <div class="form-floating mb-3">
+                                    <label asp-for="Input.Email" class="form-label">Email</label>
+                                    <input asp-for="Input.Email" class="form-control"
+                                            placeholder="email@example.com" value="admin@gmail.com"  autofocus>
+                                    <span asp-validation-for="Input.Email"  class="text-danger"></span>
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                    <label asp-for="Input.Password" class="form-label">Password</label>
+                                    <input type="password" class="form-control" placeholder="Password" asp-for="Input.Password"
+                                        autocomplete="off" autocomplete="current-password" value="Admin123*">
+                                    <span asp-validation-for="Input.Password"  class="text-danger"></span>
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                    <label asp-for="Input.EnteredCode">Enter the code: @Model.Input.GeneratedCode</label>
+                                    <input asp-for="Input.EnteredCode" class="form-control"
+                                        autocomplete="off" placeholder="Enter the code" />
+                                    <span asp-validation-for="Input.EnteredCode" class="text-danger"></span>
+                                </div>
+
+                                <input type="hidden" asp-for="Input.GeneratedCode" />
+
+                                <div class="mt-3 d-grid">
+                                    <button id="login-submit" type="submit" class="btn btn-lg btn-primary" value="login" name="Input.Button">Login</button>
+                                    <button id="cancel-submit" type="submit" class="btn btn-lg btn-primary" value="cancel" name="Input.Button">Cancel</button>
+                                </div>
+                            </form>
+
+                            @* <div class="mt-4 text-center" disabled>
                                 <p>
-                                    Login with your account!
+                                    <a href="#" disabled>Forgot
+                                        your
+                                        password?</a>
                                 </p>
-                            </div>
-                        </div>
-                        <div class="col col-5 align-self-end">
-                            <img src="~/lib/image/Login/profile-img.png" alt="" class="img-fluid">
-                        </div>
-                    </div>
-                </div>
-                <div class="pt-0 card-body">
-                    <div class="auth-logo">
-                        <div class="avatar-md profile-user-wid mb-4">
-                            <span class="avatar-title rounded-circle bg-light">
-                                <img src="~/lib/image/Login/Cshapr-icon-purple-logo.png" alt="CSharp Logo"
-                                    class="rounded-circle" height="55">
-                            </span>
-                        </div>
-                    </div>
-                    
-                    <partial name="_ValidationSummary" />
+                            </div> *@
 
-                    <div class="p-2">
-                        <form asp-page="/Account/Login/Index">
-                            <input type="hidden" asp-for="Input.ReturnUrl" />
-
-                            <div class="form-floating mb-3">
-                                <label asp-for="Input.Username" class="form-label">Email</label>
-                                <input class="form-control" placeholder="email@example.com" value="admin@gmail.com" asp-for="Input.Username" autofocus>
-                                 <span asp-validation-for="Input.Username" class="text-danger" />
-                            </div>
-
-                            <div class="form-floating mb-3">
-                                <label asp-for="Input.Password" class="form-label">Password</label>
-                                <input type="password" class="form-control" placeholder="Password" asp-for="Input.Password"
-                                    autocomplete="off" autocomplete="current-password" placeholder="password" value="Admin123*">
-                                 <span asp-validation-for="Input.Password" class="text-danger" />
-                            </div>
-
-                            <div class="mt-3 d-grid">
-                                <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary"
-                                    value="login" name="Input.Button">Login</button>
-                            </div>
-                        </form>
-
-                        @* <div class="mt-4 text-center" disabled>
-                            <p>
-                                <a href="#" disabled>Forgot
-                                    your
-                                    password?</a>
-                            </p>
-                        </div> *@
-
-                        <div class="my-form__actions">
-                            <div class="my-form__row">
-                                <span>Don't have an account?</span>
-                                <a asp-page="../Register/Index" asp-route-returnUrl="@Model.Input.ReturnUrl">
-                                    Sign Up Now
-                                </a>
+                            <div class="my-form__actions">
+                                <div class="my-form__row">
+                                    <span>Don't have an account?</span>
+                                    <a asp-page="../Register/Index" asp-route-returnUrl="@Model.Input.ReturnUrl">
+                                        Sign Up Now
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -79,3 +90,7 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -37,8 +37,8 @@ It stores the user's authentication ticket (e.g., login status) in a cookie.
 */
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+    options.DefaultScheme = "Cookies";
+    options.DefaultChallengeScheme = "OpenIdConnect";
 })
 .AddJwtBearer()
 .AddCookie(options =>
@@ -48,7 +48,7 @@ builder.Services.AddAuthentication(options =>
     options.LoginPath = "/Authentication/Login";
     options.AccessDeniedPath = "/Authentication/AccessDenied";
 })
-.AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
+.AddOpenIdConnect("OpenIdConnect", options =>
 {
     options.Authority = builder.Configuration["ServiceUrls:AuthAPI"];
     //Claims wil have every detail information

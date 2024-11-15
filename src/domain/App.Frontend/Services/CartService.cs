@@ -1,10 +1,26 @@
 
 using App.Frontend.Models;
-using App.Frontend.Services.IServices;
 using App.Frontend.Utility;
 
 namespace App.Frontend.Services
 {
+    public interface ICartService
+    {
+        /// <summary>
+        /// StaticDetail.ShoppingCartAPIBase + "/api/version/cart/Get" + userId,
+        /// </summary>
+        Task<Response> GetAsync(string userId);
+        /// <summary>
+        /// StaticDetail.ShoppingCartAPIBase + "/api/version/cart/Delete" + cartDetailsId,
+        /// </summary>
+        Task<Response> DeleteAsync(string cartDetailsId);
+
+        /// <summary>
+        /// StaticDetail.ShoppingCartAPIBase + "/api/version/cart/Add",
+        /// </summary>
+        Task<Response> AddAsync(Cart cart);
+    }
+
     public class CartService : ICartService
     {
         public readonly IBaseService _baseService;

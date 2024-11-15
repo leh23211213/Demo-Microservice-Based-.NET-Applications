@@ -7,7 +7,6 @@ using App.Domain.Admin.Services.IServices;
 
 namespace App.Domain.Admin.Controllers
 {
-    [AllowAnonymous]
     public class CartController : Controller
     {
         private readonly IOrderService _orderService;
@@ -28,7 +27,7 @@ namespace App.Domain.Admin.Controllers
             }
             else
             {
-                return RedirectToAction("Login", "Authentication");
+                return RedirectToAction("Login", "Authentication", new { area = "Account" });
             }
         }
 
@@ -41,7 +40,7 @@ namespace App.Domain.Admin.Controllers
             }
             else
             {
-                return RedirectToAction("Login", "Authentication");
+                return RedirectToAction("Login", "Authentication", new { area = "Account" });
             }
         }
 

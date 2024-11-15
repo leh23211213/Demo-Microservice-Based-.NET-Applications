@@ -6,10 +6,17 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-using App.Services.AuthAPI.Services.IServices;
 
 namespace App.Services.AuthAPI.Services
 {
+    public interface IJwtTokenGenerator
+    {
+        Task RevokeRefreshToken(Token token);
+        Task<Token> RefreshAccessToken(Token token);
+        Task<string> CreateNewRefreshToken(string userId, string jwtTokenId);
+        Task<string> CreateNewAccessToken(ApplicationUser user, string jwtTokenId);
+    }
+
     public class JwtTokenGenerator : IJwtTokenGenerator
     {
         private readonly string secretKey;

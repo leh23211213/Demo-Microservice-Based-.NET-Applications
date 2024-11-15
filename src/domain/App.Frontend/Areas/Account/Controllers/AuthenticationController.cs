@@ -1,19 +1,20 @@
 using Newtonsoft.Json;
 using App.Frontend.Models;
 using System.Diagnostics;
+using App.Frontend.Services;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
-using App.Frontend.Services.IServices;
+using App.Frontend.Areas.Account.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using App.Frontend.Areas.Account.Models;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+
 namespace App.Frontend.Areas.Account.Controllers
 {
     [Area("Account")]
-    [Route("user")]
+    [Route("{area}/{controller}/{action}")]
     public class AuthenticationController : Controller
     {
         private readonly IAuthService _authService;
@@ -33,15 +34,15 @@ namespace App.Frontend.Areas.Account.Controllers
         }
 
         [HttpGet]
-        [Route("login")]
         //[Authorize]
         public async Task<ActionResult> Login()
         {
+            var authenticateResult = await HttpContext.AuthenticateAsync();
+            if (authenticateResult.Succeeded)
+            {
+                return RedirectToAction(nameof(Index), "Home");
+            }
             return View(new LoginRequest());
-            var accessToken = await HttpContext.GetTokenAsync("access_token");
-            return RedirectToAction(nameof(Index), "Home");
-            // var authenticateResult = await HttpContext.AuthenticateAsync();
-            // if (authenticateResult.Succeeded)
         }
 
         [HttpPost]
@@ -76,7 +77,6 @@ namespace App.Frontend.Areas.Account.Controllers
         }
 
         [HttpPost]
-        [Route("logout")]
         public async Task<IActionResult> Logout()
         {
             try

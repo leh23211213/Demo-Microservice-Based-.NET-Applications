@@ -1,6 +1,7 @@
 using App.Services.AuthAPI.Models;
 using App.Services.AuthAPI.Utility;
 using IdentityModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -8,28 +9,24 @@ using System.Security.Claims;
 
 namespace App.Services.AuthAPI.Pages.Account.Register
 {
+    [SecurityHeaders]
+    [AllowAnonymous]
     public class IndexModel : PageModel
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
         public IndexModel(
-            UserManager<ApplicationUser> userManager,
-                SignInManager<ApplicationUser> signInManager,
+                UserManager<ApplicationUser> userManager,
                 RoleManager<IdentityRole> roleInManager
               )
         {
             _roleManager = roleInManager;
             _userManager = userManager;
-            _signInManager = signInManager;
         }
 
-
         [BindProperty]
-        public RegisterViewModel Input { get; set; }
-
-
+        public RegisterViewModel Input { get; set; } = default!;
         public async Task<IActionResult> OnGet(string returnUrl)
         {
             List<string> roles = new()
@@ -38,14 +35,12 @@ namespace App.Services.AuthAPI.Pages.Account.Register
                 StaticDetail.Customer
             };
             ViewData["roles_message"] = roles;
-            Input = new RegisterViewModel
-            {
-                ReturnUrl = returnUrl
-            };
+
+            Input = new RegisterViewModel { ReturnUrl = returnUrl };
             return Page();
         }
 
-        public async Task<IActionResult> OnPost(string returnUrl)
+        public async Task<IActionResult> OnPost()
         {
             if (ModelState.IsValid)
             {
@@ -58,7 +53,6 @@ namespace App.Services.AuthAPI.Pages.Account.Register
                 };
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
-
                 if (result.Succeeded)
                 {
                     if (!_roleManager.RoleExistsAsync(Input.RoleName).GetAwaiter().GetResult())
@@ -73,35 +67,14 @@ namespace App.Services.AuthAPI.Pages.Account.Register
                     }
                     await _userManager.AddToRoleAsync(user, Input.RoleName);
 
-
                     await _userManager.AddClaimsAsync(user, new Claim[] {
                         new Claim(JwtClaimTypes.Name,Input.Email),
                         new Claim(JwtClaimTypes.Email,Input.Email),
                         new Claim(JwtClaimTypes.Role,Input.RoleName)
                     });
 
-                    var loginresult = await _signInManager.PasswordSignInAsync(
-                        Input.Email, Input.Password, false, lockoutOnFailure: true);
-
-                    if (loginresult.Succeeded)
-                    {
-                        if (Url.IsLocalUrl(Input.ReturnUrl))
-                        {
-                            return Redirect(Input.ReturnUrl);
-                        }
-                        else if (string.IsNullOrEmpty(Input.ReturnUrl))
-                        {
-                            return Redirect("~/");
-                        }
-                        else
-                        {
-                            throw new Exception("invalid return URL");
-                        }
-
-                    }
-
+                    return Redirect(Input.ReturnUrl);
                 }
-
             }
             return Page();
         }

@@ -1,15 +1,12 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using App.Frontend.Services.IServices;
-using App.Frontend.Utility;
-using App.Frontend.Areas.Account.Models;
 using App.Frontend.Models;
+using App.Frontend.Utility;
+using App.Frontend.Services;
+using Microsoft.AspNetCore.Mvc;
+using App.Frontend.Areas.Account.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace App.Frontend.Areas.Account.Controllers
 {
-    [Area("Account")]
-    [Route("user")]
     public class RegisterController : Controller
     {
         private readonly IAuthService _authService;
@@ -20,7 +17,6 @@ namespace App.Frontend.Areas.Account.Controllers
         }
 
         [HttpGet]
-        [Route("register")]
         public async Task<ActionResult> Register()
         {
             var roleList = new List<SelectListItem>()
@@ -31,7 +27,6 @@ namespace App.Frontend.Areas.Account.Controllers
             ViewBag.RoleList = roleList;
             return View();
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -46,7 +41,7 @@ namespace App.Frontend.Areas.Account.Controllers
                     model.Role = StaticDetail.RoleCustomer;
                 }
                 TempData["success"] = response?.Message;
-                return RedirectToAction("Login", "Authentication");
+                return RedirectToAction("Login", "Authentication", new { area = "Account" });
             }
             else
             {

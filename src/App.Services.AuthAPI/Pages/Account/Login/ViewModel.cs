@@ -2,7 +2,6 @@
 // See LICENSE in the project root for license information.
 
 namespace App.Services.AuthAPI.Pages.Login;
-
 public class ViewModel
 {
     public bool AllowRememberLogin { get; set; } = true;
@@ -13,7 +12,7 @@ public class ViewModel
 
     public bool IsExternalLoginOnly => EnableLocalLogin == false && ExternalProviders?.Count() == 1;
     public string? ExternalLoginScheme => IsExternalLoginOnly ? ExternalProviders?.SingleOrDefault()?.AuthenticationScheme : null;
-        
+
     public class ExternalProvider
     {
         public ExternalProvider(string authenticationScheme, string? displayName = null)

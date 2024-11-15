@@ -11,12 +11,12 @@
             <h1>User Code</h1>
             <p>Please enter the code displayed on your device.</p>
         </div>
-
+        @* 
         <div class="row">
             <div class="col-sm-8">
                 <partial name="_ValidationSummary" />
             </div>
-        </div>
+        </div> *@
 
         <div class="row">
             <div class="col-sm-6">
@@ -49,11 +49,11 @@ else
             <p>Uncheck the permissions you do not wish to grant.</p>
         </div>
 
-        <div class="row">
+        @* <div class="row">
             <div class="col-sm-8">
                 <partial name="_ValidationSummary" />
             </div>
-        </div>
+        </div> *@
 
         <form asp-page="/Device/Index">
             <input asp-for="Input.UserCode" type="hidden" />
@@ -102,7 +102,8 @@ else
                                 Description
                             </div>
                             <div class="card-body">
-                                <input class="form-control" placeholder="Description or name of device" asp-for="Input.Description" autofocus>
+                                <input class="form-control" placeholder="Description or name of device"
+                                    asp-for="Input.Description" autofocus>
                             </div>
                         </div>
                     </div>
