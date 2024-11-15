@@ -1,7 +1,7 @@
+using AspNetCoreRateLimit;
 using App.Services.ProductAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using App.Services.ProductAPI.Extensions;
-using AspNetCoreRateLimit;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.AddAppAuthetication();
@@ -9,7 +9,6 @@ builder.Services.ConfigureDatabase(builder.Configuration);
 builder.Services.AppServiceCollection(builder.Configuration);
 builder.Services.ApiVersionConfiguration();
 builder.Services.AddSwaggerDocumentation();
-
 // Third-Party Libraries
 builder.Services.Configure<IpRateLimitOptions>(options =>
 {
@@ -23,27 +22,32 @@ builder.Services.Configure<IpRateLimitOptions>(options =>
         }
     };
 });
+
+builder.Services.AddMemoryCache();
 builder.Services.AddInMemoryRateLimiting();
+builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+
 var app = builder.Build();
-// app.UseMiddleware<RateLimitMiddleware>();
 
 app.UseIpRateLimiting();
+app.UseRouting();
+
+app.UseSwaggerDocumentation(app.Environment);
 
 app.UseStaticFiles();
 app.UseHttpsRedirection();
+app.MapControllers();
+
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapControllers();
 
 if (app.Environment.IsDevelopment())
 {
     ApplyMigration(app);
 }
 
-
 app.Run();
 
-app.UseSwaggerDocumentation(app.Environment);
 
 // 500.30
 void ApplyMigration(WebApplication app)

@@ -1,5 +1,6 @@
 using App.Services.AuthAPI.Data;
 using App.Services.AuthAPI.Extensions;
+using AspNetCoreRateLimit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -55,7 +56,7 @@ app.UseSwaggerUI(options =>
     }
 });
 
-
+app.UseIpRateLimiting();
 app.UseSession();
 app.UseHttpsRedirection();
 app.UseAuthentication();

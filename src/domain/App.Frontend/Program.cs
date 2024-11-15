@@ -3,8 +3,6 @@ using App.Frontend.Services;
 using App.Frontend.Extensions;
 using App.Frontend.Services.IServices;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using IdentityModel;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.

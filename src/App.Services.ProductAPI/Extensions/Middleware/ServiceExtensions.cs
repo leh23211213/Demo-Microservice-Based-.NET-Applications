@@ -1,11 +1,14 @@
+using App.Services.ProductAPI.Repository;
 namespace App.Services.ProductAPI.Extensions
 {
     public static class ServiceExtensions
     {
         public static IServiceCollection AppServiceCollection(this IServiceCollection services, IConfiguration configuration)
         {
-            // Add services to the container. 
+            services.AddScoped<IReadProductRepository, ReadProductRepository>();
+
             services.AddResponseCaching();
+
             services.AddControllers(options =>
             {
                 options.CacheProfiles.Add("Default10", new Microsoft.AspNetCore.Mvc.CacheProfile
@@ -29,7 +32,6 @@ namespace App.Services.ProductAPI.Extensions
                 options.Providers.Add<Microsoft.AspNetCore.ResponseCompression.GzipCompressionProvider>();
                 options.EnableForHttps = true;
             });
-
 
             return services;
         }

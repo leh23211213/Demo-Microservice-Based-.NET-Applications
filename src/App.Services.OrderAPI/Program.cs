@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Stripe;
+using AspNetCoreRateLimit;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.AddAppAuthetication();
@@ -81,7 +82,7 @@ app.UseSwaggerUI(options =>
 });
 
 StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
-
+app.UseIpRateLimiting();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
