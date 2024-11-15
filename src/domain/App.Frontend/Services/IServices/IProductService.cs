@@ -1,5 +1,5 @@
-using App.Frontend.Models;
-namespace App.Frontend.Services.IServices
+using App.Domain.Admin.Models;
+namespace App.Domain.Admin.Services.IServices
 {
     public interface IProductService
     {

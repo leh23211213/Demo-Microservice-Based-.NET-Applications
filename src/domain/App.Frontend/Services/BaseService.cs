@@ -7,12 +7,20 @@ using App.Frontend.Utility;
 using System.Security.Claims;
 using System.Net.Http.Headers;
 using System.IdentityModel.Tokens.Jwt;
+<<<<<<< HEAD
 using App.Frontend.Services.IServices;
+=======
+>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace App.Frontend.Services
 {
+    public interface IBaseService
+    {
+        Task<Response?> SendAsync(Request Request, bool withBearer = true);
+    }
+
     public class BaseService : IBaseService
     {
         protected readonly string _url = null!;
@@ -46,7 +54,11 @@ namespace App.Frontend.Services
 
                 HttpResponseMessage httpResponseMessage = null;
                 httpResponseMessage = await SendWithRefreshTokenAsync(client, messageFactory, withBearer);
+<<<<<<< HEAD
                 Response FinalApiResponse = new(){ IsSuccess = false };
+=======
+                Response FinalApiResponse = new() { IsSuccess = false };
+>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
 
                 try
                 {
@@ -198,7 +210,11 @@ namespace App.Frontend.Services
             jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Email).Value));
 
             var principal = new ClaimsPrincipal(identity);
-            await _httpContextAccessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+            await _httpContextAccessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal,
+            new AuthenticationProperties
+            {
+                IsPersistent = true, // Cookie sẽ tồn tại qua nhiều phiên duyệt web
+            });
 
             _tokenProvider.SetToken(token);
         }

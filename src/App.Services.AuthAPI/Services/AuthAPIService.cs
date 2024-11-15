@@ -2,10 +2,15 @@ using App.Services.AuthAPI.Data;
 using App.Services.AuthAPI.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using App.Services.AuthAPI.Services.IServices;
-
+using App.Services.AuthAPI.Services;
 namespace App.Services.AuthAPI.Services
 {
+    public interface IAuthAPIService
+    {
+        Task<string> Register(RegistrationRequest RegistrationRequest);
+        Task<Token> Login(LoginRequest loginRequest);
+    }
+
     public class AuthAPIService : IAuthAPIService
     {
         private readonly ApplicationDbContext _dbContext;
@@ -27,6 +32,8 @@ namespace App.Services.AuthAPI.Services
 
         public async Task<string> Register(RegistrationRequest registrationRequest)
         {
+            if (!IsUniqueUser(registrationRequest.Email)) return "User all ready exists";
+
             ApplicationUser applicationUser = new()
             {
                 UserName = registrationRequest.Email,
@@ -87,6 +94,16 @@ namespace App.Services.AuthAPI.Services
             };
 
             return token;
+        }
+
+        public bool IsUniqueUser(string email)
+        {
+            var user = _dbContext.Users.FirstOrDefault(x => x.Email == email);
+            if (user == null)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

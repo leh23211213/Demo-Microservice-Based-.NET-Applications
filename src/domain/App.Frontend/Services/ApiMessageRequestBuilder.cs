@@ -1,11 +1,20 @@
 ﻿using System.Text;
 using Newtonsoft.Json;
 using App.Frontend.Models;
+<<<<<<< HEAD
 using App.Frontend.Services.IServices;
+=======
+
+>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
 using static App.Frontend.Utility.StaticDetail;
 
 namespace App.Frontend.Services
 {
+    public interface IApiMessageRequestBuilder
+    {
+        HttpRequestMessage Build(Request Request);
+    }
+
     public class ApiMessageRequestBuilder : IApiMessageRequestBuilder
     {
         public HttpRequestMessage Build(Request request)

@@ -1,6 +1,15 @@
+<<<<<<< HEAD
+﻿@using App.Domain.Admin.Utility
+<!DOCTYPE html>
+<html lang="en">
+=======
 ﻿@using App.Frontend.Utility
 <!DOCTYPE html>
 <html lang="en">
+@{
+    string externalUrl = "https://409159admin-b0d0ged3e7efaceg.eastasia-01.azurewebsites.net/Account/Login";
+}
+>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
 
 <head>
     <meta charset="utf-8" />
@@ -96,6 +105,7 @@
             </div>
         </div>
         <div class="divider"></div>
+<<<<<<< HEAD
         @if (User.IsInRole(StaticDetail.RoleAdmin))
         {
             <h2>Admin</h2>
@@ -133,6 +143,8 @@
             </div>
         }
         <div class="divider"></div>
+=======
+>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
         <h2>Order</h2>
         <div class="divider"></div>
         <div class="sidebar-links-wrapper">
@@ -159,13 +171,28 @@
                                     <line class="st0" x1="9" y1="25" x2="15" y2="25"></line>
                                 </g>
                             </svg>
+<<<<<<< HEAD
                             <span class="link hide">Manage Order</span>
+=======
+                            <span class="link hide">Order History</span>
+>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
                         </a>
                     </li>
                 </ul>
             </div>
         </div>
         <div class="divider"></div>
+<<<<<<< HEAD
+=======
+        <div class="divider"></div>
+        @if (User.IsInRole(StaticDetail.RoleAdmin))
+        {
+            <a href="#" onclick="javascript:window.open('@externalUrl', '_blank');">
+                <button class="btn-primary btn form-control">Admin Central</button>
+            </a>
+        }
+        <div class="divider"></div>
+>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
         <!-- Login Partial Section -->
         @await Html.PartialAsync("_LoginPartial")
     </nav>

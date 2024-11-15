@@ -1,15 +1,18 @@
-using App.Frontend.Models;
-using App.Frontend.Services.IServices;
-using App.Frontend.Utility;
+using App.Domain.Admin.Models;
+using App.Domain.Admin.Services.IServices;
+using App.Domain.Admin.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 
-namespace App.Frontend.Controllers
+namespace App.Domain.Admin.Controllers
 {
+<<<<<<<< HEAD:src/domain/App.Frontend/Controllers/ProductController.cs
 
     [Authorize(Roles = "ADMIN")]
+========
+>>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0:src/domain/App.Domain.Admin/Controllers/ProductController.cs
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
@@ -24,38 +27,63 @@ namespace App.Frontend.Controllers
                                                       [FromQuery] string? search = ""
                                                       )
         {
+<<<<<<<< HEAD:src/domain/App.Frontend/Controllers/ProductController.cs
             Response? response = await _productService.Get(pageSize, currentPage, search);
             Pagination pagination = new();
             if (response.IsSuccess && response != null)
+========
+            if (User.Identity.IsAuthenticated)
+>>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0:src/domain/App.Domain.Admin/Controllers/ProductController.cs
             {
-                pagination = JsonConvert.DeserializeObject<Pagination>(Convert.ToString(response.Result));
+                Response? response = await _productService.Get(pageSize, currentPage, search);
+                Pagination pagination = new();
+                if (response.IsSuccess && response != null)
+                {
+                    pagination = JsonConvert.DeserializeObject<Pagination>(Convert.ToString(response.Result));
+                }
+                else
+                {
+                    TempData["error"] = response?.Message;
+                }
+                return View(pagination);
             }
             else
             {
-                TempData["error"] = response?.Message;
+                return RedirectToAction("Login", "Authentication", new { area = "Account" });
             }
+<<<<<<<< HEAD:src/domain/App.Frontend/Controllers/ProductController.cs
             return View(pagination);
+========
+>>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0:src/domain/App.Domain.Admin/Controllers/ProductController.cs
         }
 
+        [HttpGet]
         public async Task<IActionResult> Create()
         {
-            var categoryList = new List<SelectListItem>(){
+            if (User.Identity.IsAuthenticated)
+            {
+                var categoryList = new List<SelectListItem>(){
                 new SelectListItem{Text = StaticDetail.Category , Value = StaticDetail.Category},
             };
-            var brandList = new List<SelectListItem>(){
+                var brandList = new List<SelectListItem>(){
                 new SelectListItem{Text = StaticDetail.Brand , Value = StaticDetail.Brand},
             };
-            var colorList = new List<SelectListItem>(){
+                var colorList = new List<SelectListItem>(){
                 new SelectListItem{Text = StaticDetail.Color , Value = StaticDetail.Color},
             };
-            var sizeList = new List<SelectListItem>(){
+                var sizeList = new List<SelectListItem>(){
                 new SelectListItem{Text = StaticDetail.Size , Value = StaticDetail.Size},
             };
-            ViewBag.CategoryList = categoryList;
-            ViewBag.BrandList = brandList;
-            ViewBag.ColorList = colorList;
-            ViewBag.SizeList = sizeList;
-            return View();
+                ViewBag.CategoryList = categoryList;
+                ViewBag.BrandList = brandList;
+                ViewBag.ColorList = colorList;
+                ViewBag.SizeList = sizeList;
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Login", "Authentication", new { area = "Account" });
+            }
         }
 
         [HttpPost]
@@ -100,34 +128,50 @@ namespace App.Frontend.Controllers
 
         public async Task<IActionResult> Update(string Id)
         {
-            var categoryList = new List<SelectListItem>(){
+            if (User.Identity.IsAuthenticated)
+            {
+                var categoryList = new List<SelectListItem>(){
                 new SelectListItem{Text = StaticDetail.Category , Value = StaticDetail.Category},
             };
-            var brandList = new List<SelectListItem>(){
+                var brandList = new List<SelectListItem>(){
                 new SelectListItem{Text = StaticDetail.Brand , Value = StaticDetail.Brand},
             };
-            var colorList = new List<SelectListItem>(){
+                var colorList = new List<SelectListItem>(){
                 new SelectListItem{Text = StaticDetail.Color , Value = StaticDetail.Color},
             };
-            var sizeList = new List<SelectListItem>(){
+                var sizeList = new List<SelectListItem>(){
                 new SelectListItem{Text = StaticDetail.Size , Value = StaticDetail.Size},
             };
-            ViewBag.CategoryList = categoryList;
-            ViewBag.BrandList = brandList;
-            ViewBag.ColorList = colorList;
-            ViewBag.SizeList = sizeList;
+                ViewBag.CategoryList = categoryList;
+                ViewBag.BrandList = brandList;
+                ViewBag.ColorList = colorList;
+                ViewBag.SizeList = sizeList;
 
+<<<<<<<< HEAD:src/domain/App.Frontend/Controllers/ProductController.cs
             Response? response = await _productService.Get(Id);
             if (response.IsSuccess && response != null)
             {
                 Product product = JsonConvert.DeserializeObject<Product>(Convert.ToString(response.Result));
                 return View(product);
+========
+                Response? response = await _productService.Get(Id);
+                if (response.IsSuccess && response != null)
+                {
+                    Product product = JsonConvert.DeserializeObject<Product>(Convert.ToString(response.Result));
+                    return View(product);
+                }
+                else
+                {
+                    TempData["error"] = response?.Message;
+                }
+                return RedirectToAction(nameof(Index));
+
+>>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0:src/domain/App.Domain.Admin/Controllers/ProductController.cs
             }
             else
             {
-                TempData["error"] = response?.Message;
+                return RedirectToAction("Login", "Authentication", new { area = "Account" });
             }
-            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
@@ -171,17 +215,29 @@ namespace App.Frontend.Controllers
 
         public async Task<IActionResult> Delete(string Id)
         {
+<<<<<<<< HEAD:src/domain/App.Frontend/Controllers/ProductController.cs
             Response? response = await _productService.Get(Id);
             if (response.IsSuccess && response != null)
+========
+            if (User.Identity.IsAuthenticated)
+>>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0:src/domain/App.Domain.Admin/Controllers/ProductController.cs
             {
-                Product product = JsonConvert.DeserializeObject<Product>(Convert.ToString(response.Result));
-                return View(product);
+                Response? response = await _productService.Get(Id);
+                if (response.IsSuccess && response != null)
+                {
+                    Product product = JsonConvert.DeserializeObject<Product>(Convert.ToString(response.Result));
+                    return View(product);
+                }
+                else
+                {
+                    TempData["error"] = response?.Message;
+                }
+                return RedirectToAction(nameof(Index));
             }
             else
             {
-                TempData["error"] = response?.Message;
+                return RedirectToAction("Login", "Authentication", new { area = "Account" });
             }
-            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
