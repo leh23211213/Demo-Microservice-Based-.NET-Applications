@@ -1,5 +1,5 @@
 using App.Domain.Admin.Models;
-using App.Domain.Admin.Services.IServices;
+using App.Domain.Admin.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -19,7 +19,6 @@ namespace App.Domain.Admin.Controllers
             _cartService = cartService;
             _productService = productService;
         }
-<<<<<<< HEAD
         public async Task<IActionResult> Index(
                                                 [FromQuery] int pageSize = 6,
                                                 [FromQuery] int currentPage = 1,
@@ -39,26 +38,14 @@ namespace App.Domain.Admin.Controllers
             return View(pagination);
         }
 
-
-=======
-<<<<<<<< HEAD:src/domain/App.Frontend/Controllers/HomeController.cs
-========
-
         [HttpGet]
->>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0:src/domain/App.Domain.Admin/Controllers/HomeController.cs
         public async Task<IActionResult> Index(
                                                [FromQuery] int pageSize = 6,
                                                [FromQuery] int currentPage = 1,
                                                [FromQuery] string? search = ""
                                            )
         {
-<<<<<<<< HEAD:src/domain/App.Frontend/Controllers/HomeController.cs
-            Response? response = await _productService.Get(pageSize, currentPage, search);
-            Pagination pagination = new();
-            if (response.IsSuccess && response != null && response.Result != null)
-========
             if (User.Identity.IsAuthenticated)
->>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0:src/domain/App.Domain.Admin/Controllers/HomeController.cs
             {
                 Response? response = await _productService.Get(pageSize, currentPage, search);
                 Pagination pagination = new();
@@ -79,7 +66,6 @@ namespace App.Domain.Admin.Controllers
         }
 
         [HttpGet]
->>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
         public async Task<IActionResult> Details(string id)
         {
             Response? response = await _productService.Get(id);

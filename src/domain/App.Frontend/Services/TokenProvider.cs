@@ -11,7 +11,6 @@ namespace App.Frontend.Services
         void ClearToken();
     }
 
-
     /// <summary>
     ///  working with cookies
     /// </summary>
