@@ -2,19 +2,13 @@
 
 1. [Cloud Architecture](#cloud-architecture)
 
-2. [API Design](#api-design)
+2. [Service Layer](#service-layer)
 
-3. [Service Layer](#service-layer)
-
-4. [API Document](#open-api)
+3. [API Document](#open-api)
 
 # Web System Architecture
 
 ![Cloud Architecture](https://github.com/leh23211213/Demo-Microservice-Based-.NET-Applications/blob/main/docs/CloudArchitecture.drawio.png)
-
-# API Design
-
-![API Design](https://github.com/leh23211213/Demo-Microservice-Based-.NET-Applications/blob/main/docs/APIDesign.drawio.png)
 
 # Service Layer
 
