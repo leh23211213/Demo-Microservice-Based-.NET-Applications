@@ -1,5 +1,7 @@
 using App.Services.AuthAPI.Data;
 using App.Services.AuthAPI.Extensions;
+
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -57,13 +59,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapRazorPages();
-
-if (app.Environment.IsDevelopment())
-{
-    ApplyMigration();
-}
-
+ApplyMigration();
 app.Run();
 
 void ApplyMigration()

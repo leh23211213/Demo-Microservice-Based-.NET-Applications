@@ -96,21 +96,18 @@ namespace App.Domain.Admin.Controllers
 >>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0:src/domain/App.Domain.Admin/Controllers/ProductController.cs
         }
 
-        [HttpGet]
         public async Task<IActionResult> Create()
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                var categoryList = new List<SelectListItem>(){
+            var categoryList = new List<SelectListItem>(){
                 new SelectListItem{Text = StaticDetail.Category , Value = StaticDetail.Category},
             };
-                var brandList = new List<SelectListItem>(){
+            var brandList = new List<SelectListItem>(){
                 new SelectListItem{Text = StaticDetail.Brand , Value = StaticDetail.Brand},
             };
-                var colorList = new List<SelectListItem>(){
+            var colorList = new List<SelectListItem>(){
                 new SelectListItem{Text = StaticDetail.Color , Value = StaticDetail.Color},
             };
-                var sizeList = new List<SelectListItem>(){
+            var sizeList = new List<SelectListItem>(){
                 new SelectListItem{Text = StaticDetail.Size , Value = StaticDetail.Size},
             };
                 ViewBag.CategoryList = categoryList;
@@ -192,19 +189,19 @@ namespace App.Domain.Admin.Controllers
                 var categoryList = new List<SelectListItem>(){
                 new SelectListItem{Text = StaticDetail.Category , Value = StaticDetail.Category},
             };
-                var brandList = new List<SelectListItem>(){
+            var brandList = new List<SelectListItem>(){
                 new SelectListItem{Text = StaticDetail.Brand , Value = StaticDetail.Brand},
             };
-                var colorList = new List<SelectListItem>(){
+            var colorList = new List<SelectListItem>(){
                 new SelectListItem{Text = StaticDetail.Color , Value = StaticDetail.Color},
             };
-                var sizeList = new List<SelectListItem>(){
+            var sizeList = new List<SelectListItem>(){
                 new SelectListItem{Text = StaticDetail.Size , Value = StaticDetail.Size},
             };
-                ViewBag.CategoryList = categoryList;
-                ViewBag.BrandList = brandList;
-                ViewBag.ColorList = colorList;
-                ViewBag.SizeList = sizeList;
+            ViewBag.CategoryList = categoryList;
+            ViewBag.BrandList = brandList;
+            ViewBag.ColorList = colorList;
+            ViewBag.SizeList = sizeList;
 
 <<<<<<<< HEAD:src/domain/App.Frontend/Controllers/ProductController.cs
 >>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0

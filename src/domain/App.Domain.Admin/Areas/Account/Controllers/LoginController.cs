@@ -1,15 +1,14 @@
-using Newtonsoft.Json;
 using System.Diagnostics;
-using System.Security.Claims;
 using App.Domain.Admin.Models;
-using App.Domain.Admin.Utility;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Authorization;
 using App.Domain.Admin.Services.IServices;
-using Microsoft.AspNetCore.Authentication;
+using System.IdentityModel.Tokens.Jwt;
 using App.Domain.Admin.Areas.Account.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Newtonsoft.Json;
 
 namespace App.Domain.Admin.Areas.Account.Controllers
 {
@@ -25,8 +24,7 @@ namespace App.Domain.Admin.Areas.Account.Controllers
         private readonly string ProtectedCustomerUrl;
         public LoginController(
                                 IAuthService authService,
-                                ITokenProvider tokenProvider,
-                                 IConfiguration configuration
+                                ITokenProvider tokenProvider
                             )
         {
             _authService = authService;

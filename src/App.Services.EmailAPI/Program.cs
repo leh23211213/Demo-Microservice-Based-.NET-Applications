@@ -1,5 +1,6 @@
 using App.Services.EmailAPI.Data;
 using App.Services.EmailAPI.Extension;
+
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

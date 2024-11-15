@@ -17,7 +17,6 @@ namespace App.Frontend.Controllers
             _orderService = orderService;
         }
 
-        [HttpGet]
         public async Task<IActionResult> Index()
         {
             if (User.Identity.IsAuthenticated)
@@ -30,7 +29,6 @@ namespace App.Frontend.Controllers
             }
         }
 
-        [HttpGet]
         public async Task<IActionResult> Checkout()
         {
             if (User.Identity.IsAuthenticated)
@@ -74,7 +72,6 @@ namespace App.Frontend.Controllers
             return View(cart);
         }
 
-        [HttpGet]
         public async Task<IActionResult> Confirmation(string orderId)
         {
             if (User.Identity.IsAuthenticated)

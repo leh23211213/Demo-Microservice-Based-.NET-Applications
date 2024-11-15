@@ -13,15 +13,12 @@ namespace App.Services.AuthAPI.Extensions
     {
         private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
         private readonly UserManager<ApplicationUser> _userMgr;
-        private readonly RoleManager<IdentityRole> _roleMgr;
 
         public ProfileService(
             UserManager<ApplicationUser> userMgr,
-            RoleManager<IdentityRole> roleMgr,
             IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory)
         {
             _userMgr = userMgr;
-            _roleMgr = roleMgr;
             _userClaimsPrincipalFactory = userClaimsPrincipalFactory;
         }
         public async Task GetProfileDataAsync(ProfileDataRequestContext context)
