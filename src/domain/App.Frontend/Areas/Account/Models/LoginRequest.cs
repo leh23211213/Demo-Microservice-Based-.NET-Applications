@@ -4,11 +4,12 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authentication;
 
 namespace App.Frontend.Areas.Account.Models;
+
 public class LoginRequest
 {
     [Required]
     [EmailAddress]
-    public string Email { get; set; }  = null!;
+    public string Email { get; set; } = null!;
 
     [Required]
     [DataType(DataType.Password)]

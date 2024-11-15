@@ -1,40 +1,30 @@
-using Newtonsoft.Json;
 using System.Diagnostics;
-using System.Security.Claims;
 using App.Domain.Admin.Models;
-using App.Domain.Admin.Utility;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Authorization;
 using App.Domain.Admin.Services.IServices;
-using Microsoft.AspNetCore.Authentication;
+using System.IdentityModel.Tokens.Jwt;
 using App.Domain.Admin.Areas.Account.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Newtonsoft.Json;
 
 namespace App.Domain.Admin.Areas.Account.Controllers
 {
     [Area("Account")]
-    [Route("[Area]/[action]")]
-    [AllowAnonymous]
+    [Route("user/{controller}")]
     public class LoginController : Controller
     {
         private readonly IAuthService _authService;
         private readonly ITokenProvider _tokenProvider;
-        private readonly IConfiguration _configuration;
-        private readonly string ProtectedAdminUrl;
-        private readonly string ProtectedCustomerUrl;
         public LoginController(
                                 IAuthService authService,
-                                ITokenProvider tokenProvider,
-                                 IConfiguration configuration
+                                ITokenProvider tokenProvider
                             )
         {
             _authService = authService;
             _tokenProvider = tokenProvider;
-            _configuration = configuration;
-
-            ProtectedAdminUrl = _configuration.GetValue<string>("ServiceUrls:ProtectedAdminUrl");
-            ProtectedCustomerUrl = _configuration.GetValue<string>("ServiceUrls:ProtectedCustomerUrl");
         }
 
         // 20 minutes = 1200;
@@ -49,16 +39,44 @@ namespace App.Domain.Admin.Areas.Account.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> Login([FromQuery] string accessToken)
+        public async Task<ActionResult> Login()
         {
-            if (ModelState.IsValid)
-            {
-                await SignInUser(accessToken);
-                return Redirect(ProtectedAdminUrl);
-            }
+            var accessToken = await HttpContext.GetTokenAsync("access_token");
+            return RedirectToAction(nameof(Index), "Home");
+        }
 
-            var model = new LoginRequest() { };
-            return View(model);
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginRequest model)
+        {
+            _tokenProvider.ClearToken();
+            await HttpContext.SignOutAsync("Cookies");
+
+            Response response = await _authService.LoginAsync(model);
+            if (response.IsSuccess && response != null)
+            {
+                var token = JsonConvert.DeserializeObject<Token>(Convert.ToString(response.Result));
+                if (token != null)
+                {
+                    await SignInUser(token.AccessToken);
+                    var roles = User.FindFirst(ClaimTypes.Role)?.Value;
+                    if (roles == StaticDetail.RoleAdmin)
+                    {
+                        return RedirectToAction(nameof(Index), "Home");
+                    }
+                    if (roles == StaticDetail.RoleCustomer)
+                    {
+                        return Redirect(ProtectedCustomerUrl);
+                    }
+
+                    return RedirectToAction("AccessDenied", "Authentication");
+                }
+                return RedirectToAction("Error", new AccountErrorModel { Message = "Login Bug" });
+            }
+            else
+            {
+                TempData["error"] = response.Message;
+                return View(model);
+            }
         }
 
         [HttpPost]
@@ -66,12 +84,12 @@ namespace App.Domain.Admin.Areas.Account.Controllers
         {
             try
             {
-                var domain = User.FindFirst(JwtRegisteredClaimNames.Aud)?.Value;
-                await HttpContext.SignOutAsync();
+                await HttpContext.SignOutAsync("Cookies");
+                SignOut("Cookies", "OpenIdConnect");
                 var token = _tokenProvider.GetToken();
                 await _authService.LogoutAsync(token);
                 _tokenProvider.ClearToken();
-                return Redirect(domain);
+                return Redirect("~/");
             }
             catch
             {
@@ -79,6 +97,16 @@ namespace App.Domain.Admin.Areas.Account.Controllers
             }
         }
 
+        // 20 minutes = 1200;
+        [ResponseCache(Duration = 1200, Location = ResponseCacheLocation.None, NoStore = true)]
+        public async Task<ActionResult> Error(AccountErrorModel errorModel)
+        {
+            return View(new AccountErrorModel
+            {
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+                Message = errorModel.Message.ToString()
+            });
+        }
         private async Task SignInUser(string AccessToken)
         {
             var handler = new JwtSecurityTokenHandler();
@@ -91,8 +119,6 @@ namespace App.Domain.Admin.Areas.Account.Controllers
                 jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Sub).Value));
             identity.AddClaim(new Claim(JwtRegisteredClaimNames.Name,
                 jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Name).Value));
-            identity.AddClaim(new Claim(JwtRegisteredClaimNames.Aud,
-                jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Aud).Value));
             identity.AddClaim(new Claim(ClaimTypes.Role,
                 jwt.Claims.FirstOrDefault(u => u.Type == "role").Value));
             // for render information
@@ -100,7 +126,13 @@ namespace App.Domain.Admin.Areas.Account.Controllers
             jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Email).Value));
 
             var principal = new ClaimsPrincipal(identity);
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal,
+            new AuthenticationProperties
+            {
+                IsPersistent = true, // Cookie sẽ tồn tại qua nhiều phiên duyệt web
+            });
+            HttpContext.User = principal;// Optionally, update HttpContext.User to reflect the new principal immediately in the current request
+
         }
     }
 }

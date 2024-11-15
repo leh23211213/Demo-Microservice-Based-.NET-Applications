@@ -1,16 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using App.Frontend.Services.IServices;
-using App.Frontend.Areas.Account.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using App.Frontend.Services.IServices;
 using App.Frontend.Utility;
+using App.Frontend.Areas.Account.Models;
 using App.Frontend.Models;
 
 namespace App.Frontend.Areas.Account.Controllers
 {
     [Area("Account")]
-    [Route("[area]/[action]")]
-    [AllowAnonymous]
+    [Route("user")]
     public class RegisterController : Controller
     {
         private readonly IAuthService _authService;
@@ -21,6 +20,7 @@ namespace App.Frontend.Areas.Account.Controllers
         }
 
         [HttpGet]
+        [Route("register")]
         public async Task<ActionResult> Register()
         {
             var roleList = new List<SelectListItem>()
@@ -32,11 +32,13 @@ namespace App.Frontend.Areas.Account.Controllers
             return View();
         }
 
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegistrationRequest model)
         {
             Response response = await _authService.RegisterAsync(model);
+            Response assignRole;
 
             if (response.IsSuccess && response != null)
             {
@@ -45,7 +47,7 @@ namespace App.Frontend.Areas.Account.Controllers
                     model.Role = StaticDetail.RoleCustomer;
                 }
                 TempData["success"] = response?.Message;
-                return RedirectToAction("Login", "Login", new { area = "Account" });
+                return RedirectToAction("Login", "Authentication");
             }
             else
             {

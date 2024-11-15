@@ -1,0 +1,42 @@
+
+/* header */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+header, footer {
+    padding: 18px;
+}
+
+
+footer {
+    margin-top: auto;   
+}
+
+
+main {
+    display: flex; /* Sử dụng flexbox để chia phần "main" thành hai phần */
+}
+
+.left-content,
+.right-content {
+    flex: 1; /* Mỗi phần chiếm 50% chiều rộng của "main" */
+    max-width: 50%;
+    box-sizing: border-box;
+    padding: 20px;
+}
+
+.left-content {
+    order: 1; /* Xác định phần left sẽ hiển thị trước phần right */
+    
+}
+.right-content {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}

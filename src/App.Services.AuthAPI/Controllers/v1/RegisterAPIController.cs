@@ -42,7 +42,7 @@ namespace App.Services.AuthAPI.Controllers
                     return _response;
                 }
                 await _messageBus.PublishMessage(model.Email, _configuration.GetValue<string>("TopicAndQueueNames:RegisterUserQueue"));
-                _response.Message = "Registration completed successfully";
+                _response.Message = "Registration Successful";
             }
             else
             {

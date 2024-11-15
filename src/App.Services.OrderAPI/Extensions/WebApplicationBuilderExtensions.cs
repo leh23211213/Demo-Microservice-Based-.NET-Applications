@@ -9,8 +9,7 @@
             var secret = settingsSection.GetValue<string>("Secret");
             var issuer = settingsSection.GetValue<string>("Issuer");
             var audience = settingsSection.GetValue<string>("Audience");
-            // var key = Convert.FromBase64String(secret); 500.30
-            var key = System.Text.Encoding.ASCII.GetBytes(secret);
+            var key = Convert.FromBase64String(secret);
 
             builder.Services.AddAuthentication(options =>
             {
