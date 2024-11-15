@@ -1,3 +1,4 @@
+
 using App.Frontend.Areas.Account.Models;
 using App.Frontend.Models;
 using App.Frontend.Utility;
@@ -21,15 +22,6 @@ namespace App.Frontend.Services
         public AuthService(IBaseService baseService)
         {
             _baseService = baseService;
-        }
-
-        public async Task<Response?> LoginAsync()
-        {
-            return await _baseService.SendAsync(new Request()
-            {
-                ApiType = StaticDetail.ApiType.GET,
-                Url = StaticDetail.AuthAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/auth/ReLogin"
-            });
         }
 
         public async Task<Response?> LoginAsync(LoginRequest loginRequest)

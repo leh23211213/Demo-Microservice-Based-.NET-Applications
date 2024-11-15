@@ -13,6 +13,8 @@ namespace App.Domain.Admin.Services
             _baseService = baseService;
         }
 
+<<<<<<< HEAD
+=======
         public async Task<Response?> LoginAsync()
         {
             return await _baseService.SendAsync(new Request()
@@ -21,6 +23,7 @@ namespace App.Domain.Admin.Services
                 Url = StaticDetail.AuthAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/auth/ReLogin"
             });
         }
+>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
         public async Task<Response?> LoginAsync(LoginRequest loginRequest)
         {
             return await _baseService.SendAsync(new Request()

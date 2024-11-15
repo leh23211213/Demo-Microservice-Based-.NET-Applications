@@ -8,6 +8,8 @@ using App.Domain.Admin.Utility;
 
 namespace App.Domain.Admin.Controllers
 {
+    [Authorize]
+    [AllowAnonymous]
     public class OrderController : Controller
     {
         private readonly IOrderService _orderService;
@@ -17,7 +19,17 @@ namespace App.Domain.Admin.Controllers
             _orderService = orderService;
         }
 
+<<<<<<< HEAD
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+=======
+<<<<<<<< HEAD:src/domain/App.Frontend/Controllers/OrderController.cs
+========
         [HttpGet]
+>>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0:src/domain/App.Domain.Admin/Controllers/OrderController.cs
         public IActionResult Index()
         {
             if (User.Identity.IsAuthenticated)
@@ -30,7 +42,11 @@ namespace App.Domain.Admin.Controllers
             }
         }
 
+<<<<<<<< HEAD:src/domain/App.Frontend/Controllers/OrderController.cs
+========
         [HttpGet]
+>>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0:src/domain/App.Domain.Admin/Controllers/OrderController.cs
+>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
         public async Task<IActionResult> Details(string orderId)
         {
             OrderHeader orderHeader = new OrderHeader();

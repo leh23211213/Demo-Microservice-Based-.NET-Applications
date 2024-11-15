@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Stripe;
 
+
 var builder = WebApplication.CreateBuilder(args);
 builder.AddAppAuthetication();
 builder.Services.ConfigureDatabase(builder.Configuration);
@@ -81,7 +82,6 @@ app.UseSwaggerUI(options =>
 });
 
 StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
-
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

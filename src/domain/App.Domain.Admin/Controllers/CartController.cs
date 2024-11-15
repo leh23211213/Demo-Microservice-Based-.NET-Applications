@@ -7,6 +7,8 @@ using App.Domain.Admin.Services.IServices;
 
 namespace App.Domain.Admin.Controllers
 {
+    [Authorize]
+    [AllowAnonymous]
     public class CartController : Controller
     {
         private readonly IOrderService _orderService;
@@ -18,7 +20,20 @@ namespace App.Domain.Admin.Controllers
             _orderService = orderService;
         }
 
+<<<<<<< HEAD
+        public async Task<IActionResult> Index()
+        {
+            return View(await LoadCart());
+        }
+
+        public async Task<IActionResult> Checkout()
+        {
+            return View(await LoadCart());
+=======
+<<<<<<<< HEAD:src/domain/App.Frontend/Controllers/CartController.cs
+========
         [HttpGet]
+>>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0:src/domain/App.Domain.Admin/Controllers/CartController.cs
         public async Task<IActionResult> Index()
         {
             if (User.Identity.IsAuthenticated)
@@ -31,7 +46,10 @@ namespace App.Domain.Admin.Controllers
             }
         }
 
+<<<<<<<< HEAD:src/domain/App.Frontend/Controllers/CartController.cs
+========
         [HttpGet]
+>>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0:src/domain/App.Domain.Admin/Controllers/CartController.cs
         public async Task<IActionResult> Checkout()
         {
             if (User.Identity.IsAuthenticated)
@@ -42,6 +60,7 @@ namespace App.Domain.Admin.Controllers
             {
                 return RedirectToAction("Login", "Authentication", new { area = "Account" });
             }
+>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
         }
 
         [HttpPost]
@@ -75,7 +94,10 @@ namespace App.Domain.Admin.Controllers
             return View(cart);
         }
 
+<<<<<<< HEAD
+=======
         [HttpGet]
+>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
         public async Task<IActionResult> Confirmation(string orderId)
         {
             Response response = await _orderService.ValidateStripeSession(orderId);
@@ -86,7 +108,13 @@ namespace App.Domain.Admin.Controllers
             return View(orderId);
         }
 
+<<<<<<< HEAD
+=======
+<<<<<<<< HEAD:src/domain/App.Frontend/Controllers/CartController.cs
+========
         [HttpPost]
+>>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0:src/domain/App.Domain.Admin/Controllers/CartController.cs
+>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
         public async Task<IActionResult> Delete(string cartDetailsId)
         {
             Response? response = await _cartService.DeleteAsync(cartDetailsId);

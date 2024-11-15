@@ -1,15 +1,14 @@
-using Newtonsoft.Json;
 using System.Diagnostics;
-using System.Security.Claims;
 using App.Domain.Admin.Models;
-using App.Domain.Admin.Utility;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Authorization;
 using App.Domain.Admin.Services.IServices;
-using Microsoft.AspNetCore.Authentication;
+using System.IdentityModel.Tokens.Jwt;
 using App.Domain.Admin.Areas.Account.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Newtonsoft.Json;
 
 namespace App.Domain.Admin.Areas.Account.Controllers
 {
@@ -19,83 +18,18 @@ namespace App.Domain.Admin.Areas.Account.Controllers
     {
         private readonly IAuthService _authService;
         private readonly ITokenProvider _tokenProvider;
+
         private readonly IConfiguration _configuration;
         private readonly string ProtectedAdminUrl;
         private readonly string ProtectedCustomerUrl;
         public LoginController(
                                 IAuthService authService,
-                                ITokenProvider tokenProvider,
-                                 IConfiguration configuration
+                                ITokenProvider tokenProvider
                             )
         {
             _authService = authService;
             _tokenProvider = tokenProvider;
-            _configuration = configuration;
 
-            ProtectedAdminUrl = _configuration.GetValue<string>("ServiceUrls:ProtectedAdminUrl");
-            ProtectedCustomerUrl = _configuration.GetValue<string>("ServiceUrls:ProtectedCustomerUrl");
-        }
-
-        [HttpGet]
-        [Authorize]
-        public async Task<ActionResult> Login()
-        {
-            var accessToken = await HttpContext.GetTokenAsync("access_token");
-            return RedirectToAction(nameof(Index), "Home");
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginRequest model)
-        {
-            _tokenProvider.ClearToken();
-            await HttpContext.SignOutAsync("Cookies");
-
-            Response response = await _authService.LoginAsync(model);
-            if (response.IsSuccess && response != null)
-            {
-                var token = JsonConvert.DeserializeObject<Token>(Convert.ToString(response.Result));
-                if (token != null)
-                {
-                    await SignInUser(token.AccessToken);
-                    var roles = User.FindFirst(ClaimTypes.Role)?.Value;
-                    if (roles == StaticDetail.RoleAdmin)
-                    {
-                        return RedirectToAction(nameof(Index), "Home");
-                    }
-                    if (roles == StaticDetail.RoleCustomer)
-                    {
-                        return Redirect(ProtectedCustomerUrl);
-                    }
-
-                    return RedirectToAction("AccessDenied", "Authentication");
-                }
-                return RedirectToAction("Error", new AccountErrorModel { Message = "Login Bug" });
-            }
-            else
-            {
-                TempData["error"] = response.Message;
-                return View(model);
-            }
-        }
-
-
-        [HttpPost]
-        public async Task<IActionResult> Logout()
-        {
-            try
-            {
-                await HttpContext.SignOutAsync("Cookies");
-                SignOut("Cookies", "OpenIdConnect");
-                var token = _tokenProvider.GetToken();
-                await _authService.LogoutAsync(token);
-                _tokenProvider.ClearToken();
-                return Redirect("~/");
-            }
-            catch
-            {
-                return RedirectToAction("Error", new AccountErrorModel { Message = "Unknow" });
-            }
         }
 
         // 20 minutes = 1200;
@@ -108,6 +42,7 @@ namespace App.Domain.Admin.Areas.Account.Controllers
                 Message = errorModel.Message.ToString()
             });
         }
+
         private async Task SignInUser(string AccessToken)
         {
             var handler = new JwtSecurityTokenHandler();
@@ -125,7 +60,6 @@ namespace App.Domain.Admin.Areas.Account.Controllers
             // for render information
             identity.AddClaim(new Claim(ClaimTypes.Name,
             jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Email).Value));
-
             var principal = new ClaimsPrincipal(identity);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal,
             new AuthenticationProperties
@@ -133,7 +67,6 @@ namespace App.Domain.Admin.Areas.Account.Controllers
                 IsPersistent = true, // Cookie sẽ tồn tại qua nhiều phiên duyệt web
             });
             HttpContext.User = principal;// Optionally, update HttpContext.User to reflect the new principal immediately in the current request
-
         }
     }
 }
