@@ -1,4 +1,4 @@
-using AspNetCoreRateLimit;
+
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 
@@ -14,7 +14,6 @@ else
 }
 builder.Services.AddOcelot(builder.Configuration);
 var app = builder.Build();
-app.UseIpRateLimiting();
 app.MapGet("/", () => "Hello World!");
 app.UseOcelot().GetAwaiter().GetResult();
 app.Run();

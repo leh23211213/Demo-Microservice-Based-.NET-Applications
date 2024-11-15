@@ -1,6 +1,6 @@
 using App.Services.EmailAPI.Data;
 using App.Services.EmailAPI.Extension;
-using AspNetCoreRateLimit;
+
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,7 +25,6 @@ app.UseSwaggerUI(c =>
     }
 });
 
-app.UseIpRateLimiting();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
