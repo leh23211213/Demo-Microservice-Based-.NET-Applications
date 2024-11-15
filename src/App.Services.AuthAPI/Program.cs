@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+<<<<<<< HEAD
 builder.AddAppAuthetication();
 builder.Services.ConfigureDatabase(builder.Configuration);
 builder.Services.AppServiceCollection(builder.Configuration);
@@ -32,34 +33,31 @@ builder.Services.AddSwaggerGen(options =>
         Title = "App.Services.AuthAPI",
     });
 });
+=======
+builder.AddAppValidate();
+builder.AddIdentityServer7(builder.Configuration);
+builder.Services.AppServiceCollection(builder.Configuration);
+builder.Services.ConfigureDatabase(builder.Configuration);
+builder.Services.ApiVersionConfiguration();
+// builder.Services.AddSwaggerDocumentation();
+builder.Services.AddDistributedMemoryCache();
+>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
 
 builder.Services.AddDistributedMemoryCache();
 
 var app = builder.Build();
-app.UseSwagger();
-app.UseSwaggerUI(options =>
-{
-    if (app.Environment.IsDevelopment())
-    {
-        app.UseSwaggerUI(options =>
-        {
-            options.SwaggerEndpoint("/swagger/v1/swagger.json", "App.Services.AuthAPI V1");
-        });
-    }
-    else
-    {
-        app.UseSwaggerUI(options =>
-        {
-            options.SwaggerEndpoint("/swagger/v1/swagger.json", "App.Services.AuthAPI V1");
-            options.RoutePrefix = string.Empty;
-        });
-    }
-});
+
+// app.UseSwaggerDocumentation(app.Environment);
+
 
 app.UseSession();
 app.UseHttpsRedirection();
+app.UseStaticFiles();
+
+app.UseIdentityServer();
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
 ApplyMigration();
 app.Run();

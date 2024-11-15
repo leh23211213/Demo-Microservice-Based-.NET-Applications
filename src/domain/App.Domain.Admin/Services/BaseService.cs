@@ -192,17 +192,24 @@ namespace App.Domain.Admin.Services
                 jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Name).Value));
             identity.AddClaim(new Claim(ClaimTypes.Role,
                 jwt.Claims.FirstOrDefault(u => u.Type == "role").Value));
+<<<<<<< HEAD
 
+=======
+>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
             // for render information
             identity.AddClaim(new Claim(ClaimTypes.Name,
             jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Email).Value));
 
             var principal = new ClaimsPrincipal(identity);
+<<<<<<< HEAD
+            await _httpContextAccessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+=======
             await _httpContextAccessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal,
             new AuthenticationProperties
             {
                 IsPersistent = true, // Cookie sẽ tồn tại qua nhiều phiên duyệt web
             });
+>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
 
             _tokenProvider.SetToken(token);
         }

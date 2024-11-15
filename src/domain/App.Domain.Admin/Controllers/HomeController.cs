@@ -19,13 +19,46 @@ namespace App.Domain.Admin.Controllers
             _cartService = cartService;
             _productService = productService;
         }
+<<<<<<< HEAD
+        public async Task<IActionResult> Index(
+                                                [FromQuery] int pageSize = 6,
+                                                [FromQuery] int currentPage = 1,
+                                                [FromQuery] string? search = ""
+                                            )
+        {
+            Response? response = await _productService.Get(pageSize, currentPage, search);
+            Pagination pagination = new();
+            if (response.IsSuccess && response != null && response.Result != null)
+            {
+                pagination = JsonConvert.DeserializeObject<Pagination>(Convert.ToString(response.Result));
+            }
+            else
+            {
+                TempData["error"] = response?.Message;
+            }
+            return View(pagination);
+        }
+
+
+=======
+<<<<<<<< HEAD:src/domain/App.Frontend/Controllers/HomeController.cs
+========
+
+        [HttpGet]
+>>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0:src/domain/App.Domain.Admin/Controllers/HomeController.cs
         public async Task<IActionResult> Index(
                                                [FromQuery] int pageSize = 6,
                                                [FromQuery] int currentPage = 1,
                                                [FromQuery] string? search = ""
                                            )
         {
+<<<<<<<< HEAD:src/domain/App.Frontend/Controllers/HomeController.cs
+            Response? response = await _productService.Get(pageSize, currentPage, search);
+            Pagination pagination = new();
+            if (response.IsSuccess && response != null && response.Result != null)
+========
             if (User.Identity.IsAuthenticated)
+>>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0:src/domain/App.Domain.Admin/Controllers/HomeController.cs
             {
                 Response? response = await _productService.Get(pageSize, currentPage, search);
                 Pagination pagination = new();
@@ -41,11 +74,12 @@ namespace App.Domain.Admin.Controllers
             }
             else
             {
-                return RedirectToAction("Login", "Authentication");
+                return RedirectToAction("Login", "Authentication", new { area = "Account" });
             }
         }
 
         [HttpGet]
+>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
         public async Task<IActionResult> Details(string id)
         {
             Response? response = await _productService.Get(id);

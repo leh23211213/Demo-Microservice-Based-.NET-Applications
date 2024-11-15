@@ -6,7 +6,6 @@ name: Build and deploy ASP.Net Core app to Azure Web App - 409159apigateway
 on:
   push:
     branches:
-      - main
       - 409159apigateway
 
 env:
@@ -50,7 +49,7 @@ jobs:
   deploy:
     runs-on: windows-latest
     needs: build
-    
+
     environment:
       name: Production
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
@@ -67,6 +66,6 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          slot-name: 'Production'
+          slot-name: "Production"
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_64B1090A09974EB992DF06AD91EC0AC4 }}
           package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}

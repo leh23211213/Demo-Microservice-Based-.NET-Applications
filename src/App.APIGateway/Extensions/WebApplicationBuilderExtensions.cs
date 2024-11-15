@@ -32,7 +32,13 @@
                 };
             });
 
+<<<<<<<< HEAD:src/App.Services.ProductAPI/Extensions/AppAuthetication.cs
+            builder.Services.AddAuthorization(options =>
+            {
+            });
+========
             builder.Services.AddAuthorization();
+>>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0:src/App.APIGateway/Extensions/AppAuthetication.cs
             builder.Services.AddControllers();
             builder.Services.AddAuthentication();
             return builder;

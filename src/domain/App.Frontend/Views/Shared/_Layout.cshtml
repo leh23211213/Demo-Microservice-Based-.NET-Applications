@@ -1,4 +1,4 @@
-﻿@using App.Frontend.Utility
+@using App.Frontend.Utility
 <!DOCTYPE html>
 <html lang="en">
 
@@ -159,12 +159,21 @@
                                     <line class="st0" x1="9" y1="25" x2="15" y2="25"></line>
                                 </g>
                             </svg>
-                            <span class="link hide">Manage Order</span>
+
+                            <span class="link hide">Order History</span>
                         </a>
                     </li>
                 </ul>
             </div>
         </div>
+        <div class="divider"></div>
+        </div>
+        @if (User.IsInRole(StaticDetail.RoleAdmin))
+        {
+            <a href="#" onclick="javascript:window.open('@externalUrl', '_blank');">
+                <button class="btn-primary btn form-control">Admin Central</button>
+            </a>
+        }
         <div class="divider"></div>
         <!-- Login Partial Section -->
         @await Html.PartialAsync("_LoginPartial")

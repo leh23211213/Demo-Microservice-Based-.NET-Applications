@@ -7,12 +7,16 @@ using App.Frontend.Utility;
 using System.Security.Claims;
 using System.Net.Http.Headers;
 using System.IdentityModel.Tokens.Jwt;
-using App.Frontend.Services.IServices;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace App.Frontend.Services
 {
+    public interface IBaseService
+    {
+        Task<Response?> SendAsync(Request Request, bool withBearer = true);
+    }
+
     public class BaseService : IBaseService
     {
         protected readonly string _url = null!;
@@ -46,7 +50,8 @@ namespace App.Frontend.Services
 
                 HttpResponseMessage httpResponseMessage = null;
                 httpResponseMessage = await SendWithRefreshTokenAsync(client, messageFactory, withBearer);
-                Response FinalApiResponse = new(){ IsSuccess = false };
+
+                Response FinalApiResponse = new() { IsSuccess = false };
 
                 try
                 {

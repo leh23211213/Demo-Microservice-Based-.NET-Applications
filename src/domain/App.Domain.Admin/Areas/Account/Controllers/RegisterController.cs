@@ -1,3 +1,6 @@
+
+using App.Domain.Admin.Models;
+using App.Domain.Admin.Utility;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using App.Domain.Admin.Services.IServices;
@@ -45,7 +48,8 @@ namespace App.Domain.Admin.Areas.Account.Controllers
                     model.Role = StaticDetail.RoleCustomer;
                 }
                 TempData["success"] = response?.Message;
-                return RedirectToAction("Login", "Authentication");
+
+                return RedirectToAction("Login", "Authentication", new { area = "Account" });
             }
             else
             {

@@ -1,23 +1,27 @@
+
 using Newtonsoft.Json;
-using App.Frontend.Models;
 using System.Diagnostics;
+using App.Frontend.Models;
+using App.Frontend.Services;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
-using App.Frontend.Services.IServices;
+using App.Frontend.Areas.Account.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using App.Frontend.Areas.Account.Models;
+
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+
 namespace App.Frontend.Areas.Account.Controllers
 {
     [Area("Account")]
-    [Route("user")]
+    [Route("{area}/{controller}/{action}")]
     public class AuthenticationController : Controller
     {
         private readonly IAuthService _authService;
         private readonly ITokenProvider _tokenProvider;
+
         private readonly IConfiguration _configuration;
         private readonly string ProtectedAdminUrl;
         private readonly string ProtectedCustomerUrl;
@@ -33,21 +37,27 @@ namespace App.Frontend.Areas.Account.Controllers
         }
 
         [HttpGet]
-        [Route("login")]
-        //[Authorize]
+        // [Authorize]
         public async Task<ActionResult> Login()
         {
-            return View(new LoginRequest());
-            var accessToken = await HttpContext.GetTokenAsync("access_token");
-            return RedirectToAction(nameof(Index), "Home");
-            // var authenticateResult = await HttpContext.AuthenticateAsync();
-            // if (authenticateResult.Succeeded)
+            var authenticateResult = await HttpContext.AuthenticateAsync();
+            if (authenticateResult.Succeeded)
+            {
+                return RedirectToAction(nameof(Index), "Home");
+            }
+            return View(new LoginRequest() { GeneratedCode = new Random().Next(1000, 9999).ToString(), });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginRequest model)
         {
+            if (model.GeneratedCode != model.EnteredCode)
+            {
+                ModelState.AddModelError("EnteredCode", "The code you entered is incorrect.");
+                return View(new LoginRequest() { GeneratedCode = new Random().Next(1000, 9999).ToString(), });
+            }
+
             _tokenProvider.ClearToken();
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
@@ -71,12 +81,11 @@ namespace App.Frontend.Areas.Account.Controllers
             else
             {
                 TempData["error"] = response.Message;
-                return View(model);
+                return View(new LoginRequest() { GeneratedCode = new Random().Next(1000, 9999).ToString(), });
             }
         }
 
         [HttpPost]
-        [Route("logout")]
         public async Task<IActionResult> Logout()
         {
             try
@@ -109,6 +118,7 @@ namespace App.Frontend.Areas.Account.Controllers
                 Message = errorModel.Message.ToString()
             });
         }
+
         private async Task SignInUser(string AccessToken)
         {
             var handler = new JwtSecurityTokenHandler();

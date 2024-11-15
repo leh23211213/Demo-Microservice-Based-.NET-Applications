@@ -1,7 +1,11 @@
-using App.Frontend.Services.IServices;
-
 namespace App.Frontend.Services
 {
+    public interface IGlobalSession
+    {
+        void SetSessionData(string key, string value);
+        string GetSessionData(string key);
+    }
+
     public class GlobalSession : IGlobalSession
     {
         private readonly IHttpContextAccessor _httpContextAccessor;

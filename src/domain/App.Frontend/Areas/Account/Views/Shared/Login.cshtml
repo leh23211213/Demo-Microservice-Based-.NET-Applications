@@ -46,15 +46,6 @@
                                 <span asp-validation-for="Password" class="text-danger" />
                             </div>
 
-                            <div class="form-floating mb-3">
-                                <label asp-for="EnteredCode">Enter the code: @Model.GeneratedCode</label>
-                                <input asp-for="EnteredCode" class="form-control" autocomplete="off"
-                                    placeholder="Enter the code" />
-                                <span asp-validation-for="EnteredCode" class="text-danger"></span>
-                            </div>
-
-                            <input type="hidden" asp-for="GeneratedCode" />
-
                             <div class="mt-3 d-grid">
                                 <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary"
                                     value="Submit">Login</button>
