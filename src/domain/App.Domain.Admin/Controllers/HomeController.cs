@@ -1,10 +1,11 @@
-using App.Domain.Admin.Models;
-using App.Domain.Admin.Services;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using App.Domain.Admin.Models;
+using Microsoft.AspNetCore.Mvc;
+using App.Domain.Admin.Services;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authorization;
+
 namespace App.Domain.Admin.Controllers
 {
     [Authorize]
@@ -36,33 +37,6 @@ namespace App.Domain.Admin.Controllers
                 TempData["error"] = response?.Message;
             }
             return View(pagination);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Index(
-                                               [FromQuery] int pageSize = 6,
-                                               [FromQuery] int currentPage = 1,
-                                               [FromQuery] string? search = ""
-                                           )
-        {
-            if (User.Identity.IsAuthenticated)
-            {
-                Response? response = await _productService.Get(pageSize, currentPage, search);
-                Pagination pagination = new();
-                if (response.IsSuccess && response != null && response.Result != null)
-                {
-                    pagination = JsonConvert.DeserializeObject<Pagination>(Convert.ToString(response.Result));
-                }
-                else
-                {
-                    TempData["error"] = response?.Message;
-                }
-                return View(pagination);
-            }
-            else
-            {
-                return RedirectToAction("Login", "Authentication", new { area = "Account" });
-            }
         }
 
         [HttpGet]
