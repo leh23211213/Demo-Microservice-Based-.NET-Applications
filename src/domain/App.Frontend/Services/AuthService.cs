@@ -1,12 +1,4 @@
-<<<<<<< HEAD
-using App.Domain.Admin.Areas.Account.Models;
-using App.Domain.Admin.Models;
-using App.Domain.Admin.Services.IServices;
-using App.Domain.Admin.Utility;
 
-namespace App.Domain.Admin.Services
-{
-=======
 using App.Frontend.Areas.Account.Models;
 using App.Frontend.Models;
 using App.Frontend.Utility;
@@ -24,7 +16,6 @@ namespace App.Frontend.Services
         Task<Response?> RegisterAsync(RegistrationRequest registerRequest);
         Task<Response?> LogoutAsync(Token token);
     }
->>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
     public class AuthService : IAuthService
     {
         private readonly IBaseService _baseService;
@@ -41,10 +32,7 @@ namespace App.Frontend.Services
                 Url = StaticDetail.AuthAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/auth/ReLogin"
             });
         }
-<<<<<<< HEAD
-=======
 
->>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
         public async Task<Response?> LoginAsync(LoginRequest loginRequest)
         {
             return await _baseService.SendAsync(new Request()

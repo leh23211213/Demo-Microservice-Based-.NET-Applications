@@ -7,10 +7,6 @@ using App.Frontend.Utility;
 using System.Security.Claims;
 using System.Net.Http.Headers;
 using System.IdentityModel.Tokens.Jwt;
-<<<<<<< HEAD
-using App.Frontend.Services.IServices;
-=======
->>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
@@ -54,11 +50,8 @@ namespace App.Frontend.Services
 
                 HttpResponseMessage httpResponseMessage = null;
                 httpResponseMessage = await SendWithRefreshTokenAsync(client, messageFactory, withBearer);
-<<<<<<< HEAD
-                Response FinalApiResponse = new(){ IsSuccess = false };
-=======
+
                 Response FinalApiResponse = new() { IsSuccess = false };
->>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
 
                 try
                 {

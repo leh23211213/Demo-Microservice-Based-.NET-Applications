@@ -1,16 +1,4 @@
 using Newtonsoft.Json;
-<<<<<<< HEAD
-using App.Domain.Admin.Models;
-using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Authorization;
-using App.Domain.Admin.Services.IServices;
-
-namespace App.Domain.Admin.Controllers
-{
-    [Authorize]
-    [AllowAnonymous]
-=======
 using App.Frontend.Models;
 using App.Frontend.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +6,6 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace App.Frontend.Controllers
 {
->>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
     public class CartController : Controller
     {
         private readonly IOrderService _orderService;
@@ -30,14 +17,7 @@ namespace App.Frontend.Controllers
             _orderService = orderService;
         }
 
-<<<<<<< HEAD
-<<<<<<<< HEAD:src/domain/App.Frontend/Controllers/CartController.cs
-========
         [HttpGet]
->>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0:src/domain/App.Domain.Admin/Controllers/CartController.cs
-=======
-        [HttpGet]
->>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
         public async Task<IActionResult> Index()
         {
             if (User.Identity.IsAuthenticated)
@@ -50,14 +30,7 @@ namespace App.Frontend.Controllers
             }
         }
 
-<<<<<<< HEAD
-<<<<<<<< HEAD:src/domain/App.Frontend/Controllers/CartController.cs
-========
         [HttpGet]
->>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0:src/domain/App.Domain.Admin/Controllers/CartController.cs
-=======
-        [HttpGet]
->>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
         public async Task<IActionResult> Checkout()
         {
             if (User.Identity.IsAuthenticated)
@@ -104,20 +77,6 @@ namespace App.Frontend.Controllers
         [HttpGet]
         public async Task<IActionResult> Confirmation(string orderId)
         {
-<<<<<<< HEAD
-            Response response = await _orderService.ValidateStripeSession(orderId);
-            if (response.IsSuccess && response != null)
-            {
-                return View(orderId);
-            }
-            return View(orderId);
-        }
-
-<<<<<<<< HEAD:src/domain/App.Frontend/Controllers/CartController.cs
-========
-        [HttpPost]
->>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0:src/domain/App.Domain.Admin/Controllers/CartController.cs
-=======
             if (User.Identity.IsAuthenticated)
             {
                 Response response = await _orderService.ValidateStripeSession(orderId);
@@ -133,7 +92,6 @@ namespace App.Frontend.Controllers
             }
         }
 
->>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
         public async Task<IActionResult> Delete(string cartDetailsId)
         {
             Response? response = await _cartService.DeleteAsync(cartDetailsId);

@@ -1,27 +1,17 @@
-<<<<<<<< HEAD:src/domain/App.Frontend/Areas/Account/Controllers/LoginController.cs
-using System.Diagnostics;
-using App.Frontend.Models;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Mvc;
-using App.Frontend.Services.IServices;
-========
+
 using Newtonsoft.Json;
 using App.Frontend.Models;
 using System.Diagnostics;
 using App.Frontend.Services;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
->>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0:src/domain/App.Frontend/Areas/Account/Controllers/AuthenticationController.cs
 using System.IdentityModel.Tokens.Jwt;
 using App.Frontend.Areas.Account.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-<<<<<<<< HEAD:src/domain/App.Frontend/Areas/Account/Controllers/LoginController.cs
-using Newtonsoft.Json;
-========
+
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
->>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0:src/domain/App.Frontend/Areas/Account/Controllers/AuthenticationController.cs
 
 namespace App.Frontend.Areas.Account.Controllers
 {
@@ -31,11 +21,7 @@ namespace App.Frontend.Areas.Account.Controllers
     {
         private readonly IAuthService _authService;
         private readonly ITokenProvider _tokenProvider;
-<<<<<<<< HEAD:src/domain/App.Frontend/Areas/Account/Controllers/LoginController.cs
-        public LoginController(
-                                IAuthService authService,
-                                ITokenProvider tokenProvider
-========
+
         private readonly IConfiguration _configuration;
         private readonly string ProtectedAdminUrl;
         private readonly string ProtectedCustomerUrl;
@@ -43,7 +29,6 @@ namespace App.Frontend.Areas.Account.Controllers
                                 IAuthService authService,
                                 ITokenProvider tokenProvider,
                                 IConfiguration configuration
->>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0:src/domain/App.Frontend/Areas/Account/Controllers/AuthenticationController.cs
                             )
         {
             _authService = authService;
@@ -127,56 +112,7 @@ namespace App.Frontend.Areas.Account.Controllers
                 Message = errorModel.Message.ToString()
             });
         }
-<<<<<<<< HEAD:src/domain/App.Frontend/Areas/Account/Controllers/LoginController.cs
 
-        [HttpGet]
-        public async Task<ActionResult> Login()
-        {
-            var token = _tokenProvider.GetToken();
-            if (token != null)
-            {
-                await SignInUser(token.AccessToken);
-                return RedirectToAction("Index", "Home");
-            }
-
-            var model = new LoginRequest() { };
-            return View(model);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Login(LoginRequest model)
-        {
-            Response response = await _authService.LoginAsync(model);
-            if (response.IsSuccess && response != null)
-            {
-                var token = JsonConvert.DeserializeObject<Token>(Convert.ToString(response.Result));
-                if (token != null)
-                {
-                    await SignInUser(token.AccessToken);
-                    _tokenProvider.SetToken(token);
-                    return RedirectToAction("Index", "Home");
-                }
-                return RedirectToAction("Error", new AccountErrorModel { Message = "Login Bug" });
-            }
-            else
-            {
-                TempData["error"] = response.Message;
-                return View(model);
-            }
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Logout()
-        {
-            await HttpContext.SignOutAsync();
-            var token = _tokenProvider.GetToken();
-            await _authService.LogoutAsync(token);
-            _tokenProvider.ClearToken();
-            return RedirectToAction("Login", "Login", new { area = "Account" });
-        }
-
-========
->>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0:src/domain/App.Frontend/Areas/Account/Controllers/AuthenticationController.cs
         private async Task SignInUser(string AccessToken)
         {
             var handler = new JwtSecurityTokenHandler();

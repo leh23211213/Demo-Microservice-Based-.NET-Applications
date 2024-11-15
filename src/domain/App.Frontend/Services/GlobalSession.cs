@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-using App.Frontend.Services.IServices;
-
-namespace App.Frontend.Services
-{
-=======
 namespace App.Frontend.Services
 {
     public interface IGlobalSession
@@ -12,7 +6,6 @@ namespace App.Frontend.Services
         string GetSessionData(string key);
     }
 
->>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
     public class GlobalSession : IGlobalSession
     {
         private readonly IHttpContextAccessor _httpContextAccessor;

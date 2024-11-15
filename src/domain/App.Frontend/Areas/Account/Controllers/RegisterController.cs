@@ -41,11 +41,8 @@ namespace App.Frontend.Areas.Account.Controllers
                     model.Role = StaticDetail.RoleCustomer;
                 }
                 TempData["success"] = response?.Message;
-<<<<<<< HEAD
-                return RedirectToAction("Login", "Login", new { area = "Account" });
-=======
+
                 return RedirectToAction("Login", "Authentication", new { area = "Account" });
->>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
             }
             else
             {

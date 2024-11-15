@@ -1,12 +1,4 @@
 
-<<<<<<< HEAD
-using App.Domain.Admin.Models;
-using App.Domain.Admin.Services.IServices;
-using App.Domain.Admin.Utility;
-
-namespace App.Domain.Admin.Services
-{
-=======
 using App.Frontend.Models;
 using App.Frontend.Utility;
 
@@ -29,7 +21,6 @@ namespace App.Frontend.Services
         Task<Response> AddAsync(Cart cart);
     }
 
->>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
     public class CartService : ICartService
     {
         public readonly IBaseService _baseService;
