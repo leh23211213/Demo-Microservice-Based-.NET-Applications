@@ -1,46 +1,92 @@
-using App.Frontend.Models;
-using App.Frontend.Services.IServices;
+<<<<<<< HEAD
+using App.Domain.Admin.Models;
+using App.Domain.Admin.Services.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
-namespace App.Frontend.Controllers
+namespace App.Domain.Admin.Controllers
 {
     [Authorize]
     [AllowAnonymous]
+=======
+using Newtonsoft.Json;
+using System.Diagnostics;
+using App.Frontend.Models;
+using App.Frontend.Services;
+using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+
+namespace App.Frontend.Controllers
+{
+>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
     public class HomeController : Controller
     {
         private readonly ICartService _cartService;
         private readonly IProductService _productService;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
         public HomeController(ICartService cartService, IProductService productService)
         {
             _cartService = cartService;
             _productService = productService;
         }
+<<<<<<< HEAD
+<<<<<<<< HEAD:src/domain/App.Frontend/Controllers/HomeController.cs
+========
+
+        [HttpGet]
+>>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0:src/domain/App.Domain.Admin/Controllers/HomeController.cs
+        public async Task<IActionResult> Index(
+                                               [FromQuery] int pageSize = 6,
+                                               [FromQuery] int currentPage = 1,
+                                               [FromQuery] string? search = ""
+                                           )
+        {
+<<<<<<<< HEAD:src/domain/App.Frontend/Controllers/HomeController.cs
+            Response? response = await _productService.Get(pageSize, currentPage, search);
+            Pagination pagination = new();
+            if (response.IsSuccess && response != null && response.Result != null)
+========
+            if (User.Identity.IsAuthenticated)
+>>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0:src/domain/App.Domain.Admin/Controllers/HomeController.cs
+=======
+
+        [HttpGet]
         public async Task<IActionResult> Index(
                                                 [FromQuery] int pageSize = 6,
                                                 [FromQuery] int currentPage = 1,
                                                 [FromQuery] string? search = ""
                                             )
         {
-            Response? response = await _productService.Get(pageSize, currentPage, search);
-            Pagination pagination = new();
-            if (response.IsSuccess && response != null && response.Result != null)
+            if (User.Identity.IsAuthenticated)
+>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
             {
-                pagination = JsonConvert.DeserializeObject<Pagination>(Convert.ToString(response.Result));
+                Response? response = await _productService.Get(pageSize, currentPage, search);
+                Pagination pagination = new();
+                if (response.IsSuccess && response != null && response.Result != null)
+                {
+                    pagination = JsonConvert.DeserializeObject<Pagination>(Convert.ToString(response.Result));
+                }
+                else
+                {
+                    TempData["error"] = response?.Message;
+                }
+                return View(pagination);
             }
             else
             {
-                TempData["error"] = response?.Message;
+                return RedirectToAction("Login", "Authentication", new { area = "Account" });
             }
-            return View(pagination);
         }
 
-
+        [HttpGet]
         public async Task<IActionResult> Details(string id)
         {
+<<<<<<< HEAD
             Response? response = await _productService.Get(id);
             Product? product = new();
 
@@ -53,6 +99,27 @@ namespace App.Frontend.Controllers
                 TempData["error"] = response?.Message;
             }
             return View(product);
+=======
+            if (User.Identity.IsAuthenticated)
+            {
+                Response? response = await _productService.Get(id);
+                Product? product = new();
+
+                if (response != null && response.IsSuccess)
+                {
+                    product = JsonConvert.DeserializeObject<Product>(Convert.ToString(response.Result));
+                }
+                else
+                {
+                    TempData["error"] = response?.Message;
+                }
+                return View(product);
+            }
+            else
+            {
+                return RedirectToAction("Login", "Authentication", new { area = "Account" });
+            }
+>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
         }
 
         [HttpPost]

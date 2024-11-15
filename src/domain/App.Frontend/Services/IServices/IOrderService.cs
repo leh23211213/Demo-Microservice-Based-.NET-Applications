@@ -1,6 +1,6 @@
-using App.Frontend.Models;
+using App.Domain.Admin.Models;
 
-namespace App.Frontend.Services.IServices
+namespace App.Domain.Admin.Services.IServices
 {
     public interface IOrderService
     {
