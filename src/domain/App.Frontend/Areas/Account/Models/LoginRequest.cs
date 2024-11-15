@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc;
 
 namespace App.Frontend.Areas.Account.Models;
 
@@ -17,5 +18,14 @@ public class LoginRequest
     [Display(Name = "Remember me?")]
     public bool RememberMe { get; set; }
 
+    [Required(ErrorMessage = "Security code is required.")]
+    [StringLength(4, ErrorMessage = "The code must be exactly 4 digits.", MinimumLength = 4)]
+    public string? EnteredCode { get; set; }
+
+    // The code that will be generated and compared during validation.
+    [HiddenInput]
+    public string? GeneratedCode { get; set; }
+
     public IList<AuthenticationScheme>? ExternalLogins { get; set; }
+
 }

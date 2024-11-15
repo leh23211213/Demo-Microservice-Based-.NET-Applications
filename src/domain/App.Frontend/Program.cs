@@ -1,8 +1,8 @@
 using App.Frontend.Utility;
 using App.Frontend.Services;
 using App.Frontend.Extensions;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -27,45 +27,86 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<ITokenProvider, TokenProvider>();
-// Configure IdentityOptions
-builder.Services.Configure<IdentityOptions>(options =>
-{
-    // Password settings
-    options.Password.RequireDigit = false;
-    options.Password.RequireLowercase = false;
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequireUppercase = false;
-    options.Password.RequiredLength = 6;
-    options.Password.RequiredUniqueChars = 0;
+builder.Services.AddScoped<IProductService, ProductService>();
 
-    // Lockout settings
-    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-    options.Lockout.MaxFailedAccessAttempts = 5;
-    options.Lockout.AllowedForNewUsers = true;
-
-    // User settings
-    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
-    options.User.RequireUniqueEmail = true;
-
-    // SignIn settings
-    options.SignIn.RequireConfirmedEmail = false;
-    options.SignIn.RequireConfirmedPhoneNumber = false;
-});
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddControllersWithViews(u => u.Filters.Add(new AuthExceptionRedirection()));
 
 /*
 Cookie Authentication: Used to manage user authentication. 
 It stores the user's authentication ticket (e.g., login status) in a cookie.
  This allows the server to know if a user is authenticated on subsequent requests.
 */
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = "Cookies";
+    options.DefaultChallengeScheme = "OpenIdConnect";
+})
+.AddJwtBearer()
+.AddCookie(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.ExpireTimeSpan = TimeSpan.FromSeconds(20);
+    options.LoginPath = "/Account/Authentication/Login";
+    options.AccessDeniedPath = "/Account/Authentication/AccessDenied";
+})
+.AddOpenIdConnect("OpenIdConnect", options =>
+{
+    //Claims wil have every detail information
+    //options.SignInScheme = "Cookies";
+    options.Authority = builder.Configuration["ServiceUrls:AuthAPI"];
+    //options.GetClaimsFromUserInfoEndpoint = true;
+    //
+    options.ClientId = "user_scope";
+    options.ClientSecret = StaticDetail.secret;
+    options.ResponseType = "code";
+    //  
+    //options.TokenValidationParameters.NameClaimType = "name";
+    //options.TokenValidationParameters.RoleClaimType = "role";
+    //
+    options.Scope.Add("user_scope");
+    //
+    //options.SaveTokens = true;
+    //options.RequireHttpsMetadata = false;
+    options.ClaimActions.MapJsonKey("role", "role");
+    //
+    options.Events = new OpenIdConnectEvents
     {
-        options.ExpireTimeSpan = TimeSpan.FromDays(7); // the expiration time for the authentication cookie
-        options.LoginPath = "/Account/Login";
-        options.AccessDeniedPath = "/Account/AccessDenied";
-        options.Cookie.HttpOnly = true;
-        options.SlidingExpiration = true; // sẽ giúp gia hạn thời gian sống của cookie mỗi khi có hoạt động. Tuy nhiên, nếu không có hoạt động hoặc phiên đã hết hạn, người dùng sẽ bị đăng xuất và chuyển hướng về trang login.
-    });
+        OnRemoteFailure = context =>
+            {
+                context.Response.Redirect("/");
+                context.HandleResponse(); // Chặn xử lý mặc định và thực hiện điều hướng tùy chỉnh
+                return Task.CompletedTask;
+            },
+        OnAccessDenied = context =>
+            {
+                context.Response.Redirect("/AccessDenied");
+                context.HandleResponse(); // Chặn xử lý mặc định và thực hiện điều hướng tùy chỉnh
+                return Task.CompletedTask;
+            },
+        OnUserInformationReceived = context =>
+            {
+                context.Response.Redirect("/Account/Authentication/Login");
+                context.HandleResponse(); // Chặn xử lý mặc định và thực hiện điều hướng tùy chỉnh
+                return Task.CompletedTask;
+            },
+        OnTokenResponseReceived = context =>
+            {
+                context.Response.Redirect("/Account/Authentication/Login");
+                context.HandleResponse(); // Chặn xử lý mặc định và thực hiện điều hướng tùy chỉnh
+                return Task.CompletedTask;
+            },
+        OnTokenValidated = context =>
+            {
+                context.Response.Redirect("/Account/Authentication/Login");
+                context.HandleResponse(); // Chặn xử lý mặc định và thực hiện điều hướng tùy chỉnh
+                return Task.CompletedTask;
+            },
+    };
+    options.CallbackPath = new PathString("/Account/Authentication/signin-oidc");
+    options.SignedOutCallbackPath = new PathString("/Account/Authentication/signout-callback-oidc");
+});
 
 /*
 Session: Used to store user-specific data on the server (such as shopping cart information, preferences, etc.).

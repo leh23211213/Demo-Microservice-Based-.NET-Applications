@@ -67,20 +67,58 @@
                                 </div>
                             </form>
 
-                            @* <div class="mt-4 text-center" disabled>
-                                <p>
-                                    <a href="#" disabled>Forgot
-                                        your
-                                        password?</a>
-                                </p>
-                            </div> *@
-
-                            <div class="my-form__actions">
-                                <div class="my-form__row">
-                                    <span>Don't have an account?</span>
-                                    <a asp-page="../Register/Index" asp-route-returnUrl="@Model.Input.ReturnUrl">
-                                        Sign Up Now
-                                    </a>
+                             <div class="mt-4 text-center">
+                                <div class="socials-row">
+                                    <p>
+                                    <section>
+                                            @{
+                                                @if (Model.Input.ExternalLogins == null && !Model.Input.ExternalLogins.Any())
+                                                {
+                                                }
+                                                else
+                                                {
+                                                <form id="external-account" asp-area="Account" asp-controller="ExternalLogin"
+                                                    asp-action="LoginWithProvider" method="post" class="form-horizontal">
+                                                    <div>
+                                                        <p>
+                                                                @foreach (var provider in Model.Input.ExternalLogins!)
+                                                                {
+                                                                    if (provider.Name == "Google")
+                                                                    {
+                                                                    <button type="submit" class="btn btn-primary" name="provider"
+                                                                        value="@provider.Name"
+                                                                        title="Log in using your @provider.DisplayName account">
+                                                                        <img src="~/lib/image/Login/@provider.Name.ToLower()_logo.png"
+                                                                            style="height: 30px; width: 30px; "
+                                                                            alt="@provider.DisplayName" />
+                                                                        Register with @provider.DisplayName
+                                                                    </button>
+                                                                    }
+                                                                }
+                                                        </p>
+                                                    </div>
+                                                </form>
+                                                }
+                                            }
+                                    </section>
+                                    </p>
+                                    <p>
+                                        <div class="mt-4 text-center" disabled>
+                                            <p>
+                                                <a href="#" disabled>Forgot
+                                                    your
+                                                    password?</a>
+                                            </p>
+                                        </div> 
+                                        <div class="my-form__actions">
+                                            <div class="my-form__row">
+                                                <span>Don't have an account?</span>
+                                                <a asp-page="../Register/Index" asp-route-returnUrl="@Model.Input.ReturnUrl">
+                                                    Sign Up Now
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </p>
                                 </div>
                             </div>
                         </div>

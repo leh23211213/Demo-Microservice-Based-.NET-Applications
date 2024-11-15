@@ -68,6 +68,7 @@ public class Index : PageModel
         Input = new InputModel
         {
             ReturnUrl = returnUrl,
+            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList(),
             GeneratedCode = new Random().Next(1000, 9999).ToString()
         };
 
@@ -179,6 +180,12 @@ public class Index : PageModel
         }
 
         // something went wrong, show form with error
+        Input = new InputModel
+        {
+            ReturnUrl = Input.ReturnUrl,
+            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList(),
+            GeneratedCode = new Random().Next(1000, 9999).ToString(),
+        };
         await BuildModelAsync(Input.ReturnUrl);
         return Page();
     }

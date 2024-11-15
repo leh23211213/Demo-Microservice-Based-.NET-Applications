@@ -2,6 +2,7 @@
 // See LICENSE in the project root for license information.
 
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.Services.AuthAPI.Pages.Login;
@@ -25,4 +26,6 @@ public class InputModel
     // The code that will be generated and compared during validation.
     [HiddenInput]
     public string? GeneratedCode { get; set; }
+
+    public IEnumerable<AuthenticationScheme>? ExternalLogins { get; set; }
 }
