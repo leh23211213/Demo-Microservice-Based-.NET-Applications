@@ -5,7 +5,8 @@ name: Build and deploy ASP.Net Core app to Azure Web App - 409159authenticationa
 
 on:
   push:
-    branches: [409159authenticationapi]
+    branches:
+      - 409159authenticationapi
 
 env:
   AZURE_WEBAPP_NAME: 409159authenticationapi
@@ -48,12 +49,11 @@ jobs:
     runs-on: windows-latest
     needs: build
 
-    environment: 
+    environment:
       name: Production
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
-    
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:

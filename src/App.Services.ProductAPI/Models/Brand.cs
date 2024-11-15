@@ -7,7 +7,6 @@ public class Brand
     public string? Name { get; set; }
     public string? ImageUrl { get; set; }
 
-
-    [NotMapped, JsonIgnore]
+    [NotMapped,JsonIgnore]
     public ICollection<Product>? Products { get; set; }
 }

@@ -23,8 +23,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Services.CouponAPI", "A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Services.Bus", "App.Services.Bus\App.Services.Bus.csproj", "{63E530B2-7DCB-4F75-A547-1D3EBB9B29DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "template", "template\template.csproj", "{002378E1-865E-436F-BF50-EF063465706E}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,10 +69,6 @@ Global
 		{63E530B2-7DCB-4F75-A547-1D3EBB9B29DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63E530B2-7DCB-4F75-A547-1D3EBB9B29DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63E530B2-7DCB-4F75-A547-1D3EBB9B29DD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{002378E1-865E-436F-BF50-EF063465706E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{002378E1-865E-436F-BF50-EF063465706E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{002378E1-865E-436F-BF50-EF063465706E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{002378E1-865E-436F-BF50-EF063465706E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -16,6 +16,10 @@ namespace App.Services.ProductAPI.Repository
 
         public Task CreateAsync(T entity)
         {
+            Thread.Sleep(10);
+            Thread.Sleep(10);
+            Thread.Sleep(10);
+            Thread.Sleep(10);
             throw new NotImplementedException();
         }
 

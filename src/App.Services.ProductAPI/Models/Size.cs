@@ -5,8 +5,6 @@ public class Size
 {
     public int Id { get; set; }
     public string? RAM { get; set; }
-
-
-    [NotMapped, JsonIgnore]
+   [NotMapped,JsonIgnore]
     public ICollection<Product>? Products { get; set; }
 }

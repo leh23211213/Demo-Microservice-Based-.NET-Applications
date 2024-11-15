@@ -28,18 +28,28 @@ namespace App.Services.AuthAPI.Controllers
             _authAPIService = authAPIService;
         }
 
-        [HttpPost("register")]
+        [HttpPost("Register")]
         public async Task<ActionResult<Response>> Register([FromBody] RegistrationRequest model)
         {
-            var errorMessage = await _authAPIService.Register(model);
-            if (!string.IsNullOrEmpty(errorMessage))
+            if (ModelState.IsValid)
             {
-                _response.StatusCode = HttpStatusCode.BadRequest;
-                _response.IsSuccess = false;
-                _response.Message = errorMessage;
-                return _response;
+                var errorMessage = await _authAPIService.Register(model);
+                if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    _response.IsSuccess = false;
+                    _response.Message = errorMessage;
+                    _response.StatusCode = HttpStatusCode.BadRequest;
+                    return _response;
+                }
+                await _messageBus.PublishMessage(model.Email, _configuration.GetValue<string>("TopicAndQueueNames:RegisterUserQueue"));
+                _response.Message = "Registration Successful";
             }
-            await _messageBus.PublishMessage(model.Email, _configuration.GetValue<string>("TopicAndQueueNames:RegisterUserQueue"));
+            else
+            {
+                _response.IsSuccess = false;
+                _response.Message = "Input invalid";
+                _response.StatusCode = HttpStatusCode.BadRequest;
+            }
             return _response;
         }
     }

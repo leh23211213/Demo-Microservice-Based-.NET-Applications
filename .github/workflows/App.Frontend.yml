@@ -3,9 +3,7 @@ name: Build and deploy .NET Core application
 on:
   push:
     branches:
-      - main
-  workflow_dispatch:
-
+      - frontend
 env:
   AZURE_WEBAPP_NAME: levanhiep409159
   AZURE_WEBAPP_PACKAGE_PATH: App.Frontend\published

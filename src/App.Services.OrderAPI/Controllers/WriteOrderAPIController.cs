@@ -9,9 +9,10 @@ using Stripe;
 using Stripe.Checkout;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 namespace App.Services.OrderAPI.Controllers
 {
-    //[Authorize]
+    [Authorize(Roles = "ADMIN")]
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/order")]
@@ -121,8 +122,6 @@ namespace App.Services.OrderAPI.Controllers
                 _dbContext.SaveChanges();
 
                 _response.Result = stripeRequest;
-                _response.IsSuccess = true;
-                _response.StatusCode = HttpStatusCode.OK;
             }
             catch (Exception ex)
             {
@@ -142,7 +141,6 @@ namespace App.Services.OrderAPI.Controllers
             try
             {
                 OrderHeader orderHeader = await _dbContext.OrderHeaders.FirstOrDefaultAsync(u => u.Id == orderHeaderId);
-
                 var service = new SessionService();
                 Session session = service.Get(orderHeader.StripeSessionId);
                 var paymentIntentService = new PaymentIntentService();
@@ -153,10 +151,7 @@ namespace App.Services.OrderAPI.Controllers
                     orderHeader.PaymentIntentId = paymentIntent.Id;
                     orderHeader.Status = paymentIntent.Status;
                     _dbContext.SaveChanges();
-
                     _response.Result = orderHeader;
-                    _response.IsSuccess = true;
-                    _response.StatusCode = HttpStatusCode.OK;
                 }
             }
             catch (Exception ex)
