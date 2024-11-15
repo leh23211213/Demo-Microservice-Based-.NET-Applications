@@ -53,19 +53,19 @@ builder.Services.AddAuthentication(options =>
     //Claims wil have every detail information
     //options.SignInScheme = "Cookies";
     options.Authority = builder.Configuration["ServiceUrls:AuthAPI"];
-    options.GetClaimsFromUserInfoEndpoint = true;
+    //options.GetClaimsFromUserInfoEndpoint = true;
     //
     options.ClientId = "user_scope";
     options.ClientSecret = StaticDetail.secret;
     options.ResponseType = "code";
     //  
-    options.TokenValidationParameters.NameClaimType = "name";
-    options.TokenValidationParameters.RoleClaimType = "role";
+    //options.TokenValidationParameters.NameClaimType = "name";
+    //options.TokenValidationParameters.RoleClaimType = "role";
     //
     options.Scope.Add("user_scope");
     //
-    options.SaveTokens = true;
-    options.RequireHttpsMetadata = false;
+    //options.SaveTokens = true;
+    //options.RequireHttpsMetadata = false;
     options.ClaimActions.MapJsonKey("role", "role");
     //
     options.Events = new OpenIdConnectEvents
