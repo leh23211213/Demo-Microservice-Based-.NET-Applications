@@ -1,11 +1,15 @@
 ﻿using System.Text;
 using Newtonsoft.Json;
 using App.Domain.Admin.Models;
-using App.Domain.Admin.Services.IServices;
 using static App.Domain.Admin.Utility.StaticDetail;
 
 namespace App.Domain.Admin.Services
 {
+    public interface IApiMessageRequestBuilder
+    {
+        HttpRequestMessage Build(Request Request);
+    }
+
     public class ApiMessageRequestBuilder : IApiMessageRequestBuilder
     {
         public HttpRequestMessage Build(Request request)

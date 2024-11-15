@@ -7,12 +7,17 @@ using App.Domain.Admin.Utility;
 using System.Security.Claims;
 using System.Net.Http.Headers;
 using System.IdentityModel.Tokens.Jwt;
-using App.Domain.Admin.Services.IServices;
+using App.Domain.Admin.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace App.Domain.Admin.Services
 {
+    public interface IBaseService
+    {
+        Task<Response?> SendAsync(Request Request, bool withBearer = true);
+    }
+
     public class BaseService : IBaseService
     {
         protected readonly string _url = null!;
@@ -46,6 +51,7 @@ namespace App.Domain.Admin.Services
 
                 HttpResponseMessage httpResponseMessage = null;
                 httpResponseMessage = await SendWithRefreshTokenAsync(client, messageFactory, withBearer);
+
                 Response FinalApiResponse = new() { IsSuccess = false };
 
                 try
@@ -192,24 +198,17 @@ namespace App.Domain.Admin.Services
                 jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Name).Value));
             identity.AddClaim(new Claim(ClaimTypes.Role,
                 jwt.Claims.FirstOrDefault(u => u.Type == "role").Value));
-<<<<<<< HEAD
 
-=======
->>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
             // for render information
             identity.AddClaim(new Claim(ClaimTypes.Name,
             jwt.Claims.FirstOrDefault(u => u.Type == JwtRegisteredClaimNames.Email).Value));
 
             var principal = new ClaimsPrincipal(identity);
-<<<<<<< HEAD
-            await _httpContextAccessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-=======
             await _httpContextAccessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal,
             new AuthenticationProperties
             {
                 IsPersistent = true, // Cookie sẽ tồn tại qua nhiều phiên duyệt web
             });
->>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
 
             _tokenProvider.SetToken(token);
         }

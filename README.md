@@ -31,7 +31,3 @@ Cart Service API : https://409159cartapi-ekf4ckdxhmfpc5f0.eastasia-01.azurewebsi
 Order Service API : https://409159orderapi-gcg0a2dufab3f9hj.eastasia-01.azurewebsites.net
 
 POSTMAN : https://documenter.getpostman.com/view/33236192/2sAXxV5pNK (Updating...)
-
-# Git Push
-
-![Git Push](https://github.com/leh23211213/Demo-Microservice-Based-.NET-Applications/blob/main/docs/GitPush.drawio.png)

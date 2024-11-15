@@ -1,53 +1,35 @@
-using Microsoft.AspNetCore.Mvc;
-using App.Domain.Admin.Services.IServices;
-using Microsoft.AspNetCore.Authorization;
-using App.Domain.Admin.Models;
 using Newtonsoft.Json;
-using System.IdentityModel.Tokens.Jwt;
+using App.Domain.Admin.Models;
 using App.Domain.Admin.Utility;
+using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using App.Domain.Admin.Services;
 
-namespace App.Domain.Admin.Controllers
+namespace App.Domain.Admin.Controllers;
+public class OrderController : Controller
 {
-    [Authorize]
-    [AllowAnonymous]
-    public class OrderController : Controller
+    private readonly IOrderService _orderService;
+
+    public OrderController(IOrderService orderService)
     {
-        private readonly IOrderService _orderService;
-
-        public OrderController(IOrderService orderService)
-        {
-            _orderService = orderService;
-        }
-
-<<<<<<< HEAD
-        public IActionResult Index()
+        _orderService = orderService;
+    }
+    public IActionResult Index()
+    {
+        if (User.Identity.IsAuthenticated)
         {
             return View();
         }
-
-=======
-<<<<<<<< HEAD:src/domain/App.Frontend/Controllers/OrderController.cs
-========
-        [HttpGet]
->>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0:src/domain/App.Domain.Admin/Controllers/OrderController.cs
-        public IActionResult Index()
+        else
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                return View();
-            }
-            else
-            {
-                return RedirectToAction("Login", "Authentication", new { area = "Account" });
-            }
+            return RedirectToAction("Login", "Authentication", new { area = "Account" });
         }
+    }
 
-<<<<<<<< HEAD:src/domain/App.Frontend/Controllers/OrderController.cs
-========
-        [HttpGet]
->>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0:src/domain/App.Domain.Admin/Controllers/OrderController.cs
->>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
-        public async Task<IActionResult> Details(string orderId)
+    [HttpGet]
+    public async Task<IActionResult> Details(string orderId)
+    {
+        if (User.Identity.IsAuthenticated)
         {
             OrderHeader orderHeader = new OrderHeader();
             var userId = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
@@ -63,31 +45,37 @@ namespace App.Domain.Admin.Controllers
             }
             return View(orderHeader);
         }
-
-        [HttpPost("OrderReadyForPickup")]
-        public async Task<IActionResult> OrderReadyForPickup(string orderId)
+        else
         {
-            return View();
+            return RedirectToAction("Login", "Authentication", new { area = "Account" });
         }
+    }
 
-        [HttpPost("CompleteOrder")]
-        public async Task<IActionResult> CompleteOrder(string orderId)
-        {
-            return View();
-        }
+    [HttpPost("OrderReadyForPickup")]
+    public async Task<IActionResult> OrderReadyForPickup(string orderId)
+    {
+        return View();
+    }
 
-        [HttpPost("CancelOrder")]
-        public async Task<IActionResult> CancelOrder(string orderId)
-        {
-            return View();
-        }
+    [HttpPost("CompleteOrder")]
+    public async Task<IActionResult> CompleteOrder(string orderId)
+    {
+        return View();
+    }
 
-        [HttpGet]
-        public IActionResult Get(string status)
+    [HttpPost("CancelOrder")]
+    public async Task<IActionResult> CancelOrder(string orderId)
+    {
+        return View();
+    }
+
+    [HttpGet]
+    public IActionResult Get(string status)
+    {
+        if (User.Identity.IsAuthenticated)
         {
             IEnumerable<OrderHeader> list;
             string userId = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
-
             Response response = _orderService.GetAllOrder(userId).GetAwaiter().GetResult();
             if (response.IsSuccess && response != null)
             {
@@ -112,6 +100,10 @@ namespace App.Domain.Admin.Controllers
                 list = new List<OrderHeader>();
             }
             return Json(new { data = list.OrderByDescending(u => u.Id) });
+        }
+        else
+        {
+            return RedirectToAction("Login", "Authentication", new { area = "Account" });
         }
     }
 }

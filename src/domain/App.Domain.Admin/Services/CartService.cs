@@ -1,10 +1,25 @@
 
 using App.Domain.Admin.Models;
-using App.Domain.Admin.Services.IServices;
 using App.Domain.Admin.Utility;
 
 namespace App.Domain.Admin.Services
 {
+    public interface ICartService
+    {
+        /// <summary>
+        /// StaticDetail.ShoppingCartAPIBase + "/api/version/cart/Get" + userId,
+        /// </summary>
+        Task<Response> GetAsync(string userId);
+        /// <summary>
+        /// StaticDetail.ShoppingCartAPIBase + "/api/version/cart/Delete" + cartDetailsId,
+        /// </summary>
+        Task<Response> DeleteAsync(string cartDetailsId);
+
+        /// <summary>
+        /// StaticDetail.ShoppingCartAPIBase + "/api/version/cart/Add",
+        /// </summary>
+        Task<Response> AddAsync(Cart cart);
+    }
     public class CartService : ICartService
     {
         public readonly IBaseService _baseService;
