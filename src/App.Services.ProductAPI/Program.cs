@@ -22,15 +22,12 @@ app.MapControllers();
 app.UseAuthentication();
 app.UseAuthorization();
 
-
 if (app.Environment.IsDevelopment())
 {
     ApplyMigration(app);
 }
 
 app.Run();
-
-
 
 // 500.30
 void ApplyMigration(WebApplication app)
