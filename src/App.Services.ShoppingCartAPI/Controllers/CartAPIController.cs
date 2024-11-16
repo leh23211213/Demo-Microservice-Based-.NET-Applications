@@ -8,10 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace App.Services.ShoppingCartAPI.Controllers
 {
-<<<<<<< HEAD
     // [Authorize]
-=======
->>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/cart")]
