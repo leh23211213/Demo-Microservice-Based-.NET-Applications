@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-namespace App.Services.AuthAPI;
-public static class StaticDetail
-{
-    public static string AccessToken = "AccessToken";
-    public static string RefreshToken = "RefreshToken";
-=======
 using Duende.IdentityServer;
 using Duende.IdentityServer.Models;
 using IdentityModel;
@@ -76,5 +69,4 @@ namespace App.Services.AuthAPI.Utility
 
         #endregion
     }
->>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
 }
