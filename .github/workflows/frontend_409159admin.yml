@@ -6,8 +6,15 @@ name: Build and deploy ASP.Net Core app to Azure Web App - 409159admin
 on:
   push:
     branches:
-      - frontend
+      - main
   workflow_dispatch:
+
+env:
+  AZURE_WEBAPP_NAME: 409159admin
+  AZURE_WEBAPP_PACKAGE_PATH: domain\App.Domain.Admin\published
+  CONFIGURATION: Release
+  DOTNET_CORE_VERSION: 8.0.x
+  WORKING_DIRECTORY: ./src/domain/App.Domain.Admin
 
 jobs:
   build:
@@ -19,20 +26,26 @@ jobs:
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: "8.x"
+          dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
           include-prerelease: true
 
-      - name: Build with dotnet
-        run: dotnet build --configuration Release
+      - name: Restore Dependencies
+        run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
 
-      - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+      - name: Build
+        run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration "${{ env.CONFIGURATION }}" --no-restore
 
-      - name: Upload artifact for deployment job
+      - name: Test
+        run: dotnet test "${{ env.WORKING_DIRECTORY }}" --no-build
+
+      - name: Publish
+        run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration "${{ env.CONFIGURATION }}" --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
+
+      - name: Publish Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          name: webapp-dotnet-version-${{ env.DOTNET_CORE_VERSION }}
+          path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
   deploy:
     runs-on: windows-latest
