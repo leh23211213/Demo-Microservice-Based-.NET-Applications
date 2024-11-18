@@ -6,11 +6,6 @@ namespace App.Frontend.Services
 {
     public interface IAuthService
     {
-        /// <summary>
-        /// If user already have token in cookie redirect to application again
-        /// </summary>
-        /// <returns></returns>
-        Task<Response?> LoginAsync();
         Task<Response?> LoginAsync(LoginRequest loginRequest);
         Task<Response?> RegisterAsync(RegistrationRequest registerRequest);
         Task<Response?> LogoutAsync(Token token);
@@ -21,15 +16,6 @@ namespace App.Frontend.Services
         public AuthService(IBaseService baseService)
         {
             _baseService = baseService;
-        }
-
-        public async Task<Response?> LoginAsync()
-        {
-            return await _baseService.SendAsync(new Request()
-            {
-                ApiType = StaticDetail.ApiType.GET,
-                Url = StaticDetail.AuthAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/auth/ReLogin"
-            });
         }
 
         public async Task<Response?> LoginAsync(LoginRequest loginRequest)

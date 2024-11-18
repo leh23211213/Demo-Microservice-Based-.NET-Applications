@@ -1,11 +1,12 @@
+using IdentityModel;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
 using App.Services.AuthAPI.Models;
 using App.Services.AuthAPI.Utility;
-using IdentityModel;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
 
 namespace App.Services.AuthAPI.Pages.Account.Register
 {
@@ -13,14 +14,17 @@ namespace App.Services.AuthAPI.Pages.Account.Register
     [AllowAnonymous]
     public class IndexModel : PageModel
     {
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
         public IndexModel(
+                RoleManager<IdentityRole> roleInManager,
                 UserManager<ApplicationUser> userManager,
-                RoleManager<IdentityRole> roleInManager
+                SignInManager<ApplicationUser> signInManager
               )
         {
+            _signInManager = signInManager;
             _roleManager = roleInManager;
             _userManager = userManager;
         }
@@ -36,7 +40,11 @@ namespace App.Services.AuthAPI.Pages.Account.Register
             };
             ViewData["roles_message"] = roles;
 
-            Input = new RegisterViewModel { ReturnUrl = returnUrl };
+            Input = new RegisterViewModel
+            {
+                ReturnUrl = returnUrl,
+                ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync() ?? Enumerable.Empty<AuthenticationScheme>()).ToList(),
+            };
             return Page();
         }
 
@@ -75,6 +83,21 @@ namespace App.Services.AuthAPI.Pages.Account.Register
 
                     return Redirect(Input.ReturnUrl);
                 }
+            }
+            else
+            {
+                List<string> roles = new()
+                {
+                    StaticDetail.Admin,
+                    StaticDetail.Customer
+                };
+                ViewData["roles_message"] = roles;
+
+                Input = new RegisterViewModel
+                {
+                    ReturnUrl = Input.ReturnUrl,
+                    ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync() ?? Enumerable.Empty<AuthenticationScheme>()).ToList(),
+                };
             }
             return Page();
         }

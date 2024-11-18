@@ -6,31 +6,26 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 using App.Frontend.Areas.Account.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authorization;
 
 namespace App.Frontend.Areas.Account.Controllers
 {
     [Area("Account")]
-    [Route("{area}/{controller}/{action}")]
+    [Route("{controller}/{action}")]
     public class AuthenticationController : Controller
     {
         private readonly IAuthService _authService;
         private readonly ITokenProvider _tokenProvider;
-        private readonly IConfiguration _configuration;
-        private readonly string ProtectedAdminUrl;
-        private readonly string ProtectedCustomerUrl;
         public AuthenticationController(
                                 IAuthService authService,
-                                ITokenProvider tokenProvider,
-                                IConfiguration configuration
+                                ITokenProvider tokenProvider
                             )
         {
             _authService = authService;
             _tokenProvider = tokenProvider;
-            _configuration = configuration;
         }
 
         [HttpGet]

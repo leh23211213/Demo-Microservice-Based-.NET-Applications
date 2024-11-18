@@ -3,6 +3,9 @@ using App.Frontend.Models;
 using App.Frontend.Utility;
 namespace App.Frontend.Services
 {
+    /// <summary>
+    ///  working with cookies
+    /// </summary>
     public interface ITokenProvider
     {
         void SetToken(Token token);
@@ -10,10 +13,6 @@ namespace App.Frontend.Services
         void ClearToken();
     }
 
-
-    /// <summary>
-    ///  working with cookies
-    /// </summary>
     public class TokenProvider : ITokenProvider
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -52,17 +51,17 @@ namespace App.Frontend.Services
             _httpContextAccessor.HttpContext?.Response.Cookies.Append(StaticDetail.AccessToken, token.AccessToken, new CookieOptions
             {
                 HttpOnly = true,
-                Secure = true,  // Nên dùng HTTPS
-                SameSite = SameSiteMode.None, // Để trình duyệt cho phép chia sẻ cookie
+                Secure = true,
+                SameSite = SameSiteMode.None,
                 Expires = DateTime.UtcNow.AddDays(7)
             });
 
             _httpContextAccessor.HttpContext?.Response.Cookies.Append(StaticDetail.RefreshToken, token.RefreshToken, new CookieOptions
             {
-                Expires = DateTime.UtcNow.AddDays(7),
                 Secure = true,  // Nên dùng HTTPS
                 HttpOnly = true,
-                SameSite = SameSiteMode.None, // Để trình duyệt cho phép chia sẻ cookie
+                SameSite = SameSiteMode.None,
+                Expires = DateTime.UtcNow.AddDays(7),
             });
         }
     }

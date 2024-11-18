@@ -14,15 +14,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace App.Services.AuthAPI.Pages.Login;
-
 [SecurityHeaders]
 [AllowAnonymous]
 public class Index : PageModel
 {
     //
-    private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
-    private readonly RoleManager<IdentityRole> _roleManager;
     private readonly ApplicationDbContext _dbContext;
     //
     private readonly IIdentityServerInteractionService _interaction;
@@ -31,11 +28,9 @@ public class Index : PageModel
     private readonly IIdentityProviderStore _identityProviderStore;
     public ViewModel View { get; set; } = default!;
     [BindProperty]
-    public InputModel Input { get; set; } = default!;
+    public InputModel Input { get; set; }
     public Index(
-                UserManager<ApplicationUser> userManager,
                 SignInManager<ApplicationUser> signInManager,
-                RoleManager<IdentityRole> roleInManager,
                 ApplicationDbContext dbContext,
                 //
                 IIdentityServerInteractionService interaction,
@@ -51,13 +46,16 @@ public class Index : PageModel
         _events = events;
 
         _dbContext = dbContext;
-        _roleManager = roleInManager;
-        _userManager = userManager;
         _signInManager = signInManager;
     }
 
     public async Task<IActionResult> OnGet(string? returnUrl)
     {
+        //if (_signInManager.IsSignedIn(User))
+        //{
+        //    return Redirect(returnUrl ?? "~/123");
+        //}
+
         await BuildModelAsync(returnUrl);
 
         if (View.IsExternalLoginOnly)
@@ -68,7 +66,7 @@ public class Index : PageModel
         Input = new InputModel
         {
             ReturnUrl = returnUrl,
-            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList(),
+            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync() ?? Enumerable.Empty<AuthenticationScheme>()).ToList(),
             GeneratedCode = new Random().Next(1000, 9999).ToString()
         };
 
@@ -77,11 +75,6 @@ public class Index : PageModel
 
     public async Task<IActionResult> OnPost()
     {
-        if (Input.GeneratedCode != Input.EnteredCode)
-        {
-            ModelState.AddModelError("EnteredCode", "The code you entered is incorrect.");
-            return Page();
-        }
         // check if we are in the context of an authorization request
         var context = await _interaction.GetAuthorizationContextAsync(Input.ReturnUrl);
 
@@ -117,6 +110,26 @@ public class Index : PageModel
 
         if (ModelState.IsValid)
         {
+            // validate EnteredCode
+            if (Input.GeneratedCode != Input.EnteredCode)
+            {
+                TempData["error"] = "The code you entered is incorrect.";
+                await BuildModelAsync(Input.ReturnUrl);
+
+                if (View.IsExternalLoginOnly)
+                {
+                    // we only have one option for logging in and it's an external provider
+                    return RedirectToPage("/ExternalLogin/Challenge", new { scheme = View.ExternalLoginScheme, Input.ReturnUrl });
+                }
+                Input = new InputModel
+                {
+                    ReturnUrl = Input.ReturnUrl,
+                    ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync() ?? Enumerable.Empty<AuthenticationScheme>()).ToList(),
+                    GeneratedCode = new Random().Next(1000, 9999).ToString()
+                };
+                return Page();
+            }
+
             var result = await _signInManager.PasswordSignInAsync
                 (Input.Email, Input.Password, Input.RememberLogin, lockoutOnFailure: false);
 
@@ -144,7 +157,7 @@ public class Index : PageModel
                     DisplayName = user.Email
                 };
 
-                //await HttpContext.SignInAsync(isuser, props);
+                await HttpContext.SignInAsync(isuser, props);
 
                 if (context != null)
                 {
@@ -166,7 +179,7 @@ public class Index : PageModel
                 }
                 else if (string.IsNullOrEmpty(Input.ReturnUrl))
                 {
-                    return Redirect("~/Account/Authentication/Login");
+                    return Redirect("~/");
                 }
                 else
                 {
@@ -176,17 +189,36 @@ public class Index : PageModel
             }
 
             await _events.RaiseAsync(new UserLoginFailureEvent(Input.Email, "invalid credentials", clientId: context?.Client.ClientId));
-            ModelState.AddModelError(string.Empty, LoginOptions.InvalidCredentialsErrorMessage);
+            await BuildModelAsync(Input.ReturnUrl);
+            TempData["error"] = "Error Email or Password";
+            if (View.IsExternalLoginOnly)
+            {
+                // we only have one option for logging in and it's an external provider
+                return RedirectToPage("/ExternalLogin/Challenge", new { scheme = View.ExternalLoginScheme, Input.ReturnUrl });
+            }
+            Input = new InputModel
+            {
+                ReturnUrl = Input.ReturnUrl,
+                ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync() ?? Enumerable.Empty<AuthenticationScheme>()).ToList(),
+                GeneratedCode = new Random().Next(1000, 9999).ToString()
+            };
         }
-
-        // something went wrong, show form with error
-        Input = new InputModel
+        else // something went wrong, show form with error
         {
-            ReturnUrl = Input.ReturnUrl,
-            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList(),
-            GeneratedCode = new Random().Next(1000, 9999).ToString(),
-        };
-        await BuildModelAsync(Input.ReturnUrl);
+            await BuildModelAsync(Input.ReturnUrl);
+
+            if (View.IsExternalLoginOnly)
+            {
+                // we only have one option for logging in and it's an external provider
+                return RedirectToPage("/ExternalLogin/Challenge", new { scheme = View.ExternalLoginScheme, Input.ReturnUrl });
+            }
+            Input = new InputModel
+            {
+                ReturnUrl = Input.ReturnUrl,
+                ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync() ?? Enumerable.Empty<AuthenticationScheme>()).ToList(),
+                GeneratedCode = new Random().Next(1000, 9999).ToString()
+            };
+        }
         return Page();
     }
 
