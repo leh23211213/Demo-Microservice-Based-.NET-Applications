@@ -10,8 +10,8 @@
             var secret = settingsSection.GetValue<string>("Secret");
             var issuer = settingsSection.GetValue<string>("Issuer");
             var audience = settingsSection.GetValue<string>("Audience");
-            //var key = Convert.FromBase64String(secret); 500.30
-            var key = System.Text.Encoding.UTF8.GetBytes(secret);
+            var key = Convert.FromBase64String(secret);// 500.30
+            //var key = System.Text.Encoding.UTF8.GetBytes(secret);
 
             builder.Services.AddAuthentication(options =>
             {
@@ -20,9 +20,10 @@
             })
             .AddJwtBearer(options =>
             {
-                options.RequireHttpsMetadata = false; // Enable if you're not using HTTPS (for dev environment)
-                options.SaveToken = true;
-                options.Authority = authrityUrl;
+                // SSO
+                // options.RequireHttpsMetadata = false; // Enable if you're not using HTTPS (for dev environment)
+                // options.SaveToken = true;
+                // options.Authority = authrityUrl;
                 options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                 {
                     ValidIssuer = issuer,

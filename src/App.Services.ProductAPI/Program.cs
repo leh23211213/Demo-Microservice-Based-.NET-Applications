@@ -11,15 +11,9 @@ builder.Services.AddSwaggerDocumentation();
 
 var app = builder.Build();
 
-app.UseRouting();
-
 app.UseSwaggerDocumentation(app.Environment);
 
 app.UseStaticFiles();
-
-app.UseHttpsRedirection();
-
-app.MapControllers();
 
 app.UseAuthentication();
 app.UseAuthorization();
