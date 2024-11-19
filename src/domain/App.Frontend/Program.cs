@@ -119,8 +119,9 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+app.UseStaticFiles();
 
+app.UseHttpsRedirection();
 app.UseRequestTimeout(TimeSpan.FromSeconds(10));
 
 app.UseAuthentication();
