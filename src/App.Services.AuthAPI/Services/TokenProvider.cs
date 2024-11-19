@@ -1,4 +1,5 @@
 using App.Services.AuthAPI.Models;
+using App.Services.AuthAPI.Utility;
 namespace App.Services.AuthAPI.Services
 {
     public interface ITokenProvider
