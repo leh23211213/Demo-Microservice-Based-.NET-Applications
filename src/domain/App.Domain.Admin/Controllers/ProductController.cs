@@ -1,5 +1,5 @@
 using App.Domain.Admin.Models;
-using App.Domain.Admin.Services.IServices;
+using App.Domain.Admin.Services;
 using App.Domain.Admin.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,16 +8,6 @@ using Newtonsoft.Json;
 
 namespace App.Domain.Admin.Controllers
 {
-<<<<<<< HEAD
-
-    [Authorize(Roles = "ADMIN")]
-=======
-<<<<<<<< HEAD:src/domain/App.Frontend/Controllers/ProductController.cs
-
-    [Authorize(Roles = "ADMIN")]
-========
->>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0:src/domain/App.Domain.Admin/Controllers/ProductController.cs
->>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
@@ -32,47 +22,7 @@ namespace App.Domain.Admin.Controllers
                                                       [FromQuery] string? search = ""
                                                       )
         {
-<<<<<<< HEAD
-            Response? response = await _productService.Get(pageSize, currentPage, search);
-            Pagination pagination = new();
-            if (response.IsSuccess && response != null)
-            {
-                pagination = JsonConvert.DeserializeObject<Pagination>(Convert.ToString(response.Result));
-            }
-            else
-            {
-                TempData["error"] = response?.Message;
-            }
-            return View(pagination);
-        }
-
-        public async Task<IActionResult> Create()
-        {
-            var categoryList = new List<SelectListItem>(){
-                new SelectListItem{Text = StaticDetail.Category , Value = StaticDetail.Category},
-            };
-            var brandList = new List<SelectListItem>(){
-                new SelectListItem{Text = StaticDetail.Brand , Value = StaticDetail.Brand},
-            };
-            var colorList = new List<SelectListItem>(){
-                new SelectListItem{Text = StaticDetail.Color , Value = StaticDetail.Color},
-            };
-            var sizeList = new List<SelectListItem>(){
-                new SelectListItem{Text = StaticDetail.Size , Value = StaticDetail.Size},
-            };
-            ViewBag.CategoryList = categoryList;
-            ViewBag.BrandList = brandList;
-            ViewBag.ColorList = colorList;
-            ViewBag.SizeList = sizeList;
-            return View();
-=======
-<<<<<<<< HEAD:src/domain/App.Frontend/Controllers/ProductController.cs
-            Response? response = await _productService.Get(pageSize, currentPage, search);
-            Pagination pagination = new();
-            if (response.IsSuccess && response != null)
-========
             if (User.Identity.IsAuthenticated)
->>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0:src/domain/App.Domain.Admin/Controllers/ProductController.cs
             {
                 Response? response = await _productService.Get(pageSize, currentPage, search);
                 Pagination pagination = new();
@@ -90,24 +40,23 @@ namespace App.Domain.Admin.Controllers
             {
                 return RedirectToAction("Login", "Authentication", new { area = "Account" });
             }
-<<<<<<<< HEAD:src/domain/App.Frontend/Controllers/ProductController.cs
-            return View(pagination);
-========
->>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0:src/domain/App.Domain.Admin/Controllers/ProductController.cs
         }
 
+        [HttpGet]
         public async Task<IActionResult> Create()
         {
-            var categoryList = new List<SelectListItem>(){
+            if (User.Identity.IsAuthenticated)
+            {
+                var categoryList = new List<SelectListItem>(){
                 new SelectListItem{Text = StaticDetail.Category , Value = StaticDetail.Category},
             };
-            var brandList = new List<SelectListItem>(){
+                var brandList = new List<SelectListItem>(){
                 new SelectListItem{Text = StaticDetail.Brand , Value = StaticDetail.Brand},
             };
-            var colorList = new List<SelectListItem>(){
+                var colorList = new List<SelectListItem>(){
                 new SelectListItem{Text = StaticDetail.Color , Value = StaticDetail.Color},
             };
-            var sizeList = new List<SelectListItem>(){
+                var sizeList = new List<SelectListItem>(){
                 new SelectListItem{Text = StaticDetail.Size , Value = StaticDetail.Size},
             };
                 ViewBag.CategoryList = categoryList;
@@ -120,7 +69,6 @@ namespace App.Domain.Admin.Controllers
             {
                 return RedirectToAction("Login", "Authentication", new { area = "Account" });
             }
->>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
         }
 
         [HttpPost]
@@ -165,60 +113,8 @@ namespace App.Domain.Admin.Controllers
 
         public async Task<IActionResult> Update(string Id)
         {
-<<<<<<< HEAD
-            var categoryList = new List<SelectListItem>(){
-                new SelectListItem{Text = StaticDetail.Category , Value = StaticDetail.Category},
-            };
-            var brandList = new List<SelectListItem>(){
-                new SelectListItem{Text = StaticDetail.Brand , Value = StaticDetail.Brand},
-            };
-            var colorList = new List<SelectListItem>(){
-                new SelectListItem{Text = StaticDetail.Color , Value = StaticDetail.Color},
-            };
-            var sizeList = new List<SelectListItem>(){
-                new SelectListItem{Text = StaticDetail.Size , Value = StaticDetail.Size},
-            };
-            ViewBag.CategoryList = categoryList;
-            ViewBag.BrandList = brandList;
-            ViewBag.ColorList = colorList;
-            ViewBag.SizeList = sizeList;
-
-=======
             if (User.Identity.IsAuthenticated)
             {
-                var categoryList = new List<SelectListItem>(){
-                new SelectListItem{Text = StaticDetail.Category , Value = StaticDetail.Category},
-            };
-            var brandList = new List<SelectListItem>(){
-                new SelectListItem{Text = StaticDetail.Brand , Value = StaticDetail.Brand},
-            };
-            var colorList = new List<SelectListItem>(){
-                new SelectListItem{Text = StaticDetail.Color , Value = StaticDetail.Color},
-            };
-            var sizeList = new List<SelectListItem>(){
-                new SelectListItem{Text = StaticDetail.Size , Value = StaticDetail.Size},
-            };
-            ViewBag.CategoryList = categoryList;
-            ViewBag.BrandList = brandList;
-            ViewBag.ColorList = colorList;
-            ViewBag.SizeList = sizeList;
-
-<<<<<<<< HEAD:src/domain/App.Frontend/Controllers/ProductController.cs
->>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
-            Response? response = await _productService.Get(Id);
-            if (response.IsSuccess && response != null)
-            {
-                Product product = JsonConvert.DeserializeObject<Product>(Convert.ToString(response.Result));
-                return View(product);
-<<<<<<< HEAD
-            }
-            else
-            {
-                TempData["error"] = response?.Message;
-            }
-            return RedirectToAction(nameof(Index));
-=======
-========
                 Response? response = await _productService.Get(Id);
                 if (response.IsSuccess && response != null)
                 {
@@ -229,15 +125,31 @@ namespace App.Domain.Admin.Controllers
                 {
                     TempData["error"] = response?.Message;
                 }
-                return RedirectToAction(nameof(Index));
 
->>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0:src/domain/App.Domain.Admin/Controllers/ProductController.cs
+
+                var categoryList = new List<SelectListItem>(){
+                new SelectListItem{Text = StaticDetail.Category , Value = StaticDetail.Category},
+                };
+                var brandList = new List<SelectListItem>(){
+                new SelectListItem{Text = StaticDetail.Brand , Value = StaticDetail.Brand},
+                };
+                var colorList = new List<SelectListItem>(){
+                new SelectListItem{Text = StaticDetail.Color , Value = StaticDetail.Color},
+                };
+                var sizeList = new List<SelectListItem>(){
+                new SelectListItem{Text = StaticDetail.Size , Value = StaticDetail.Size},
+                };
+                ViewBag.CategoryList = categoryList;
+                ViewBag.BrandList = brandList;
+                ViewBag.ColorList = colorList;
+                ViewBag.SizeList = sizeList;
+
+                return RedirectToAction(nameof(Index));
             }
             else
             {
                 return RedirectToAction("Login", "Authentication", new { area = "Account" });
             }
->>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
         }
 
         [HttpPost]
@@ -281,25 +193,7 @@ namespace App.Domain.Admin.Controllers
 
         public async Task<IActionResult> Delete(string Id)
         {
-<<<<<<< HEAD
-            Response? response = await _productService.Get(Id);
-            if (response.IsSuccess && response != null)
-            {
-                Product product = JsonConvert.DeserializeObject<Product>(Convert.ToString(response.Result));
-                return View(product);
-            }
-            else
-            {
-                TempData["error"] = response?.Message;
-            }
-            return RedirectToAction(nameof(Index));
-=======
-<<<<<<<< HEAD:src/domain/App.Frontend/Controllers/ProductController.cs
-            Response? response = await _productService.Get(Id);
-            if (response.IsSuccess && response != null)
-========
             if (User.Identity.IsAuthenticated)
->>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0:src/domain/App.Domain.Admin/Controllers/ProductController.cs
             {
                 Response? response = await _productService.Get(Id);
                 if (response.IsSuccess && response != null)
@@ -317,7 +211,6 @@ namespace App.Domain.Admin.Controllers
             {
                 return RedirectToAction("Login", "Authentication", new { area = "Account" });
             }
->>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
         }
 
         [HttpPost]

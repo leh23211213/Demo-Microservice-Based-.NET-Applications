@@ -44,8 +44,10 @@ namespace App.Frontend.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(string id)
         {
-            Response? response = await _productService.Get(id);
-            Product? product = new();
+            if (User.Identity.IsAuthenticated)
+            {
+                Response? response = await _productService.Get(id);
+                Product? product = new();
 
                 if (response != null && response.IsSuccess)
                 {
@@ -97,6 +99,7 @@ namespace App.Frontend.Controllers
             {
                 TempData["error"] = response?.Message;
             }
+
             return RedirectToAction("Details", "Home", new { Id = product.Id });
         }
 

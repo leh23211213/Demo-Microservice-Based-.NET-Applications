@@ -1,9 +1,8 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using App.Services.AuthAPI.Models;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
 using App.Services.AuthAPI.Services;
+
 namespace App.Services.AuthAPI.Controllers
 {
     [ApiController]

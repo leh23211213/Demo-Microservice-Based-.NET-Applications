@@ -5,7 +5,7 @@ name: Build and deploy ASP.Net Core app to Azure Web App - 409159productapi
 
 on:
   push:
-    branches:
+    branches: 
       - 409159productapi
 
 env:

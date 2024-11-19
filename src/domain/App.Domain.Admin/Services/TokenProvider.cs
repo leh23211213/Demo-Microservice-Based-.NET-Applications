@@ -1,9 +1,16 @@
 
 using App.Domain.Admin.Models;
 using App.Domain.Admin.Utility;
-using App.Domain.Admin.Services.IServices;
+using App.Domain.Admin.Services;
 namespace App.Domain.Admin.Services
 {
+    public interface ITokenProvider
+    {
+        void SetToken(Token token);
+        Token? GetToken();
+        void ClearToken();
+    }
+
     /// <summary>
     ///  working with cookies
     /// </summary>
