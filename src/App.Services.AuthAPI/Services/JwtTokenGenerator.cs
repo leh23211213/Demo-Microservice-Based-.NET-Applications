@@ -1,4 +1,3 @@
-
 using System.Text;
 using System.Security.Claims;
 using App.Services.AuthAPI.Data;
@@ -23,6 +22,7 @@ namespace App.Services.AuthAPI.Services
         private readonly string secretKey;
         private readonly string issuer;
         private readonly string audience;
+        private readonly IConfiguration _configuration;
         private readonly ApplicationDbContext _dbContext;
         private readonly UserManager<ApplicationUser> _userManager;
         public JwtTokenGenerator(
@@ -33,16 +33,18 @@ namespace App.Services.AuthAPI.Services
         {
             _dbContext = dbContext;
             _userManager = userManager;
-            secretKey = configuration.GetValue<string>("ApiSettings:Secret");
-            issuer = configuration.GetValue<string>("ApiSettings:Issuer");
-            audience = configuration.GetValue<string>("ApiSettings:Audience");
+
+            _configuration = configuration;
+
+            secretKey = _configuration.GetValue<string>("ApiSettings:Secret");
+            issuer = _configuration.GetValue<string>("ApiSettings:Issuer");
+            audience = _configuration.GetValue<string>("ApiSettings:Audience");
         }
 
         public async Task<string> CreateNewAccessToken(ApplicationUser user, string jwtTokenId)
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Convert.FromBase64String(secretKey);
             var roles = await _userManager.GetRolesAsync(user);
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
 
             var claimList = new List<Claim>
             {
@@ -50,21 +52,23 @@ namespace App.Services.AuthAPI.Services
                 new Claim(JwtRegisteredClaimNames.Name, user.Name),
                 new Claim(JwtRegisteredClaimNames.Jti, jwtTokenId),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.Aud, audience),
                 new Claim(ClaimTypes.Role, roles.FirstOrDefault()),
             };
+            //claimList.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Issuer = issuer,
-                Audience = audience,
+                Issuer = issuer, // authen server url
+                Audience = audience, // domain server url
                 Subject = new ClaimsIdentity(claimList),
                 Expires = DateTime.UtcNow.AddMinutes(60),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
             };
 
+            var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            var tokenString = tokenHandler.WriteToken(token);
-            return tokenString;
+            return tokenHandler.WriteToken(token);
         }
 
         public async Task<string> CreateNewRefreshToken(string userId, string jwtTokenId)
@@ -92,7 +96,7 @@ namespace App.Services.AuthAPI.Services
             }
 
             // Compare data from existing refresh and access token provided and if there is any missmatch then consider it as a fraud
-            var isTokenValid = GetAccessTokenData(token.AccessToken, existingRefreshToken.UserId, existingRefreshToken.JwtTokenId);
+            var isTokenValid = GetAccessTokenData(token.AccessToken ?? "null", existingRefreshToken.UserId, existingRefreshToken.JwtTokenId);
             if (!isTokenValid)
             {
                 await MarkTokenAsInvalid(existingRefreshToken);
@@ -138,7 +142,7 @@ namespace App.Services.AuthAPI.Services
                 return;
             // Compare data from existing refresh and access token provided and
             // if there is any missmatch then we should do nothing with refresh token
-            var isTokenValid = GetAccessTokenData(token.AccessToken, existingRefreshToken.UserId, existingRefreshToken.JwtTokenId);
+            var isTokenValid = GetAccessTokenData(token.AccessToken ?? "null", existingRefreshToken.UserId, existingRefreshToken.JwtTokenId);
             if (!isTokenValid)
             {
                 return;

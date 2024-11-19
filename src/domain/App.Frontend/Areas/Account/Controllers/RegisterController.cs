@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace App.Frontend.Areas.Account.Controllers
 {
+    [Area("Account")]
+    [Route("{user}/{controller}")]
     public class RegisterController : Controller
     {
         private readonly IAuthService _authService;

@@ -16,7 +16,6 @@ namespace App.Services.AuthAPI.Services
         private readonly string domain;
         private readonly IConfiguration _configuration;
         private readonly IHttpContextAccessor _httpContextAccessor;
-
         public TokenProvider(
                             IConfiguration configuration,
                             IHttpContextAccessor httpContextAccessor
@@ -47,7 +46,6 @@ namespace App.Services.AuthAPI.Services
                 };
                 return hasAccessToken is true ? token : null;
             }
-
             catch
             {
                 return null;
@@ -64,6 +62,7 @@ namespace App.Services.AuthAPI.Services
                 SameSite = SameSiteMode.None, // Để trình duyệt cho phép chia sẻ cookie
                 Expires = DateTime.UtcNow.AddDays(7)
             });
+
             _httpContextAccessor.HttpContext?.Response.Cookies.Append(StaticDetail.RefreshToken, token.RefreshToken ?? "", new CookieOptions
             {
                 Domain = domain,
