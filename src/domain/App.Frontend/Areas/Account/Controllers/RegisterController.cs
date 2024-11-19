@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace App.Frontend.Areas.Account.Controllers
 {
     [Area("Account")]
-    [Route("{user}/{controller}")]
+    [Route("{controller}/{action}")]
     public class RegisterController : Controller
     {
         private readonly IAuthService _authService;
@@ -19,6 +19,7 @@ namespace App.Frontend.Areas.Account.Controllers
         }
 
         [HttpGet]
+        [Route("user")]
         public async Task<ActionResult> Register()
         {
             var roleList = new List<SelectListItem>()

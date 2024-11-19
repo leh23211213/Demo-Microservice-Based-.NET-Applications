@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 namespace App.Frontend.Areas.Account.Controllers
 {
     [Area("Account")]
-    [Route("{user}/{controller}")]
+    [Route("{controller}/{action}")]
     public class AuthenticationController : Controller
     {
         private readonly IAuthService _authService;
