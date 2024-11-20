@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 
 namespace App.Frontend.Areas.Account.Controllers
 {
-    [Area("Account")]
     [Route("{controller}/{action}")]
     public class AuthenticationController : Controller
     {
