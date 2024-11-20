@@ -30,7 +30,7 @@ namespace App.Services.ProductAPI.Controllers.v2
         }
 
         [HttpPost("Create")]
-        public async Task<ActionResult<Response>> Create(Product product)
+        public async Task<ActionResult<Response>> Create([FromBody] Product product)
         {
             try
             {
@@ -45,7 +45,7 @@ namespace App.Services.ProductAPI.Controllers.v2
         }
 
         [HttpPut("Update")]
-        public async Task<ActionResult<Response>> Update(Product product)
+        public async Task<ActionResult<Response>> Update([FromBody] Product product)
         {
             try
             {
@@ -59,8 +59,8 @@ namespace App.Services.ProductAPI.Controllers.v2
             return _response;
         }
 
-        [HttpDelete("Delete/{id}")]
-        public async Task<ActionResult<Response>> Delete(string id)
+        [HttpDelete("Delete")]
+        public async Task<ActionResult<Response>> Delete([FromBody] string id)
         {
             try
             {
