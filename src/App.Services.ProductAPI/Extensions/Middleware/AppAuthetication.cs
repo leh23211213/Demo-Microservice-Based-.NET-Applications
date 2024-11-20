@@ -1,4 +1,4 @@
-﻿namespace App.APIGateway.Extensions
+﻿namespace App.Services.ProductAPI.Extensions
 {
     public static class AppAuthetication
     {
@@ -10,7 +10,7 @@
             var secret = settingsSection.GetValue<string>("Secret");
             var issuer = settingsSection.GetValue<string>("Issuer");
             var audience = settingsSection.GetValue<string>("Audience");
-            //var key = Convert.FromBase64String(secret); 500.30
+            // var key = Convert.FromBase64String(secret);// 500.30
             var key = System.Text.Encoding.UTF8.GetBytes(secret);
 
             builder.Services.AddAuthentication(options =>
@@ -20,9 +20,10 @@
             })
             .AddJwtBearer(options =>
             {
-                options.RequireHttpsMetadata = false; // Enable if you're not using HTTPS (for dev environment)
-                options.SaveToken = true;
-                options.Authority = authrityUrl;
+                // SSO
+                // options.RequireHttpsMetadata = false; // Enable if you're not using HTTPS (for dev environment)
+                // options.SaveToken = true;
+                // options.Authority = authrityUrl;
                 options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                 {
                     ValidIssuer = issuer,
@@ -35,13 +36,9 @@
                 };
             });
 
-<<<<<<<< HEAD:src/App.Services.ProductAPI/Extensions/AppAuthetication.cs
             builder.Services.AddAuthorization(options =>
             {
             });
-========
-            builder.Services.AddAuthorization();
->>>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0:src/App.APIGateway/Extensions/AppAuthetication.cs
             builder.Services.AddControllers();
 
             return builder;

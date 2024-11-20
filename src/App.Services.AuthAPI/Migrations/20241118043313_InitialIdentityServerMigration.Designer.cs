@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace App.Services.AuthAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241114092232_InitialDB")]
-    partial class InitialDB
+    [Migration("20241118043313_InitialIdentityServerMigration")]
+    partial class InitialIdentityServerMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

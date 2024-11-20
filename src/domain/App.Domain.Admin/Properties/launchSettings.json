@@ -1,4 +1,4 @@
-﻿{
+﻿﻿{
   "$schema": "http://json.schemastore.org/launchsettings.json",
   "iisSettings": {
     "windowsAuthentication": false,
@@ -22,11 +22,7 @@
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
-<<<<<<< HEAD
-      "applicationUrl": "https://localhost:7261;http://localhost:5176",
-=======
       "applicationUrl": "https://localhost:6999;http://localhost:5176",
->>>>>>> 34f0162eaa816ab08a78191cb4d003ff1457bee0
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

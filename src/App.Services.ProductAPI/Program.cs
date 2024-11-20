@@ -11,17 +11,13 @@ builder.Services.AddSwaggerDocumentation();
 
 var app = builder.Build();
 
-app.UseRouting();
 app.UseSwaggerDocumentation(app.Environment);
+
 app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.MapControllers();
-
-app.MapControllers();
-
 app.UseAuthentication();
 app.UseAuthorization();
-
 
 if (app.Environment.IsDevelopment())
 {
@@ -29,8 +25,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.Run();
-
-
 
 // 500.30
 void ApplyMigration(WebApplication app)

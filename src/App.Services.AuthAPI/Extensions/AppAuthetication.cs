@@ -1,12 +1,21 @@
 using Microsoft.AspNetCore.Identity;
-
+using App.Services.AuthAPI.Models;
+using App.Services.AuthAPI.Data;
 namespace App.Services.AuthAPI.Extensions
 {
     public static class AppAuthetication
     {
         public static WebApplicationBuilder AddAppValidate(this WebApplicationBuilder builder)
         {
-            // Configure IdentityOptions
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                // Lockout settings
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
+                options.Lockout.MaxFailedAccessAttempts = 20;
+                options.Lockout.AllowedForNewUsers = true;
+            }
+            ).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
+
             builder.Services.Configure<IdentityOptions>(options =>
             {
                 // Password settings
@@ -17,11 +26,6 @@ namespace App.Services.AuthAPI.Extensions
                 options.Password.RequiredLength = 6;
                 options.Password.RequiredUniqueChars = 0;
 
-                // Lockout settings
-                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-                options.Lockout.MaxFailedAccessAttempts = 5;
-                options.Lockout.AllowedForNewUsers = true;
-
                 // User settings
                 options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
                 options.User.RequireUniqueEmail = true;
@@ -31,7 +35,16 @@ namespace App.Services.AuthAPI.Extensions
                 options.SignIn.RequireConfirmedPhoneNumber = false;
             });
 
-            builder.Services.AddAuthentication();
+            builder.Services.AddAuthentication()
+            .AddCookie(options =>
+            {
+                options.Cookie.HttpOnly = true;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+                options.LoginPath = "/Account/Login";
+                options.AccessDeniedPath = "/Account/AccessDenied";
+                options.SlidingExpiration = true;
+            });
+
             builder.Services.AddAuthorization();
             builder.Services.AddControllersWithViews();
             // .AddJsonOptions(options =>

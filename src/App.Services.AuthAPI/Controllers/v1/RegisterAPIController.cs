@@ -40,7 +40,8 @@ namespace App.Services.AuthAPI.Controllers
                     _response.StatusCode = HttpStatusCode.BadRequest;
                     return _response;
                 }
-                await _messageBus.PublishMessage(model.Email, _configuration.GetValue<string>("TopicAndQueueNames:RegisterUserQueue"));
+                //await _messageBus.PublishMessage(model.Email, _configuration.GetValue<string>("TopicAndQueueNames:RegisterUserQueue"));
+
                 _response.Message = "Registration Successful";
             }
             else

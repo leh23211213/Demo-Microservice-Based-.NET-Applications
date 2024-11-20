@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace App.Services.AuthAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialDB : Migration
+    public partial class InitialIdentityServerMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

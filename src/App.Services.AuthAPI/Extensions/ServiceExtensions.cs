@@ -1,6 +1,6 @@
 using App.Services.Bus;
 using App.Services.AuthAPI.Services;
-using App.Services.AuthAPI.Services;
+using Duende.IdentityServer.Services;
 namespace App.Services.AuthAPI.Extensions
 {
     public static class ServiceExtensions
@@ -13,6 +13,9 @@ namespace App.Services.AuthAPI.Extensions
             services.AddScoped<IAuthAPIService, AuthAPIService>();
             services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
             services.AddScoped<IMessageBus, MessageBus>();
+            services.AddAntiforgery();
+            services.AddRazorPages();
+            services.AddScoped<IProfileService, ProfileService>();
 
             return services;
         }

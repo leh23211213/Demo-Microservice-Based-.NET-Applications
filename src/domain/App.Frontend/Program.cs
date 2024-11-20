@@ -1,9 +1,10 @@
 using App.Frontend.Utility;
 using App.Frontend.Services;
 using App.Frontend.Extensions;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-
+using Microsoft.AspNetCore.Builder;
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews(u => u.Filters.Add(new AuthExceptionRedirection()));
@@ -37,75 +38,58 @@ Cookie Authentication: Used to manage user authentication.
 It stores the user's authentication ticket (e.g., login status) in a cookie.
  This allows the server to know if a user is authenticated on subsequent requests.
 */
-
+builder.Services.AddDistributedMemoryCache();
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = "Cookies";
-    options.DefaultChallengeScheme = "OpenIdConnect";
+    options.DefaultChallengeScheme = "oidc";
 })
 .AddJwtBearer()
-.AddCookie(options =>
+// .AddCookie(options =>
+// {
+//     options.Cookie.HttpOnly = true;
+//     options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+//     options.LoginPath = "/Auth/Login";
+//     options.AccessDeniedPath = "/Auth/AccessDenied";
+//     options.SlidingExpiration = true;
+// })
+.AddCookie("Cookies")
+.AddOpenIdConnect("oidc", options =>
 {
-    options.Cookie.HttpOnly = true;
-    options.ExpireTimeSpan = TimeSpan.FromSeconds(20);
-    options.LoginPath = "/Account/Authentication/Login";
-    options.AccessDeniedPath = "/Account/Authentication/AccessDenied";
-})
-.AddOpenIdConnect("OpenIdConnect", options =>
-{
-    //Claims wil have every detail information
-    //options.SignInScheme = "Cookies";
+    options.SignInScheme = "Cookies";
     options.Authority = builder.Configuration["ServiceUrls:AuthAPI"];
-    //options.GetClaimsFromUserInfoEndpoint = true;
+    //Claims wil have every detail information
+    options.GetClaimsFromUserInfoEndpoint = true;
     //
-    options.ClientId = "user_scope";
+    options.ClientId = "user";
     options.ClientSecret = StaticDetail.secret;
     options.ResponseType = "code";
-    //  
-    //options.TokenValidationParameters.NameClaimType = "name";
-    //options.TokenValidationParameters.RoleClaimType = "role";
     //
-    options.Scope.Add("user_scope");
+    options.Scope.Add("openid");
+    options.Scope.Add("profile");
+    options.Scope.Add("email");
+    options.Scope.Add("api1_scope");
+    options.Scope.Add("api2_scope");
+    options.Scope.Add("user");
     //
-    //options.SaveTokens = true;
-    //options.RequireHttpsMetadata = false;
+    options.SaveTokens = true;
+    // Xử lý claims:
     options.ClaimActions.MapJsonKey("role", "role");
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        NameClaimType = "name",
+        RoleClaimType = "role",
+    };
     //
     options.Events = new OpenIdConnectEvents
     {
         OnRemoteFailure = context =>
             {
                 context.Response.Redirect("/");
-                context.HandleResponse(); // Chặn xử lý mặc định và thực hiện điều hướng tùy chỉnh
-                return Task.CompletedTask;
-            },
-        OnAccessDenied = context =>
-            {
-                context.Response.Redirect("/AccessDenied");
-                context.HandleResponse(); // Chặn xử lý mặc định và thực hiện điều hướng tùy chỉnh
-                return Task.CompletedTask;
-            },
-        OnUserInformationReceived = context =>
-            {
-                context.Response.Redirect("/Account/Authentication/Login");
-                context.HandleResponse(); // Chặn xử lý mặc định và thực hiện điều hướng tùy chỉnh
-                return Task.CompletedTask;
-            },
-        OnTokenResponseReceived = context =>
-            {
-                context.Response.Redirect("/Account/Authentication/Login");
-                context.HandleResponse(); // Chặn xử lý mặc định và thực hiện điều hướng tùy chỉnh
-                return Task.CompletedTask;
-            },
-        OnTokenValidated = context =>
-            {
-                context.Response.Redirect("/Account/Authentication/Login");
-                context.HandleResponse(); // Chặn xử lý mặc định và thực hiện điều hướng tùy chỉnh
+                context.HandleResponse();
                 return Task.CompletedTask;
             },
     };
-    options.CallbackPath = new PathString("/Account/Authentication/signin-oidc");
-    options.SignedOutCallbackPath = new PathString("/Account/Authentication/signout-callback-oidc");
 });
 
 /*
@@ -113,14 +97,17 @@ Session: Used to store user-specific data on the server (such as shopping cart i
  The session can be used to store non-authentication-related information temporarily and is tied to the user’s session ID.
  This handles storing session-specific data (like cart items or temporary form data) and sets an idle
 */
-builder.Services.AddSession(options =>
-{
-    options.IdleTimeout = TimeSpan.FromDays(7);
-    options.Cookie.HttpOnly = true;
-    options.Cookie.IsEssential = true;  // Make the session cookie essential
-
-});
-
+// builder.Services.AddSession(options =>
+// {
+//     options.IdleTimeout = TimeSpan.FromMinutes(100);
+//     options.Cookie.HttpOnly = true;
+//     options.Cookie.IsEssential = true;
+// });
+// builder.Services.ConfigureApplicationCookie(options =>
+// {
+//     options.Cookie.Name = "ids"; // Cùng tên cookie cho cả hai
+//     options.Cookie.SameSite = SameSiteMode.Lax;
+// });
 
 var app = builder.Build();
 
@@ -132,10 +119,11 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseSession();
-app.UseHttpsRedirection();
 app.UseStaticFiles();
-app.UseRouting();
+
+app.UseHttpsRedirection();
+app.UseRequestTimeout(TimeSpan.FromSeconds(10));
+
 app.UseAuthentication();
 app.UseAuthorization();
 
