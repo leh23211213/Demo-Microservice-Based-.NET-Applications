@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace App.Frontend.Areas.Account.Controllers
 {
+    [Area("Account")]
     [Route("{user}/{action}")]
     public class RegisterController : Controller
     {
