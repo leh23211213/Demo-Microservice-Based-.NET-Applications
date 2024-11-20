@@ -97,12 +97,12 @@ Session: Used to store user-specific data on the server (such as shopping cart i
  The session can be used to store non-authentication-related information temporarily and is tied to the user’s session ID.
  This handles storing session-specific data (like cart items or temporary form data) and sets an idle
 */
-// builder.Services.AddSession(options =>
-// {
-//     options.IdleTimeout = TimeSpan.FromMinutes(100);
-//     options.Cookie.HttpOnly = true;
-//     options.Cookie.IsEssential = true;
-// });
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(100);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 // builder.Services.ConfigureApplicationCookie(options =>
 // {
 //     options.Cookie.Name = "ids"; // Cùng tên cookie cho cả hai
@@ -120,7 +120,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseStaticFiles();
-
+app.UseSession();
 app.UseHttpsRedirection();
 app.UseRequestTimeout(TimeSpan.FromSeconds(10));
 

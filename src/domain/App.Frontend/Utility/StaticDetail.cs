@@ -40,4 +40,7 @@ public static class StaticDetail
         Json,
         MultipartFormData,
     }
+
+
+    public const string SessionCart = "SessionShoppingCart";
 }

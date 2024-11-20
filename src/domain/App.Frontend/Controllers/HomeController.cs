@@ -4,6 +4,7 @@ using App.Frontend.Models;
 using App.Frontend.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
+using App.Frontend.Utility;
 namespace App.Frontend.Controllers
 {
     public class HomeController : Controller
@@ -69,7 +70,6 @@ namespace App.Frontend.Controllers
         public async Task<IActionResult> Details(Product product)
         {
             #region CART
-
             Cart cart = new()
             {
                 CartHeader = new CartHeader()
@@ -85,7 +85,6 @@ namespace App.Frontend.Controllers
 
             List<CartDetails> cartDetailsList = new() { cartDetails };
             cart.CartDetails = cartDetailsList;
-
             #endregion
 
             Response response = await _cartService.AddAsync(cart);
@@ -93,6 +92,7 @@ namespace App.Frontend.Controllers
             if (response != null && response.IsSuccess)
             {
                 TempData["success"] = response?.Message;
+                HttpContext.Session.SetString(StaticDetail.SessionCart, JsonConvert.SerializeObject(response.Result));
                 return RedirectToAction(nameof(Index));
             }
             else
