@@ -45,15 +45,15 @@ builder.Services.AddAuthentication(options =>
     options.DefaultChallengeScheme = "oidc";
 })
 .AddJwtBearer()
-// .AddCookie(options =>
-// {
-//     options.Cookie.HttpOnly = true;
-//     options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-//     options.LoginPath = "/Auth/Login";
-//     options.AccessDeniedPath = "/Auth/AccessDenied";
-//     options.SlidingExpiration = true;
-// })
-.AddCookie("Cookies")
+.AddCookie(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+    options.LoginPath = "/Auth/Login";
+    options.AccessDeniedPath = "/Auth/AccessDenied";
+    options.SlidingExpiration = true;
+})
+// .AddCookie("Cookies")
 .AddOpenIdConnect("oidc", options =>
 {
     options.SignInScheme = "Cookies";
@@ -99,7 +99,7 @@ Session: Used to store user-specific data on the server (such as shopping cart i
 */
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(100);
+    options.IdleTimeout = TimeSpan.FromMinutes(5);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
