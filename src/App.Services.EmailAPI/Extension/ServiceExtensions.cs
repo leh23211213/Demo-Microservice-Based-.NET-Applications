@@ -10,20 +10,14 @@ namespace App.Services.EmailAPI.Extension
         {
             var optionBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
             optionBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
-
             // Configure Email service
             // services.AddOptions();
             // var mailSettings = configuration.GetSection("MailSettings");
             // services.Configure<EmailLogger>(mailSettings);
             // services.AddSingleton<IEmailSender, SendMailService>();
-
-
             services.AddSingleton(new EmailService(optionBuilder.Options));
-
-
-
             services.AddSingleton<IAzureServiceBusConsumer, AzureServiceBusConsumer>();
-
+            services.AddControllers();
             return services;
         }
     }
