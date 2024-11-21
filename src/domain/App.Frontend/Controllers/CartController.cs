@@ -1,14 +1,12 @@
-using System.IdentityModel.Tokens.Jwt;
-using App.Frontend.Models;
-using App.Frontend.Services.IServices;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using App.Frontend.Models;
+using App.Frontend.Services;
+using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using App.Frontend.Utility;
 
 namespace App.Frontend.Controllers
 {
-    [Authorize]
-    [AllowAnonymous]
     public class CartController : Controller
     {
         private readonly IOrderService _orderService;
@@ -22,12 +20,26 @@ namespace App.Frontend.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View(await LoadCart());
+            if (User.Identity.IsAuthenticated)
+            {
+                return View(await LoadCart());
+            }
+            else
+            {
+                return RedirectToAction("Login", "Authentication", new { area = "Account" });
+            }
         }
 
         public async Task<IActionResult> Checkout()
         {
-            return View(await LoadCart());
+            if (User.Identity.IsAuthenticated)
+            {
+                return View(await LoadCart());
+            }
+            else
+            {
+                return RedirectToAction("Login", "Authentication", new { area = "Account" });
+            }
         }
 
         [HttpPost]
@@ -63,12 +75,19 @@ namespace App.Frontend.Controllers
 
         public async Task<IActionResult> Confirmation(string orderId)
         {
-            Response response = await _orderService.ValidateStripeSession(orderId);
-            if (response.IsSuccess && response != null)
+            if (User.Identity.IsAuthenticated)
             {
+                Response response = await _orderService.ValidateStripeSession(orderId);
+                if (response.IsSuccess && response != null)
+                {
+                    return View(orderId);
+                }
                 return View(orderId);
             }
-            return View(orderId);
+            else
+            {
+                return RedirectToAction("Login", "Authentication", new { area = "Account" });
+            }
         }
 
         public async Task<IActionResult> Delete(string cartDetailsId)
@@ -77,6 +96,7 @@ namespace App.Frontend.Controllers
             if (response != null && response.IsSuccess)
             {
                 TempData["success"] = response?.Message;
+                HttpContext.Session.SetString(StaticDetail.SessionCart, JsonConvert.SerializeObject(response.Result));
                 return RedirectToAction(nameof(Index));
             }
             else
@@ -94,12 +114,15 @@ namespace App.Frontend.Controllers
             var userEmail = User.FindFirst(JwtRegisteredClaimNames.Email)?.Value;
             var userName = User.FindFirst(JwtRegisteredClaimNames.Name)?.Value;
 
+
             Response? response = await _cartService.GetAsync(userId);
             if (response != null && response.IsSuccess)
             {
                 Cart cart = JsonConvert.DeserializeObject<Cart>(Convert.ToString(response.Result));
                 cart.CartHeader.Name = userName;
                 cart.CartHeader.Email = userEmail;
+
+                HttpContext.Session.SetString(StaticDetail.SessionCart, JsonConvert.SerializeObject(response.Result));
                 return cart;
             }
             return new Cart();

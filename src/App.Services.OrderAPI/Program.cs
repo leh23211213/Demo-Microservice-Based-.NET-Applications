@@ -3,6 +3,7 @@ using App.Services.OrderAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using App.Services.OrderAPI.Extensions;
 
+
 var builder = WebApplication.CreateBuilder(args);
 builder.AddAppAuthetication();
 builder.Services.ConfigureDatabase(builder.Configuration);
@@ -13,9 +14,6 @@ var app = builder.Build();
 StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
 
 //Default
-app.UseHttpsRedirection();
-app.UseAuthentication();
-app.UseAuthorization();
 app.MapControllers();
 ApplyMigration();
 app.Run();

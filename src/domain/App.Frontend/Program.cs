@@ -1,14 +1,14 @@
 using App.Frontend.Utility;
 using App.Frontend.Services;
 using App.Frontend.Extensions;
-using App.Frontend.Services.IServices;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 
 var builder = WebApplication.CreateBuilder(args);
+
 // Add services to the container.
-builder.Services.AddControllersWithViews(u => u.Filters.Add(new AuthExceptionRedirection()));
-builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddSingleton<IApiMessageRequestBuilder, ApiMessageRequestBuilder>();
@@ -28,45 +28,68 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<ITokenProvider, TokenProvider>();
-// Configure IdentityOptions
-builder.Services.Configure<IdentityOptions>(options =>
-{
-    // Password settings
-    options.Password.RequireDigit = false;
-    options.Password.RequireLowercase = false;
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequireUppercase = false;
-    options.Password.RequiredLength = 6;
-    options.Password.RequiredUniqueChars = 0;
+builder.Services.AddScoped<IProductService, ProductService>();
 
-    // Lockout settings
-    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-    options.Lockout.MaxFailedAccessAttempts = 5;
-    options.Lockout.AllowedForNewUsers = true;
-
-    // User settings
-    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
-    options.User.RequireUniqueEmail = true;
-
-    // SignIn settings
-    options.SignIn.RequireConfirmedEmail = false;
-    options.SignIn.RequireConfirmedPhoneNumber = false;
-});
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddControllersWithViews(u => u.Filters.Add(new AuthExceptionRedirection()));
 
 /*
 Cookie Authentication: Used to manage user authentication. 
 It stores the user's authentication ticket (e.g., login status) in a cookie.
  This allows the server to know if a user is authenticated on subsequent requests.
 */
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = "oidc";
+})
+.AddJwtBearer()
+.AddCookie(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+    options.LoginPath = "/Auth/Login";
+    options.AccessDeniedPath = "/Auth/AccessDenied";
+    options.SlidingExpiration = true;
+})
+.AddOpenIdConnect("oidc", options =>
+{
+    options.SignInScheme = "Cookies";
+    options.Authority = builder.Configuration["ServiceUrls:AuthAPI"];
+    //Claims wil have every detail information
+    options.GetClaimsFromUserInfoEndpoint = true;
+    //
+    options.ClientId = "user";
+    options.ClientSecret = StaticDetail.secret;
+    options.ResponseType = "code";
+    //
+    options.Scope.Add("openid");
+    options.Scope.Add("profile");
+    options.Scope.Add("email");
+    options.Scope.Add("api1_scope");
+    options.Scope.Add("api2_scope");
+    options.Scope.Add("user");
+    //
+    options.SaveTokens = true;
+    // Xử lý claims:
+    options.ClaimActions.MapJsonKey("role", "role");
+    options.TokenValidationParameters = new TokenValidationParameters
     {
-        options.ExpireTimeSpan = TimeSpan.FromDays(7); // the expiration time for the authentication cookie
-        options.LoginPath = "/Account/Login";
-        options.AccessDeniedPath = "/Account/AccessDenied";
-        options.Cookie.HttpOnly = true;
-        options.SlidingExpiration = true; // sẽ giúp gia hạn thời gian sống của cookie mỗi khi có hoạt động. Tuy nhiên, nếu không có hoạt động hoặc phiên đã hết hạn, người dùng sẽ bị đăng xuất và chuyển hướng về trang login.
-    });
+        NameClaimType = "name",
+        RoleClaimType = "role",
+    };
+    //
+    options.Events = new OpenIdConnectEvents
+    {
+        OnRemoteFailure = context =>
+            {
+                context.Response.Redirect("/");
+                context.HandleResponse();
+                return Task.CompletedTask;
+            },
+    };
+});
 
 /*
 Session: Used to store user-specific data on the server (such as shopping cart information, preferences, etc.).
@@ -75,12 +98,15 @@ Session: Used to store user-specific data on the server (such as shopping cart i
 */
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromDays(7);
+    options.IdleTimeout = TimeSpan.FromMinutes(5);
     options.Cookie.HttpOnly = true;
-    options.Cookie.IsEssential = true;  // Make the session cookie essential
-
+    options.Cookie.IsEssential = true;
 });
-
+// builder.Services.ConfigureApplicationCookie(options =>
+// {
+//     options.Cookie.Name = "ids"; // Cùng tên cookie cho cả hai
+//     options.Cookie.SameSite = SameSiteMode.Lax;
+// });
 
 var app = builder.Build();
 
@@ -93,6 +119,11 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseSession();
+app.UseRequestTimeout(TimeSpan.FromSeconds(10));
+
+
+
+//default setting
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();

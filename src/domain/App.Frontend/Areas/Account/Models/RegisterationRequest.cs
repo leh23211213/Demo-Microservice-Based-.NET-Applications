@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authentication;
 namespace App.Frontend.Areas.Account.Models;
+
 public class RegistrationRequest
 {
     [Required]

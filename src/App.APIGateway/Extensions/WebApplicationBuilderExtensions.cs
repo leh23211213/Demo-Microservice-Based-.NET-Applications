@@ -31,8 +31,10 @@
                     IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(key),
                 };
             });
+            builder.Services.AddAuthorization(options =>
+            {
+            });
 
-            builder.Services.AddAuthorization();
             builder.Services.AddControllers();
             builder.Services.AddAuthentication();
             return builder;

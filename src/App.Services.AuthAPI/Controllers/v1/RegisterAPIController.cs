@@ -2,8 +2,7 @@ using System.Net;
 using App.Services.Bus;
 using Microsoft.AspNetCore.Mvc;
 using App.Services.AuthAPI.Models;
-using App.Services.AuthAPI.Services.IServices;
-
+using App.Services.AuthAPI.Services;
 namespace App.Services.AuthAPI.Controllers
 {
     [ApiController]
@@ -41,7 +40,8 @@ namespace App.Services.AuthAPI.Controllers
                     _response.StatusCode = HttpStatusCode.BadRequest;
                     return _response;
                 }
-                await _messageBus.PublishMessage(model.Email, _configuration.GetValue<string>("TopicAndQueueNames:RegisterUserQueue"));
+                //await _messageBus.PublishMessage(model.Email, _configuration.GetValue<string>("TopicAndQueueNames:RegisterUserQueue"));
+
                 _response.Message = "Registration Successful";
             }
             else

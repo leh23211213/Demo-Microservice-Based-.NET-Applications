@@ -142,12 +142,19 @@ namespace App.Services.ShoppingCartAPI.Controllers
         {
             try
             {
-                CartDetails cartDetails = await _dbContext.CartDetails.FirstOrDefaultAsync(u => u.Id == cartDetailsId);
-
-                _dbContext.CartDetails.Remove(cartDetails);
-                await _dbContext.SaveChangesAsync();
-
-                _response.Message = "Remove product successfully";
+                if (cartDetailsId == null)
+                {
+                    _response.Message = "Not Found";
+                    _response.StatusCode = HttpStatusCode.NotFound;
+                    return _response;
+                }
+                else
+                {
+                    CartDetails cartDetails = await _dbContext.CartDetails.FirstOrDefaultAsync(u => u.Id == cartDetailsId);
+                    _dbContext.CartDetails.Remove(cartDetails);
+                    await _dbContext.SaveChangesAsync();
+                    _response.Message = "Remove product successfully";
+                }
             }
             catch (Exception ex)
             {
@@ -185,10 +192,13 @@ namespace App.Services.ShoppingCartAPI.Controllers
                     _response.IsSuccess = false;
                     _response.Message = "Empty";
                     _response.StatusCode = HttpStatusCode.NotFound;
+                    return _response;
                 }
-
-                _dbContext.CartHeaders.Remove(cart);
-                await _dbContext.SaveChangesAsync();
+                else
+                {
+                    _dbContext.CartHeaders.Remove(cart);
+                    await _dbContext.SaveChangesAsync();
+                }
             }
             catch (Exception ex)
             {

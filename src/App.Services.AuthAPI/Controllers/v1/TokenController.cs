@@ -2,8 +2,7 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using App.Services.AuthAPI.Models;
-using App.Services.AuthAPI.Services.IServices;
-
+using App.Services.AuthAPI.Services;
 namespace App.Services.AuthAPI.Controllers
 {
     [ApiController]
@@ -65,6 +64,22 @@ namespace App.Services.AuthAPI.Controllers
             _response.IsSuccess = false;
             _response.Result = "Invalid Input";
             _response.StatusCode = HttpStatusCode.BadRequest;
+            return _response;
+        }
+
+        [HttpDelete("warning-remove-token")]
+        public async Task<ActionResult<Response>> warning()
+        {
+            _tokenProvider.ClearToken();
+            _response.Message = " Already Clear Token!!!";
+            return _response;
+        }
+
+        [HttpGet("warning-gettoken")]
+        public async Task<ActionResult<Response>> gettoken()
+        {
+            _tokenProvider.ClearToken();
+            _response.Result = _tokenProvider.GetToken();
             return _response;
         }
     }

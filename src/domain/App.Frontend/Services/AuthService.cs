@@ -1,10 +1,16 @@
+
 using App.Frontend.Areas.Account.Models;
 using App.Frontend.Models;
-using App.Frontend.Services.IServices;
 using App.Frontend.Utility;
 
 namespace App.Frontend.Services
 {
+    public interface IAuthService
+    {
+        Task<Response?> LoginAsync(LoginRequest loginRequest);
+        Task<Response?> RegisterAsync(RegistrationRequest registerRequest);
+        Task<Response?> LogoutAsync(Token token);
+    }
     public class AuthService : IAuthService
     {
         private readonly IBaseService _baseService;

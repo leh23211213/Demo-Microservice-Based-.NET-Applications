@@ -1,19 +1,16 @@
-using App.Frontend.Models;
-using App.Frontend.Services.IServices;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using App.Frontend.Models;
+using App.Frontend.Services;
+using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
+using App.Frontend.Utility;
 namespace App.Frontend.Controllers
 {
-    [Authorize]
-    [AllowAnonymous]
     public class HomeController : Controller
     {
         private readonly ICartService _cartService;
         private readonly IProductService _productService;
-
         public HomeController(ICartService cartService, IProductService productService)
         {
             _cartService = cartService;
@@ -25,41 +22,54 @@ namespace App.Frontend.Controllers
                                                 [FromQuery] string? search = ""
                                             )
         {
-            Response? response = await _productService.Get(pageSize, currentPage, search);
-            Pagination pagination = new();
-            if (response.IsSuccess && response != null && response.Result != null)
+            if (User.Identity.IsAuthenticated)
             {
-                pagination = JsonConvert.DeserializeObject<Pagination>(Convert.ToString(response.Result));
+                Response? response = await _productService.Get(pageSize, currentPage, search);
+                Pagination pagination = new();
+                if (response.IsSuccess && response != null && response.Result != null)
+                {
+                    pagination = JsonConvert.DeserializeObject<Pagination>(Convert.ToString(response.Result));
+                }
+                else
+                {
+                    TempData["error"] = response?.Message;
+                }
+                return View(pagination);
             }
             else
             {
-                TempData["error"] = response?.Message;
+                return RedirectToAction("Login", "Authentication", new { area = "Account" });
             }
-            return View(pagination);
         }
 
-
+        [HttpGet]
         public async Task<IActionResult> Details(string id)
         {
-            Response? response = await _productService.Get(id);
-            Product? product = new();
-
-            if (response != null && response.IsSuccess)
+            if (User.Identity.IsAuthenticated)
             {
-                product = JsonConvert.DeserializeObject<Product>(Convert.ToString(response.Result));
+                Response? response = await _productService.Get(id);
+                Product? product = new();
+
+                if (response != null && response.IsSuccess)
+                {
+                    product = JsonConvert.DeserializeObject<Product>(Convert.ToString(response.Result));
+                }
+                else
+                {
+                    TempData["error"] = response?.Message;
+                }
+                return View(product);
             }
             else
             {
-                TempData["error"] = response?.Message;
+                return RedirectToAction("Login", "Authentication", new { area = "Account" });
             }
-            return View(product);
         }
 
         [HttpPost]
         public async Task<IActionResult> Details(Product product)
         {
             #region CART
-
             Cart cart = new()
             {
                 CartHeader = new CartHeader()
@@ -75,7 +85,6 @@ namespace App.Frontend.Controllers
 
             List<CartDetails> cartDetailsList = new() { cartDetails };
             cart.CartDetails = cartDetailsList;
-
             #endregion
 
             Response response = await _cartService.AddAsync(cart);
@@ -83,12 +92,14 @@ namespace App.Frontend.Controllers
             if (response != null && response.IsSuccess)
             {
                 TempData["success"] = response?.Message;
+                HttpContext.Session.SetString(StaticDetail.SessionCart, JsonConvert.SerializeObject(response.Result));
                 return RedirectToAction(nameof(Index));
             }
             else
             {
                 TempData["error"] = response?.Message;
             }
+
             return RedirectToAction("Details", "Home", new { Id = product.Id });
         }
 

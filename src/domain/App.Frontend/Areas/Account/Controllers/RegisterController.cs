@@ -1,16 +1,14 @@
+using App.Frontend.Models;
+using App.Frontend.Utility;
+using App.Frontend.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using App.Frontend.Services.IServices;
 using App.Frontend.Areas.Account.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using App.Frontend.Utility;
-using App.Frontend.Models;
 
 namespace App.Frontend.Areas.Account.Controllers
 {
     [Area("Account")]
-    [Route("[area]/[action]")]
-    [AllowAnonymous]
+    [Route("{user}/{action}")]
     public class RegisterController : Controller
     {
         private readonly IAuthService _authService;
@@ -46,7 +44,8 @@ namespace App.Frontend.Areas.Account.Controllers
                     model.Role = StaticDetail.RoleCustomer;
                 }
                 TempData["success"] = response?.Message;
-                return RedirectToAction("Login", "Login", new { area = "Account" });
+
+                return RedirectToAction("Login", "Authentication", new { area = "Account" });
             }
             else
             {
