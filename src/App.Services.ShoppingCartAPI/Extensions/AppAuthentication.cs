@@ -1,9 +1,8 @@
-﻿
-namespace App.Services.ShoppingCartAPI.Extensions
+﻿namespace App.Services.ShoppingCartAPI.Extensions
 {
-    public static class WebApplicationBuilderExtensions
+    public static class AppAuthentication
     {
-        public static WebApplicationBuilder AddAppAuthetication(this WebApplicationBuilder builder)
+        public static WebApplicationBuilder AddAppAuthentication(this WebApplicationBuilder builder)
         {
             var settingsSection = builder.Configuration.GetSection("ApiSettings");
 
@@ -15,9 +14,8 @@ namespace App.Services.ShoppingCartAPI.Extensions
 
             builder.Services.AddAuthentication(options =>
             {
-                options.DefaultAuthenticateScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultScheme = Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = "Bearer";
+                options.DefaultChallengeScheme = "Bearer";
             })
             .AddJwtBearer(options =>
             {
@@ -36,7 +34,6 @@ namespace App.Services.ShoppingCartAPI.Extensions
 
             builder.Services.AddAuthorization();
             builder.Services.AddControllers();
-            builder.Services.AddAuthentication();
             return builder;
         }
     }
