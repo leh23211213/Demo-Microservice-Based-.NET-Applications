@@ -1,9 +1,12 @@
-using App.Services.OrderAPI.Models;
-using App.Services.OrderAPI.Services.IServices;
 using Newtonsoft.Json;
+using App.Services.OrderAPI.Models;
 
 namespace App.Services.OrderAPI.Services
 {
+    public interface IProductService
+    {
+        Task<IEnumerable<Product>> Get();
+    }
     public class ProductService : IProductService
     {
         private readonly IHttpClientFactory _httpClientFactory;
