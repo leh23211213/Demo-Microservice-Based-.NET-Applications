@@ -1,99 +1,48 @@
-using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using App.Services.ShoppingCartAPI.Data;
 using App.Services.ShoppingCartAPI.Extensions;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.AddAppAuthetication();
+builder.AddAppAuthentication();
 builder.Services.ConfigureDatabase(builder.Configuration);
 builder.Services.AppServiceCollection(builder.Configuration);
-
-builder.Services.AddApiVersioning(options =>
-{
-    options.ReportApiVersions = true;
-    options.DefaultApiVersion = new ApiVersion(1, 0);
-    options.AssumeDefaultVersionWhenUnspecified = true;
-    // options.ApiVersionReader = new UrlSegmentApiVersionReader();  // Read version from URL
-});
-
-builder.Services.AddVersionedApiExplorer(options =>
-{
-    options.GroupNameFormat = "'v'VVV";
-    options.SubstituteApiVersionInUrl = true;
-});
-
-builder.Services.AddEndpointsApiExplorer();
-
-builder.Services.AddSwaggerGen(option =>
-{
-    option.AddSecurityDefinition(name: JwtBearerDefaults.AuthenticationScheme, securityScheme: new OpenApiSecurityScheme
-    {
-        Name = "Authorization",
-        Description = "Enter the Bearer Authorization string as following: `Bearer Generated-JWT-Token`",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer"
-    });
-    option.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference= new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = JwtBearerDefaults.AuthenticationScheme
-                }
-            }, new string[]{}
-        }
-    });
-
-    option.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Version = "v1.0",
-        Title = "App.Services.ShoppingCartAPI",
-    });
-});
+builder.Services.ApiVersionConfiguration();
+builder.Services.AddSwaggerDocumentation();
 
 var app = builder.Build();
 
-app.UseSwagger();
-app.UseSwaggerUI(options =>
-{
-    if (app.Environment.IsDevelopment())
-    {
-        app.UseSwaggerUI(options =>
-        {
-            options.SwaggerEndpoint("/swagger/v1/swagger.json", "App.Services.ShoppingCartAPI V1");
-        });
-    }
-    else
-    {
-        app.UseSwaggerUI(options =>
-        {
-            options.SwaggerEndpoint("/swagger/v1/swagger.json", "App.Services.ShoppingCartAPI V1");
-            options.RoutePrefix = string.Empty;
-        });
-    }
-});
+app.UseSwaggerDocumentation(app.Environment);
 
+//Default;
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.UseAuthentication();
 app.MapControllers();
-ApplyMigration();
+
+if (app.Environment.IsDevelopment())
+{
+    ApplyMigration(app);
+}
+
 app.Run();
 
-void ApplyMigration()
+// 500.30
+void ApplyMigration(WebApplication app)
 {
-    using (var scope = app.Services.CreateScope())
+    using var scope = app.Services.CreateScope();
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+    var _db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    try
     {
-        var _db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         if (_db.Database.GetPendingMigrations().Count() > 0)
         {
             _db.Database.Migrate();
         }
+    }
+    catch (Exception ex)
+    {
+        // Log and handle the migration error
+        logger.LogError(ex, "An error occurred while applying migrations.");
+        // Optional: Handle the error (e.g., rethrow or notify)
     }
 }

@@ -3,12 +3,12 @@ using App.Frontend.Services;
 using App.Frontend.Extensions;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.AspNetCore.Builder;
+
 var builder = WebApplication.CreateBuilder(args);
+
 // Add services to the container.
-builder.Services.AddControllersWithViews(u => u.Filters.Add(new AuthExceptionRedirection()));
-builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddSingleton<IApiMessageRequestBuilder, ApiMessageRequestBuilder>();
@@ -41,7 +41,7 @@ It stores the user's authentication ticket (e.g., login status) in a cookie.
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultScheme = "Cookies";
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = "oidc";
 })
 .AddJwtBearer()
@@ -53,7 +53,6 @@ builder.Services.AddAuthentication(options =>
     options.AccessDeniedPath = "/Auth/AccessDenied";
     options.SlidingExpiration = true;
 })
-// .AddCookie("Cookies")
 .AddOpenIdConnect("oidc", options =>
 {
     options.SignInScheme = "Cookies";
@@ -119,11 +118,15 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseStaticFiles();
 app.UseSession();
-app.UseHttpsRedirection();
 app.UseRequestTimeout(TimeSpan.FromSeconds(10));
 
+
+
+//default setting
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
