@@ -1,70 +1,70 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
+# # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy ASP.Net Core app to Azure Web App - 409159admin
+# name: Build and deploy ASP.Net Core app to Azure Web App - 409159admin
 
-on:
-  push:
-    branches:
-      - main
+# on:
+#   push:
+#     branches:
+#       - main
 
-env:
-  AZURE_WEBAPP_NAME: 409159admin
-  AZURE_WEBAPP_PACKAGE_PATH: domain\App.Domain.Admin\published
-  CONFIGURATION: Release
-  DOTNET_CORE_VERSION: 8.0.x
-  WORKING_DIRECTORY: ./src/domain/App.Domain.Admin
+# env:
+#   AZURE_WEBAPP_NAME: 409159admin
+#   AZURE_WEBAPP_PACKAGE_PATH: domain\App.Domain.Admin\published
+#   CONFIGURATION: Release
+#   DOTNET_CORE_VERSION: 8.0.x
+#   WORKING_DIRECTORY: ./src/domain/App.Domain.Admin
 
-jobs:
-  build:
-    runs-on: windows-latest
+# jobs:
+#   build:
+#     runs-on: windows-latest
 
-    steps:
-      - uses: actions/checkout@v4
+#     steps:
+#       - uses: actions/checkout@v4
 
-      - name: Set up .NET Core
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
-          include-prerelease: true
+#       - name: Set up .NET Core
+#         uses: actions/setup-dotnet@v1
+#         with:
+#           dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
+#           include-prerelease: true
 
-      - name: Restore Dependencies
-        run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
+#       - name: Restore Dependencies
+#         run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
 
-      - name: Build
-        run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration "${{ env.CONFIGURATION }}" --no-restore
+#       - name: Build
+#         run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration "${{ env.CONFIGURATION }}" --no-restore
 
-      - name: Test
-        run: dotnet test "${{ env.WORKING_DIRECTORY }}" --no-build
+#       - name: Test
+#         run: dotnet test "${{ env.WORKING_DIRECTORY }}" --no-build
 
-      - name: Publish
-        run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration "${{ env.CONFIGURATION }}" --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
+#       - name: Publish
+#         run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration "${{ env.CONFIGURATION }}" --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
 
-      - name: Publish Artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: webapp-dotnet-version-${{ env.DOTNET_CORE_VERSION }}
-          path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+#       - name: Publish Artifacts
+#         uses: actions/upload-artifact@v3
+#         with:
+#           name: webapp-dotnet-version-${{ env.DOTNET_CORE_VERSION }}
+#           path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
-  deploy:
-    runs-on: windows-latest
-    needs: build
+#   deploy:
+#     runs-on: windows-latest
+#     needs: build
 
-    environment:
-      name: "Production"
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+#     environment:
+#       name: "Production"
+#       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v3
-        with:
-          name: webapp-dotnet-version-${{ env.DOTNET_CORE_VERSION }}
-          path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+#     steps:
+#       - name: Download artifact from build job
+#         uses: actions/download-artifact@v3
+#         with:
+#           name: webapp-dotnet-version-${{ env.DOTNET_CORE_VERSION }}
+#           path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_DE209224E97646FA93328174214D9067 }}
-          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+#       - name: Deploy to Azure Web App
+#         id: deploy-to-webapp
+#         uses: azure/webapps-deploy@v2
+#         with:
+#           app-name: ${{ env.AZURE_WEBAPP_NAME }}
+#           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_DE209224E97646FA93328174214D9067 }}
+#           package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
