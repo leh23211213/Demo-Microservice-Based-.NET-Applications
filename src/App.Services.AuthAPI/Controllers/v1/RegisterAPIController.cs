@@ -27,6 +27,7 @@ namespace App.Services.AuthAPI.Controllers
             _authAPIService = authAPIService;
         }
 
+
         [HttpPost("Register")]
         public async Task<ActionResult<Response>> Register([FromBody] RegistrationRequest model)
         {

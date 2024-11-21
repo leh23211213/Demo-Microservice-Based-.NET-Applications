@@ -38,6 +38,7 @@ namespace App.Services.AuthAPI.Controllers
         }
 
         [HttpPost("Login")]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult<Response>> Login([FromBody] LoginRequest model)
         {
             try
