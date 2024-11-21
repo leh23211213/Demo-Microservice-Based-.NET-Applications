@@ -88,7 +88,8 @@ namespace App.Frontend.Services
             return await _baseService.SendAsync(new Request
             {
                 ApiType = StaticDetail.ApiType.DELETE,
-                Url = StaticDetail.ProductAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/product/Delete/" + id
+                Data = id,
+                Url = StaticDetail.ProductAPIBase + $"/api/{StaticDetail.CurrentAPIVersion}/product/Delete",
             });
         }
     }

@@ -1,53 +1,45 @@
-using System.Net;
-using App.Services.Bus;
-using App.Services.OrderAPI.Data;
-using App.Services.OrderAPI.Models;
-using App.Services.OrderAPI.Services.IServices;
-using App.Services.OrderAPI.Utility;
-using AutoMapper;
 using Stripe;
+using System.Net;
+using AutoMapper;
 using Stripe.Checkout;
 using Microsoft.AspNetCore.Mvc;
+using App.Services.OrderAPI.Data;
+using App.Services.OrderAPI.Models;
+using App.Services.OrderAPI.Utility;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+
 namespace App.Services.OrderAPI.Controllers
 {
-    [Authorize(Roles = "ADMIN")]
     [ApiController]
     [ApiVersion("1.0")]
+    [Authorize(Roles = "ADMIN")]
     [Route("api/v{version:apiVersion}/order")]
     public class WriteOrderAPIController : ControllerBase
     {
         private IMapper _mapper;
         protected Response _response;
-        private IProductService _productService;
-        private readonly IMessageBus _messageBus;
-        private readonly IConfiguration _configuration;
         private readonly ApplicationDbContext _dbContext;
         private readonly ILogger<WriteOrderAPIController> _logger;
 
         public WriteOrderAPIController(
                                     IMapper mapper,
-                                    IMessageBus messageBus,
-                                    IConfiguration configuration,
                                     ApplicationDbContext dbContext,
-                                    IProductService productService,
                                     ILogger<WriteOrderAPIController> logger
                                     )
         {
+            _response = new();
             _mapper = mapper;
             _logger = logger;
-            _response = new();
             _dbContext = dbContext;
-            _messageBus = messageBus;
-            _configuration = configuration;
-            _productService = productService;
         }
 
 
         [HttpPost("CreateOrder")]
         public async Task<ActionResult<Response>> CreateOrder([FromBody] Cart cart)
         {
+            if (cart == null) return _response;
+
             try
             {
                 OrderHeader orderHeader = _mapper.Map<OrderHeader>(cart.CartHeader);
@@ -63,9 +55,10 @@ namespace App.Services.OrderAPI.Controllers
             }
             catch (Exception ex)
             {
-                _response.Message = ex.Message;
+                _response.Message = "Internal Server Error";
                 _response.IsSuccess = false;
-                _response.StatusCode = HttpStatusCode.BadRequest;
+                _response.StatusCode = HttpStatusCode.InternalServerError;
+                _logger.LogError(ex.Message);
             }
             return _response;
         }
@@ -73,6 +66,8 @@ namespace App.Services.OrderAPI.Controllers
         [HttpPost("CreateStripeSession")]
         public async Task<ActionResult<Response>> CreateStripeSession([FromBody] Models.StripeRequest stripeRequest)
         {
+            if (stripeRequest == null) return _response;
+
             try
             {
                 var options = new SessionCreateOptions
@@ -125,10 +120,9 @@ namespace App.Services.OrderAPI.Controllers
             }
             catch (Exception ex)
             {
-                _response.Message = ex.Message;
+                _response.Message = "Internal Server Error";
                 _response.IsSuccess = false;
-                _response.StatusCode = HttpStatusCode.BadRequest;
-
+                _response.StatusCode = HttpStatusCode.InternalServerError;
                 _logger.LogError(ex.Message);
             }
 
@@ -138,6 +132,8 @@ namespace App.Services.OrderAPI.Controllers
         [HttpPost("ValidateStripeSession")]
         public async Task<ActionResult<Response>> ValidateStripeSession([FromBody] string orderHeaderId)
         {
+            if (orderHeaderId == null) return _response;
+
             try
             {
                 OrderHeader orderHeader = await _dbContext.OrderHeaders.FirstOrDefaultAsync(u => u.Id == orderHeaderId);
@@ -156,9 +152,9 @@ namespace App.Services.OrderAPI.Controllers
             }
             catch (Exception ex)
             {
-                _response.Message = ex.Message;
+                _response.Message = "Internal Server Error";
                 _response.IsSuccess = false;
-                _response.StatusCode = HttpStatusCode.BadRequest;
+                _response.StatusCode = HttpStatusCode.InternalServerError;
             }
             return _response;
         }
@@ -172,9 +168,10 @@ namespace App.Services.OrderAPI.Controllers
             }
             catch (Exception ex)
             {
-                _response.Message = ex.Message;
+                _response.Message = "Internal Server Error";
                 _response.IsSuccess = false;
-                _response.StatusCode = HttpStatusCode.BadRequest;
+                _response.StatusCode = HttpStatusCode.InternalServerError;
+                _logger.LogError(ex.Message);
             }
 
             return _response;

@@ -78,17 +78,19 @@ namespace App.Domain.Admin.Controllers
             product.Color.Id = product.Color.Name == "Black" ? 1 : 0;
             product.Category.Id = product.Category.Name == "Smartphone" ? 1 : 0;
             product.Brand.Id = product.Brand.Name == "Apple" ? 1 : 0;
-
-            Response? response = await _productService.CreateAsync(product);
-
-            if (response.IsSuccess && response != null)
+            if (ModelState.IsValid)
             {
-                TempData["success"] = response?.Message;
-                return RedirectToAction(nameof(Index));
-            }
-            else
-            {
-                TempData["error"] = response?.Message;
+                Response? response = await _productService.CreateAsync(product);
+
+                if (response.IsSuccess && response != null)
+                {
+                    TempData["success"] = response?.Message;
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    TempData["error"] = response?.Message;
+                }
             }
 
             var categoryList = new List<SelectListItem>(){
@@ -159,18 +161,21 @@ namespace App.Domain.Admin.Controllers
             product.Color.Id = product.Color.Name == "Black" ? 1 : 0;
             product.Category.Id = product.Category.Name == "Smartphone" ? 1 : 0;
             product.Brand.Id = product.Brand.Name == "Apple" ? 1 : 0;
-
-            Response? response = await _productService.UpdateAsync(product);
-            if (response.IsSuccess && response != null)
+            if (ModelState.IsValid)
             {
-                TempData["success"] = response?.Message;
-                return RedirectToAction(nameof(Index));
-            }
-            else
-            {
-                TempData["error"] = response?.Message;
-            }
 
+                Response? response = await _productService.UpdateAsync(product);
+                if (response.IsSuccess && response != null)
+                {
+                    TempData["success"] = response?.Message;
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    TempData["error"] = response?.Message;
+                }
+
+            }
             var categoryList = new List<SelectListItem>(){
                 new SelectListItem{Text = StaticDetail.Category , Value = StaticDetail.Category},
             };
