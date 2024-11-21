@@ -1,6 +1,6 @@
 ﻿namespace App.Services.OrderAPI.Extensions
 {
-    public static class WebApplicationBuilderExtensions
+    public static class AppAuthetication
     {
         public static WebApplicationBuilder AddAppAuthetication(this WebApplicationBuilder builder)
         {
@@ -14,9 +14,8 @@
 
             builder.Services.AddAuthentication(options =>
             {
-                options.DefaultAuthenticateScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultScheme = Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = "Bearer";
+                options.DefaultChallengeScheme = "Bearer";
             })
             .AddJwtBearer(options =>
             {
@@ -35,7 +34,6 @@
 
             builder.Services.AddAuthorization();
             builder.Services.AddControllers();
-            builder.Services.AddAuthentication();
             return builder;
         }
     }
