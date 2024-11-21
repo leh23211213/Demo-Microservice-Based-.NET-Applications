@@ -20,7 +20,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapRazorPages().RequireAuthorization();
+
+app.MapRazorPages();
 
 if (app.Environment.IsDevelopment())
 {
