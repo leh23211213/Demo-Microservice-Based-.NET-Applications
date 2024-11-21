@@ -34,6 +34,8 @@
                     </div>
                     <div class="p-2">
                         <form method="post" id="register">
+                            @Html.AntiForgeryToken()
+
                             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert" />
                             <div class="form-floating mb-3">
                                 <input asp-for="Email" class="form-control" autocomplete="Email" aria-required="true"

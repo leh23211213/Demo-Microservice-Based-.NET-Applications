@@ -32,6 +32,7 @@
                     </div>
                     <div class="p-2">
                         <form id="login" method="post" class="form-horizontal">
+                            @Html.AntiForgeryToken()
                             <div class="form-floating mb-3">
                                 <input asp-for="Email" class="form-control" autocomplete="username"
                                     placeholder="name@example.com" value="admin@gmail.com" />
