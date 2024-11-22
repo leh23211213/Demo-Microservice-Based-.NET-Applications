@@ -2,6 +2,9 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using App.Services.AuthAPI.Models;
 using App.Services.AuthAPI.Services;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
 
 namespace App.Services.AuthAPI.Controllers
 {
@@ -11,14 +14,27 @@ namespace App.Services.AuthAPI.Controllers
     public class LoginAPIController : ControllerBase
     {
         protected Response _response;
+        private readonly string issuer;
+        private readonly string audience;
+        private readonly string secretKey;
         private readonly IAuthAPIService _authAPIService;
-
+        private readonly ITokenProvider _tokenProvider;
+        private readonly IConfiguration _configuration;
         public LoginAPIController(
-                                IAuthAPIService authAPIService
+                                IConfiguration configuration,
+                                IAuthAPIService authAPIService,
+                                ITokenProvider tokenProvider
                                 )
         {
             _response = new();
             _authAPIService = authAPIService;
+            _tokenProvider = tokenProvider;
+
+            _configuration = configuration;
+
+            issuer = _configuration.GetValue<string>("SetToken:Issuer");
+            audience = _configuration.GetValue<string>("SetToken:Audience");
+            secretKey = _configuration.GetValue<string>("SetToken:Secret");
         }
 
         [HttpPost("Login")]
