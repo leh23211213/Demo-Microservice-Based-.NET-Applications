@@ -29,8 +29,11 @@ namespace App.Services.AuthAPI.Controllers
 
 
         [HttpPost("Register")]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult<Response>> Register([FromBody] RegistrationRequest model)
         {
+            if (model is null) return _response;
+
             if (ModelState.IsValid)
             {
                 var errorMessage = await _authAPIService.Register(model);
@@ -38,7 +41,7 @@ namespace App.Services.AuthAPI.Controllers
                 {
                     _response.IsSuccess = false;
                     _response.Message = errorMessage;
-                    _response.StatusCode = HttpStatusCode.BadRequest;
+                    _response.StatusCode = HttpStatusCode.InternalServerError;
                     return _response;
                 }
                 //await _messageBus.PublishMessage(model.Email, _configuration.GetValue<string>("TopicAndQueueNames:RegisterUserQueue"));
@@ -48,8 +51,8 @@ namespace App.Services.AuthAPI.Controllers
             else
             {
                 _response.IsSuccess = false;
-                _response.Message = "Input invalid";
-                _response.StatusCode = HttpStatusCode.BadRequest;
+                _response.Message = "Internal Server Error";
+                _response.StatusCode = HttpStatusCode.InternalServerError;
             }
             return _response;
         }
