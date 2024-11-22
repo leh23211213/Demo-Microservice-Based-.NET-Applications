@@ -1,3 +1,4 @@
+
 using Newtonsoft.Json;
 using System.Diagnostics;
 using App.Frontend.Models;
@@ -8,8 +9,6 @@ using System.IdentityModel.Tokens.Jwt;
 using App.Frontend.Areas.Account.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.AspNetCore.Authorization;
 
 namespace App.Frontend.Areas.Account.Controllers
 {
@@ -32,58 +31,75 @@ namespace App.Frontend.Areas.Account.Controllers
         // [Authorize]
         public async Task<ActionResult> Login()
         {
-            var authenticateResult = await HttpContext.AuthenticateAsync();
-            if (authenticateResult.Succeeded)
+            try
             {
-                return RedirectToAction(nameof(Index), "Home");
+                var authenticateResult = await HttpContext.AuthenticateAsync();
+                if (authenticateResult.Succeeded)
+                {
+                    return RedirectToAction(nameof(Index), "Home");
+                }
+                return View(new LoginRequest() { GeneratedCode = new Random().Next(1000, 9999).ToString(), });
             }
-            return View(new LoginRequest() { GeneratedCode = new Random().Next(1000, 9999).ToString(), });
+            catch
+            {
+                return RedirectToAction("Error", new AccountErrorModel { Message = "Unknow" });
+            }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginRequest model)
         {
-            if (model.GeneratedCode != model.EnteredCode)
+            try
             {
-                ModelState.AddModelError("EnteredCode", "The code you entered is incorrect.");
-                return View(new LoginRequest() { GeneratedCode = new Random().Next(1000, 9999).ToString(), });
-            }
-
-            _tokenProvider.ClearToken();
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
-            Response response = await _authService.LoginAsync(model);
-            if (response.IsSuccess && response != null)
-            {
-                var token = JsonConvert.DeserializeObject<Token>(Convert.ToString(response.Result));
-                if (token != null)
+                // validate captcha
+                if (model.GeneratedCode != model.EnteredCode)
                 {
-                    await SignInUser(token.AccessToken);
-                    _tokenProvider.SetToken(token);
-                    var roles = User.FindFirst(ClaimTypes.Role)?.Value;
-                    if (roles != null)
-                    {
-                        return RedirectToAction(nameof(Index), "Home");
-                    }
-                    return RedirectToAction("AccessDenied", "Authentication");
+                    ModelState.AddModelError("EnteredCode", "The code you entered is incorrect.");
+                    return View(new LoginRequest() { GeneratedCode = new Random().Next(1000, 9999).ToString(), });
                 }
-                return RedirectToAction("Error", new AccountErrorModel { Message = "Login Bug" });
+
+                // clear old user login
+                _tokenProvider.ClearToken();
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+                Response response = await _authService.LoginAsync(model);
+                if (response.IsSuccess && response != null)
+                {
+                    var token = JsonConvert.DeserializeObject<Token>(Convert.ToString(response.Result));
+                    if (token != null)
+                    {
+                        await SignInUser(token.AccessToken);
+                        _tokenProvider.SetToken(token);
+                        var roles = User.FindFirst(ClaimTypes.Role)?.Value;
+                        if (roles != null)
+                        {
+                            return RedirectToAction(nameof(Index), "Home");
+                        }
+                        return RedirectToAction("AccessDenied", "Authentication");
+                    }
+                    return RedirectToAction("Error", new AccountErrorModel { Message = "Login Bug" });
+                }
+                else
+                {
+                    TempData["error"] = response.Message;
+                    return View(new LoginRequest() { GeneratedCode = new Random().Next(1000, 9999).ToString(), });
+                }
             }
-            else
+            catch
             {
-                TempData["error"] = response.Message;
-                return View(new LoginRequest() { GeneratedCode = new Random().Next(1000, 9999).ToString(), });
+                return RedirectToAction("Error", new AccountErrorModel { Message = "Unknow" });
             }
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
             try
             {
                 await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-                SignOut(CookieAuthenticationDefaults.AuthenticationScheme, OpenIdConnectDefaults.AuthenticationScheme);
+                HttpContext.Session.Clear();
                 var token = _tokenProvider.GetToken();
                 await _authService.LogoutAsync(token);
                 _tokenProvider.ClearToken();

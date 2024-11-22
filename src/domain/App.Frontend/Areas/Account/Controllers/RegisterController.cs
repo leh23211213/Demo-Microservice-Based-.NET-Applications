@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace App.Frontend.Areas.Account.Controllers
 {
+    [Area("Account")]
+    [Route("{user}/{action}")]
     public class RegisterController : Controller
     {
         private readonly IAuthService _authService;
@@ -19,43 +21,55 @@ namespace App.Frontend.Areas.Account.Controllers
         [HttpGet]
         public async Task<ActionResult> Register()
         {
-            var roleList = new List<SelectListItem>()
+            try
+            {
+                var roleList = new List<SelectListItem>()
             {
                 new SelectListItem{Text=StaticDetail.RoleAdmin,Value=StaticDetail.RoleAdmin},
                 new SelectListItem{Text=StaticDetail.RoleCustomer,Value=StaticDetail.RoleCustomer},
             };
-            ViewBag.RoleList = roleList;
-            return View();
+                ViewBag.RoleList = roleList;
+                return View();
+            }
+            catch
+            {
+                return RedirectToAction("Error", new AccountErrorModel { Message = "Unknow" });
+            }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegistrationRequest model)
         {
-            Response response = await _authService.RegisterAsync(model);
-
-            if (response.IsSuccess && response != null)
+            try
             {
-                if (string.IsNullOrEmpty(model.Role))
+                Response response = await _authService.RegisterAsync(model);
+                if (response.IsSuccess && response != null)
                 {
-                    model.Role = StaticDetail.RoleCustomer;
+                    if (string.IsNullOrEmpty(model.Role))
+                    {
+                        model.Role = StaticDetail.RoleCustomer;
+                    }
+                    TempData["success"] = response?.Message;
+                    return RedirectToAction("Login", "Authentication", new { area = "Account" });
                 }
-                TempData["success"] = response?.Message;
-                return RedirectToAction("Login", "Authentication", new { area = "Account" });
+                else
+                {
+                    TempData["error"] = response?.Message;
+                }
+                // error then return old view
+                var roleList = new List<SelectListItem>()
+                {
+                    new SelectListItem{Text=StaticDetail.RoleAdmin,Value=StaticDetail.RoleAdmin},
+                    new SelectListItem{Text=StaticDetail.RoleCustomer,Value=StaticDetail.RoleCustomer},
+                };
+                ViewBag.RoleList = roleList;
+                return View(model);
             }
-            else
+            catch
             {
-                TempData["error"] = response?.Message;
+                return RedirectToAction("Error", new AccountErrorModel { Message = "Unknow" });
             }
-
-            var roleList = new List<SelectListItem>()
-            {
-                new SelectListItem{Text=StaticDetail.RoleAdmin,Value=StaticDetail.RoleAdmin},
-                new SelectListItem{Text=StaticDetail.RoleCustomer,Value=StaticDetail.RoleCustomer},
-            };
-            ViewBag.RoleList = roleList;
-
-            return View(model);
         }
     }
 }

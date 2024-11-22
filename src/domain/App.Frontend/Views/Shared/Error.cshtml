@@ -12,3 +12,8 @@
         <strong>Request ID:</strong> <code>@Model.RequestId</code>
     </p>
 }
+@if (Model.Message != null)
+{
+    <h1>Request Timeout</h1>
+    <p>Model.Message</p>
+}

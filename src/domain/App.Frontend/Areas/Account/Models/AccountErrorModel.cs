@@ -1,4 +1,3 @@
-namespace App.Frontend.Areas.Account.Models;
 public class AccountErrorModel
 {
     public string? RequestId { get; set; }

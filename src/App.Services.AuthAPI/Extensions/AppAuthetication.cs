@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using App.Services.AuthAPI.Models;
 using App.Services.AuthAPI.Data;
 namespace App.Services.AuthAPI.Extensions

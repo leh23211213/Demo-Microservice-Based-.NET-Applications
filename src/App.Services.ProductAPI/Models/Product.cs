@@ -28,9 +28,7 @@ public class Product
         }
     }
     public string? Description { get; set; }
-    [SwaggerIgnore]
     public string? ImageUrl { get; set; }
-    [SwaggerIgnore]
     public string? ImageLocalPath { get; set; }
 
     public int SizeId { get; set; }
