@@ -1,9 +1,16 @@
 using App.Services.ShoppingCartAPI.Models;
-using App.Services.ShoppingCartAPI.Services.IServices;
 using Newtonsoft.Json;
 
 namespace App.Services.ShoppingCartAPI.Services
 {
+    public interface IProductService
+    {
+        /// <summary>
+        /// Get all product from product api
+        /// </summary>
+        /// <returns></returns>
+        Task<IEnumerable<Product>> GetAsync();
+    }
     public class ProductService : IProductService
     {
         private readonly IHttpClientFactory _httpClientFactory;

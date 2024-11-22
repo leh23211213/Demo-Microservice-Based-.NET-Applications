@@ -5,6 +5,7 @@ using App.Services.ProductAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using App.Services.ProductAPI.Models;
 using Microsoft.AspNetCore.Authorization;
+
 namespace App.Services.ProductAPI.Controllers.v1
 {
     [ApiController]
@@ -28,7 +29,7 @@ namespace App.Services.ProductAPI.Controllers.v1
         }
 
         [HttpPost("Create")]
-        public async Task<ActionResult<Response>> Create(Product product)
+        public async Task<ActionResult<Response>> Create([FromBody] Product product)
         {
             try
             {
@@ -97,7 +98,7 @@ namespace App.Services.ProductAPI.Controllers.v1
         }
         // TODO : bug lost category,colorr,size,brand ID
         [HttpPut("Update")]
-        public async Task<ActionResult<Response>> Update(Product product)
+        public async Task<ActionResult<Response>> Update([FromBody] Product product)
         {
             try
             {
@@ -146,8 +147,8 @@ namespace App.Services.ProductAPI.Controllers.v1
             return _response;
         }
 
-        [HttpDelete("Delete/{id}")]
-        public async Task<ActionResult<Response>> Delete(string id)
+        [HttpDelete("Delete")]
+        public async Task<ActionResult<Response>> Delete([FromBody] string id)
         {
             try
             {

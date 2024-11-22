@@ -1,10 +1,8 @@
 using System.Net;
-using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using App.Services.AuthAPI.Models;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
 using App.Services.AuthAPI.Services;
+
 namespace App.Services.AuthAPI.Controllers
 {
     [ApiController]
@@ -13,28 +11,14 @@ namespace App.Services.AuthAPI.Controllers
     public class LoginAPIController : ControllerBase
     {
         protected Response _response;
-        private readonly string issuer;
-        private readonly string audience;
-        private readonly string secretKey;
-        private readonly IConfiguration _configuration;
-        private readonly ITokenProvider _tokenProvider;
         private readonly IAuthAPIService _authAPIService;
 
         public LoginAPIController(
-                                IConfiguration configuration,
-                                IAuthAPIService authAPIService,
-                                ITokenProvider tokenProvider
+                                IAuthAPIService authAPIService
                                 )
         {
             _response = new();
             _authAPIService = authAPIService;
-            _tokenProvider = tokenProvider;
-
-            _configuration = configuration;
-
-            secretKey = _configuration.GetValue<string>("ApiSettings:Secret");
-            issuer = _configuration.GetValue<string>("ApiSettings:Issuer");
-            audience = _configuration.GetValue<string>("ApiSettings:Audience");
         }
 
         [HttpPost("Login")]
@@ -109,5 +93,6 @@ namespace App.Services.AuthAPI.Controllers
             }
             return false;
         }
+
     }
 }

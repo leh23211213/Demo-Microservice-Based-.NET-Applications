@@ -22,7 +22,8 @@ namespace App.Frontend.Extensions
             }
             catch (OperationCanceledException) when (cts.IsCancellationRequested)
             {
-                context.Response.StatusCode = StatusCodes.Status408RequestTimeout;
+                context.Response.Redirect("/Error/RequestTimeout");
+                //   context.Response.StatusCode = StatusCodes.Status408RequestTimeout;
             }
         }
     }

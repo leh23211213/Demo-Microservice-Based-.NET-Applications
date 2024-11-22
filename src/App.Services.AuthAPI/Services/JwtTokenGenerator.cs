@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using System.Security.Claims;
 using App.Services.AuthAPI.Data;
 using App.Services.AuthAPI.Models;

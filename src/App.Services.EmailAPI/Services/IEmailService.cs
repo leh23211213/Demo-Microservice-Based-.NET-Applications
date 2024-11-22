@@ -5,5 +5,6 @@ namespace App.Services.EmailAPI.Services
     {
         Task RegisterUserEmailAndLog(string email);
         Task SendEmailAsync(string email, string subject, string message);
+
     }
 }

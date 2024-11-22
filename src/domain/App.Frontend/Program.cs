@@ -3,25 +3,28 @@ using App.Frontend.Services;
 using App.Frontend.Extensions;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.AspNetCore.Builder;
+
 var builder = WebApplication.CreateBuilder(args);
+
 // Add services to the container.
 builder.Services.AddHttpClient();
-builder.Services.AddHttpClient<IAuthService, AuthService>();
-builder.Services.AddHttpClient<ICartService, CartService>();
-builder.Services.AddHttpClient<IOrderService, OrderService>();
-builder.Services.AddHttpClient<IProductService, ProductService>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddSingleton<IApiMessageRequestBuilder, ApiMessageRequestBuilder>();
+builder.Services.AddHttpClient<IAuthService, AuthService>();
+builder.Services.AddHttpClient<IProductService, ProductService>();
+builder.Services.AddHttpClient<ICartService, CartService>();
+builder.Services.AddHttpClient<IOrderService, OrderService>();
 
 StaticDetail.AuthAPIBase = builder.Configuration["ServiceUrls:AuthAPI"];
-StaticDetail.OrderAPIBase = builder.Configuration["ServiceUrls:OrderAPI"];
 StaticDetail.ProductAPIBase = builder.Configuration["ServiceUrls:ProductAPI"];
 StaticDetail.ShoppingCartAPIBase = builder.Configuration["ServiceUrls:ShoppingCartAPI"];
+StaticDetail.OrderAPIBase = builder.Configuration["ServiceUrls:OrderAPI"];
 
 builder.Services.AddScoped<IBaseService, BaseService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<ITokenProvider, TokenProvider>();
@@ -38,19 +41,18 @@ It stores the user's authentication ticket (e.g., login status) in a cookie.
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultScheme = "Cookies";
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = "oidc";
 })
 .AddJwtBearer()
-// .AddCookie(options =>
-// {
-//     options.Cookie.HttpOnly = true;
-//     options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-//     options.LoginPath = "/Auth/Login";
-//     options.AccessDeniedPath = "/Auth/AccessDenied";
-//     options.SlidingExpiration = true;
-// })
-.AddCookie("Cookies")
+.AddCookie(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+    options.LoginPath = "/Auth/Login";
+    options.AccessDeniedPath = "/Auth/AccessDenied";
+    options.SlidingExpiration = true;
+})
 .AddOpenIdConnect("oidc", options =>
 {
     options.SignInScheme = "Cookies";
@@ -62,11 +64,11 @@ builder.Services.AddAuthentication(options =>
     options.ClientSecret = StaticDetail.secret;
     options.ResponseType = "code";
     //
-    // options.Scope.Add("openid");
-    // options.Scope.Add("profile");
-    // options.Scope.Add("email");
-    // options.Scope.Add("api1_scope");
-    // options.Scope.Add("api2_scope");
+    options.Scope.Add("openid");
+    options.Scope.Add("profile");
+    options.Scope.Add("email");
+    options.Scope.Add("api1_scope");
+    options.Scope.Add("api2_scope");
     options.Scope.Add("user");
     //
     options.SaveTokens = true;
@@ -94,35 +96,42 @@ Session: Used to store user-specific data on the server (such as shopping cart i
  The session can be used to store non-authentication-related information temporarily and is tied to the user’s session ID.
  This handles storing session-specific data (like cart items or temporary form data) and sets an idle
 */
-// builder.Services.AddSession(options =>
-// {
-//     options.IdleTimeout = TimeSpan.FromMinutes(100);
-//     options.Cookie.HttpOnly = true;
-//     options.Cookie.IsEssential = true;
-// });
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(5);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 // builder.Services.ConfigureApplicationCookie(options =>
 // {
 //     options.Cookie.Name = "ids"; // Cùng tên cookie cho cả hai
 //     options.Cookie.SameSite = SameSiteMode.Lax;
 // });
+
 var app = builder.Build();
 
+// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
-app.UseStaticFiles();
-app.UseHttpsRedirection();
-
+app.UseSession();
 app.UseRequestTimeout(TimeSpan.FromSeconds(10));
 
+
+
+//default setting
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=coverPage}/{id?}");
+    pattern: "{controller=Home}/{action=CoverPage}/{id?}");
 
 app.Run();

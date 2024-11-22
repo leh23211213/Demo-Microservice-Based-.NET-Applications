@@ -3,6 +3,7 @@ using App.Frontend.Models;
 using App.Frontend.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
+using App.Frontend.Utility;
 
 namespace App.Frontend.Controllers
 {
@@ -17,7 +18,6 @@ namespace App.Frontend.Controllers
             _orderService = orderService;
         }
 
-        [HttpGet]
         public async Task<IActionResult> Index()
         {
             if (User.Identity.IsAuthenticated)
@@ -30,7 +30,6 @@ namespace App.Frontend.Controllers
             }
         }
 
-        [HttpGet]
         public async Task<IActionResult> Checkout()
         {
             if (User.Identity.IsAuthenticated)
@@ -74,7 +73,6 @@ namespace App.Frontend.Controllers
             return View(cart);
         }
 
-        [HttpGet]
         public async Task<IActionResult> Confirmation(string orderId)
         {
             if (User.Identity.IsAuthenticated)
@@ -98,6 +96,7 @@ namespace App.Frontend.Controllers
             if (response != null && response.IsSuccess)
             {
                 TempData["success"] = response?.Message;
+                HttpContext.Session.SetString(StaticDetail.SessionCart, JsonConvert.SerializeObject(response.Result));
                 return RedirectToAction(nameof(Index));
             }
             else
@@ -115,12 +114,15 @@ namespace App.Frontend.Controllers
             var userEmail = User.FindFirst(JwtRegisteredClaimNames.Email)?.Value;
             var userName = User.FindFirst(JwtRegisteredClaimNames.Name)?.Value;
 
+
             Response? response = await _cartService.GetAsync(userId);
             if (response != null && response.IsSuccess)
             {
                 Cart cart = JsonConvert.DeserializeObject<Cart>(Convert.ToString(response.Result));
                 cart.CartHeader.Name = userName;
                 cart.CartHeader.Email = userEmail;
+
+                HttpContext.Session.SetString(StaticDetail.SessionCart, JsonConvert.SerializeObject(response.Result));
                 return cart;
             }
             return new Cart();
