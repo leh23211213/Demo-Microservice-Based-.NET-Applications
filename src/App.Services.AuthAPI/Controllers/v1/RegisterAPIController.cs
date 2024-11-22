@@ -13,30 +13,30 @@ namespace App.Services.AuthAPI.Controllers
         protected Response _response;
         private readonly IMessageBus _messageBus;
         private readonly IConfiguration _configuration;
-        private readonly IAuthAPIService _authAPIService;
+        private readonly IRegisterAPIService _registerAPIService;
 
         public RegisterAPIController(
                                     IMessageBus messageBus,
                                     IConfiguration configuration,
-                                    IAuthAPIService authAPIService
+                                    IRegisterAPIService registerAPIService
                                     )
         {
             _response = new();
             _messageBus = messageBus;
             _configuration = configuration;
-            _authAPIService = authAPIService;
+            _registerAPIService = registerAPIService;
         }
 
 
         [HttpPost("Register")]
-        [ValidateAntiForgeryToken]
+        // [ValidateAntiForgeryToken]
         public async Task<ActionResult<Response>> Register([FromBody] RegistrationRequest model)
         {
             if (model is null) return _response;
 
             if (ModelState.IsValid)
             {
-                var errorMessage = await _authAPIService.Register(model);
+                var errorMessage = await _registerAPIService.Register(model);
                 if (!string.IsNullOrEmpty(errorMessage))
                 {
                     _response.IsSuccess = false;

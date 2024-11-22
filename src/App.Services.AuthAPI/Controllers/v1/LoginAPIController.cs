@@ -17,17 +17,17 @@ namespace App.Services.AuthAPI.Controllers
         private readonly string issuer;
         private readonly string audience;
         private readonly string secretKey;
-        private readonly IAuthAPIService _authAPIService;
+        private readonly ILoginAPIService _loginAPIService;
         private readonly ITokenProvider _tokenProvider;
         private readonly IConfiguration _configuration;
         public LoginAPIController(
                                 IConfiguration configuration,
-                                IAuthAPIService authAPIService,
+                                ILoginAPIService loginAPIService,
                                 ITokenProvider tokenProvider
                                 )
         {
             _response = new();
-            _authAPIService = authAPIService;
+            _loginAPIService = loginAPIService;
             _tokenProvider = tokenProvider;
 
             _configuration = configuration;
@@ -48,7 +48,7 @@ namespace App.Services.AuthAPI.Controllers
                 try
                 {
                     // create token
-                    var token = await _authAPIService.Login(model);
+                    var token = await _loginAPIService.Login(model);
                     if (token == null || string.IsNullOrEmpty(token.AccessToken))
                     {
                         _response.Message = "Email or password is incorrect";

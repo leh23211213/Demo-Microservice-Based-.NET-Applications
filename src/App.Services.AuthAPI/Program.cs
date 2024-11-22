@@ -8,8 +8,11 @@ builder.AddIdentityServer7(builder.Configuration);
 builder.Services.AppServiceCollection(builder.Configuration);
 builder.Services.ApiVersionConfiguration();
 builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSwaggerDocumentation();
 
 var app = builder.Build();
+
+app.UseSwaggerDocumentation(app.Environment);
 
 app.UseAntiforgery();
 app.UseStaticFiles();
@@ -21,7 +24,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapRazorPages();
+// app.MapRazorPages();
 
 if (app.Environment.IsDevelopment())
 {
