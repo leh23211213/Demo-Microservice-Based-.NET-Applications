@@ -8,6 +8,8 @@
 
   <ItemGroup>
 	  
+	  <PackageReference Include="BenchmarkDotNet" Version="0.14.0" />
+	  
 	  <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.10" />
 	  <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.10" />
 	  <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.10" />
