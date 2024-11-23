@@ -5,6 +5,7 @@ using App.Services.AuthAPI.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace App.Services.AuthAPI.Controllers
 {
@@ -18,28 +19,26 @@ namespace App.Services.AuthAPI.Controllers
         private readonly string audience;
         private readonly string secretKey;
         private readonly ILoginAPIService _loginAPIService;
-        private readonly ITokenProvider _tokenProvider;
         private readonly IConfiguration _configuration;
         public LoginAPIController(
                                 IConfiguration configuration,
-                                ILoginAPIService loginAPIService,
-                                ITokenProvider tokenProvider
+                                ILoginAPIService loginAPIService
                                 )
         {
             _response = new();
             _loginAPIService = loginAPIService;
-            _tokenProvider = tokenProvider;
 
             _configuration = configuration;
 
-            issuer = _configuration.GetValue<string>("SetToken:Issuer");
-            audience = _configuration.GetValue<string>("SetToken:Audience");
-            secretKey = _configuration.GetValue<string>("SetToken:Secret");
+            issuer = _configuration.GetValue<string>("ApiSettings:Issuer");
+            audience = _configuration.GetValue<string>("ApiSettings:Audience");
+            secretKey = _configuration.GetValue<string>("ApiSettings:Secret");
         }
 
         [HttpPost("Login")]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult<Response>> Login([FromBody] LoginRequest model)
+        //  [ValidateAntiForgeryToken]
+        [EnableRateLimiting("RateLimitPolicy")]
+        public async Task<ActionResult<Response>> Login(LoginRequest model)
         {
             if (model is null) return _response;
 
@@ -58,7 +57,6 @@ namespace App.Services.AuthAPI.Controllers
                     if (Validate(token.AccessToken))
                     {
                         _response.Result = token;
-                        _tokenProvider.SetToken(token);
                     }
                 }
                 catch (Exception ex)
@@ -109,6 +107,5 @@ namespace App.Services.AuthAPI.Controllers
             }
             return false;
         }
-
     }
 }

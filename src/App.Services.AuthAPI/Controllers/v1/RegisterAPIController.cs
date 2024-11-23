@@ -3,6 +3,7 @@ using App.Services.Bus;
 using Microsoft.AspNetCore.Mvc;
 using App.Services.AuthAPI.Models;
 using App.Services.AuthAPI.Services;
+using Microsoft.AspNetCore.RateLimiting;
 namespace App.Services.AuthAPI.Controllers
 {
     [ApiController]
@@ -30,6 +31,7 @@ namespace App.Services.AuthAPI.Controllers
 
         [HttpPost("Register")]
         // [ValidateAntiForgeryToken]
+        [EnableRateLimiting("RateLimitPolicy")]
         public async Task<ActionResult<Response>> Register([FromBody] RegistrationRequest model)
         {
             if (model is null) return _response;

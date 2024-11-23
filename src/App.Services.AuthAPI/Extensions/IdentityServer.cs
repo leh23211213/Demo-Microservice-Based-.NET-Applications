@@ -38,43 +38,48 @@ namespace App.Services.AuthAPI.Extensions
         public static WebApplicationBuilder AddIdentityServer7(this WebApplicationBuilder builder, IConfiguration configuration)
         {
 
-            var connectionString = configuration.GetConnectionString("DefaultSQLConnection");
-            var migrationsAssembly = typeof(StaticDetail).Assembly.GetName().Name;
+            // var connectionString = configuration.GetConnectionString("DefaultSQLConnection");
+            // var migrationsAssembly = typeof(StaticDetail).Assembly.GetName().Name;
 
-            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            builder.Services.AddDbContext<ApplicationDbContext>(option =>
             {
-                options.UseSqlServer(connectionString, sqlOptions => sqlOptions.MigrationsAssembly(migrationsAssembly));
+                option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSQLConnection"));
             });
 
-            builder.Services.AddIdentityServer(options =>
-            {
-                options.Events.RaiseErrorEvents = true;
-                options.Events.RaiseInformationEvents = true;
-                options.Events.RaiseFailureEvents = true;
-                options.Events.RaiseSuccessEvents = true;
-                options.EmitStaticAudienceClaim = true;
-                // Specify custom user interaction URLs
-                // options.UserInteraction.LoginUrl = "/user/login";
-                // options.UserInteraction.LogoutUrl = "/user/logout";
-            })
-            .AddConfigurationStore(options =>
-            {
-                options.ConfigureDbContext = db =>
-                    db.UseSqlServer(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
-            })
-            .AddOperationalStore(options =>
-            {
-                options.ConfigureDbContext = db =>
-                    db.UseSqlServer(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
-            })
-            .AddInMemoryIdentityResources(StaticDetail.IdentityResources)
-            .AddInMemoryApiScopes(StaticDetail.ApiScopes)
-            .AddInMemoryClients(StaticDetail.Clients)
-            .AddInMemoryApiResources(StaticDetail.ApiResources)
-            .AddAspNetIdentity<ApplicationUser>() // use the dotnet identity 
-            .AddProfileService<ProfileService>()
-            .AddDeveloperSigningCredential(); // For Development
-            //.AddSigningCredential(certificate)
+            // builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            // {
+            //     options.UseSqlServer(connectionString, sqlOptions => sqlOptions.MigrationsAssembly(migrationsAssembly));
+            // });
+
+            // builder.Services.AddIdentityServer(options =>
+            // {
+            //     options.Events.RaiseErrorEvents = true;
+            //     options.Events.RaiseInformationEvents = true;
+            //     options.Events.RaiseFailureEvents = true;
+            //     options.Events.RaiseSuccessEvents = true;
+            //     options.EmitStaticAudienceClaim = true;
+            //     // Specify custom user interaction URLs
+            //     // options.UserInteraction.LoginUrl = "/user/login";
+            //     // options.UserInteraction.LogoutUrl = "/user/logout";
+            // })
+            // .AddConfigurationStore(options =>
+            // {
+            //     options.ConfigureDbContext = db =>
+            //         db.UseSqlServer(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
+            // })
+            // .AddOperationalStore(options =>
+            // {
+            //     options.ConfigureDbContext = db =>
+            //         db.UseSqlServer(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
+            // })
+            // .AddInMemoryIdentityResources(StaticDetail.IdentityResources)
+            // .AddInMemoryApiScopes(StaticDetail.ApiScopes)
+            // .AddInMemoryClients(StaticDetail.Clients)
+            // .AddInMemoryApiResources(StaticDetail.ApiResources)
+            // .AddAspNetIdentity<ApplicationUser>() // use the dotnet identity 
+            // .AddProfileService<ProfileService>()
+            // .AddDeveloperSigningCredential(); // For Development
+            // //.AddSigningCredential(certificate)
 
 
             return builder;
