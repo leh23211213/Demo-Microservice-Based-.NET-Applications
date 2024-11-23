@@ -27,5 +27,5 @@ public class LoginRequest
     public string? GeneratedCode { get; set; }
 
     public IList<AuthenticationScheme>? ExternalLogins { get; set; }
-
+    public string? ReturnUrl { get; set; }
 }

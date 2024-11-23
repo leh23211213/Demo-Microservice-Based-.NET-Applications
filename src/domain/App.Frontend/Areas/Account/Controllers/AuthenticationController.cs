@@ -9,22 +9,28 @@ using System.IdentityModel.Tokens.Jwt;
 using App.Frontend.Areas.Account.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace App.Frontend.Areas.Account.Controllers
 {
     [Area("Account")]
     [Route("{controller}/{action}")]
+    [AllowAnonymous]
     public class AuthenticationController : Controller
     {
         private readonly IAuthService _authService;
+        private readonly SignInManager<User> _signInManager;
         private readonly ITokenProvider _tokenProvider;
         public AuthenticationController(
                                 IAuthService authService,
-                                ITokenProvider tokenProvider
+                                ITokenProvider tokenProvider,
+                                SignInManager<User> signInManager
                             )
         {
             _authService = authService;
             _tokenProvider = tokenProvider;
+            _signInManager = signInManager;
         }
 
         [HttpGet]
@@ -36,9 +42,17 @@ namespace App.Frontend.Areas.Account.Controllers
                 var authenticateResult = await HttpContext.AuthenticateAsync();
                 if (authenticateResult.Succeeded)
                 {
-                    return RedirectToAction(nameof(Index), "Home");
+                    return RedirectToAction("Index", "Home");
                 }
-                return View(new LoginRequest() { GeneratedCode = new Random().Next(1000, 9999).ToString(), });
+
+                await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+                return View(new LoginRequest()
+                {
+                    GeneratedCode = new Random().Next(1000, 9999).ToString(),
+                    ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync())?.ToList() ?? new List<AuthenticationScheme>()
+                });
             }
             catch
             {
@@ -47,7 +61,7 @@ namespace App.Frontend.Areas.Account.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        // [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginRequest model)
         {
             try
@@ -56,7 +70,11 @@ namespace App.Frontend.Areas.Account.Controllers
                 if (model.GeneratedCode != model.EnteredCode)
                 {
                     ModelState.AddModelError("EnteredCode", "The code you entered is incorrect.");
-                    return View(new LoginRequest() { GeneratedCode = new Random().Next(1000, 9999).ToString(), });
+                    return View(new LoginRequest()
+                    {
+                        GeneratedCode = new Random().Next(1000, 9999).ToString(),
+                        ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync())?.ToList() ?? new List<AuthenticationScheme>()
+                    });
                 }
 
                 // clear old user login
@@ -83,7 +101,11 @@ namespace App.Frontend.Areas.Account.Controllers
                 else
                 {
                     TempData["error"] = response.Message;
-                    return View(new LoginRequest() { GeneratedCode = new Random().Next(1000, 9999).ToString(), });
+                    return View(new LoginRequest()
+                    {
+                        GeneratedCode = new Random().Next(1000, 9999).ToString(),
+                        ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync())?.ToList() ?? new List<AuthenticationScheme>()
+                    });
                 }
             }
             catch

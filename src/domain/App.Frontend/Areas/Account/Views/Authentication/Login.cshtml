@@ -33,6 +33,7 @@
                     <div class="p-2">
                         <form id="login" method="post" class="form-horizontal">
                             @Html.AntiForgeryToken()
+
                             <div class="form-floating mb-3">
                                 <input asp-for="Email" class="form-control" autocomplete="username"
                                     placeholder="name@example.com" value="admin@gmail.com" />
@@ -70,12 +71,60 @@
                             </p>
                         </div> *@
 
-                        <div class="my-form__actions">
-                            <div class="my-form__row">
-                                <span>Don't have an account?</span>
-                                <a asp-controller="user" asp-action="Register">
-                                    Sign Up Now
-                                </a>
+                        <div class="mt-4 text-center">
+                            <div class="socials-row">
+                                <p>
+                                <section>
+                                        @{
+                                            @if (Model.ExternalLogins == null && !Model.ExternalLogins.Any())
+                                            {
+                                            }
+                                            else
+                                            {
+                                            <form id="external-account" asp-controller="ExternalLogin"
+                                                asp-action="LoginWithProvider" method="post" class="form-horizontal">
+                                                    @Html.AntiForgeryToken()
+                                                <input type="hidden" asp-for="ReturnUrl" />
+                                                <div>
+                                                    <p>
+                                                            @foreach (var provider in Model.ExternalLogins!)
+                                                            {
+                                                                if (provider.Name == "Google")
+                                                                {
+                                                                <button type="submit" class="btn btn-primary" name="provider"
+                                                                    value="@provider.Name"
+                                                                    title="Log in using your @provider.DisplayName account">
+                                                                    <img src="~/lib/image/Login/@provider.Name.ToLower()_logo.png"
+                                                                        style="height: 30px; width: 30px; "
+                                                                        alt="@provider.DisplayName" />
+                                                                    Register with @provider.DisplayName
+                                                                </button>
+                                                                }
+                                                            }
+                                                    </p>
+                                                </div>
+                                            </form>
+                                            }
+                                        }
+                                </section>
+                                </p>
+                                <p>
+                                <div class="mt-4 text-center" disabled>
+                                    <p>
+                                        <a href="#" disabled>Forgot
+                                            your
+                                            password?</a>
+                                    </p>
+                                </div>
+                                <div class="my-form__actions">
+                                    <div class="my-form__row">
+                                        <span>Don't have an account?</span>
+                                        <a asp-controller="user" asp-action="Register">
+                                            Sign Up Now
+                                        </a>
+                                    </div>
+                                </div>
+                                </p>
                             </div>
                         </div>
                     </div>
