@@ -28,9 +28,11 @@ namespace App.Services.AuthAPI.Services
         {
             if (!IsUniqueUser(registrationRequest.Email)) return "User all ready exists";
 
+            var id = new SnowflakeIdGenerator(datacenterId: 1, workerId: 1);
+
             ApplicationUser applicationUser = new()
             {
-                Id = GenerateId().ToString(),
+                Id = id.GenerateId().ToString(),
                 UserName = registrationRequest.Email,
                 Email = registrationRequest.Email,
                 NormalizedEmail = registrationRequest.Email.ToUpper(),
@@ -68,67 +70,6 @@ namespace App.Services.AuthAPI.Services
                 return true;
             }
             return false;
-        }
-
-        private const long Epoch = 1609459200000L; // 2021-01-01 00:00:00 UTC
-        private const int MachineIdBits = 10;     // Số bit dành cho Machine ID
-        private const int SequenceBits = 12;      // Số bit dành cho Sequence
-        private const long MaxMachineId = (1L << MachineIdBits) - 1;
-        private const long MaxSequence = (1L << SequenceBits) - 1;
-        private readonly long _machineId;
-        private long _lastTimestamp = -1L;
-        private long _sequence = 0L;
-        private readonly object _lock = new object();
-
-        public long GenerateId()
-        {
-            lock (_lock)
-            {
-                long timestamp = GetCurrentTimestamp();
-
-                if (timestamp < _lastTimestamp)
-                {
-                    throw new InvalidOperationException("Clock moved backwards. Refusing to generate ID.");
-                }
-
-                if (timestamp == _lastTimestamp)
-                {
-                    // Tăng dần Sequence trong cùng một mili giây
-                    _sequence = (_sequence + 1) & MaxSequence;
-
-                    if (_sequence == 0)
-                    {
-                        // Đợi đến mili giây tiếp theo
-                        timestamp = WaitForNextMillis(_lastTimestamp);
-                    }
-                }
-                else
-                {
-                    // Reset Sequence khi thời gian thay đổi
-                    _sequence = 0L;
-                }
-
-                _lastTimestamp = timestamp;
-
-                // Tạo ID bằng cách kết hợp các thành phần
-                return ((timestamp - Epoch) << (MachineIdBits + SequenceBits)) |
-                       (_machineId << SequenceBits) |
-                       _sequence;
-            }
-        }
-        private long GetCurrentTimestamp()
-        {
-            return DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-        }
-
-        private long WaitForNextMillis(long lastTimestamp)
-        {
-            long timestamp = GetCurrentTimestamp();
-            while (timestamp <= lastTimestamp)
-            {
-                timestamp = GetCurrentTimestamp();
-            }
-            return timestamp;
         }
 
     }
