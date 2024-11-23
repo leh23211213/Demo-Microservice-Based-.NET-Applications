@@ -27,6 +27,8 @@ namespace App.Services.AuthAPI.Controllers
         [HttpPost("Refresh")]
         public async Task<ActionResult<Response>> GetNewTokenFromRefreshToken([FromBody] Token token)
         {
+            if (token is null) return _response;
+
             try
             {
                 if (ModelState.IsValid)
@@ -35,8 +37,8 @@ namespace App.Services.AuthAPI.Controllers
                     if (tokenResponse == null || string.IsNullOrEmpty(tokenResponse.AccessToken))
                     {
                         _response.IsSuccess = false;
-                        _response.Message = "Token Invalid";
-                        _response.StatusCode = HttpStatusCode.BadRequest;
+                        _response.Message = "Internal Server Error";
+                        _response.StatusCode = HttpStatusCode.InternalServerError;
                         return _response;
                     }
                     _response.Result = tokenResponse;
@@ -45,8 +47,8 @@ namespace App.Services.AuthAPI.Controllers
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
-                _response.Result = ex.Message;
-                _response.StatusCode = HttpStatusCode.BadRequest;
+                _response.Message = "Internal Server Error";
+                _response.StatusCode = HttpStatusCode.InternalServerError;
             }
             return _response;
         }
@@ -55,15 +57,23 @@ namespace App.Services.AuthAPI.Controllers
         [HttpPost("Revoke")]
         public async Task<ActionResult<Response>> RevokeRefreshToken([FromBody] Token token)
         {
-            if (ModelState.IsValid)
+            if (token is null) return _response;
+
+            try
             {
-                _tokenProvider.ClearToken();
-                await _jwtTokenGenerator.RevokeRefreshToken(token);
-                return _response;
+                if (ModelState.IsValid)
+                {
+                    _tokenProvider.ClearToken();
+                    await _jwtTokenGenerator.RevokeRefreshToken(token);
+                    return _response;
+                }
             }
-            _response.IsSuccess = false;
-            _response.Result = "Invalid Input";
-            _response.StatusCode = HttpStatusCode.BadRequest;
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = "Internal Server Error";
+                _response.StatusCode = HttpStatusCode.InternalServerError;
+            }
             return _response;
         }
 
