@@ -5,6 +5,7 @@ using App.Services.AuthAPI.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace App.Services.AuthAPI.Controllers
 {
@@ -17,29 +18,27 @@ namespace App.Services.AuthAPI.Controllers
         private readonly string issuer;
         private readonly string audience;
         private readonly string secretKey;
-        private readonly IAuthAPIService _authAPIService;
-        private readonly ITokenProvider _tokenProvider;
+        private readonly ILoginAPIService _loginAPIService;
         private readonly IConfiguration _configuration;
         public LoginAPIController(
                                 IConfiguration configuration,
-                                IAuthAPIService authAPIService,
-                                ITokenProvider tokenProvider
+                                ILoginAPIService loginAPIService
                                 )
         {
             _response = new();
-            _authAPIService = authAPIService;
-            _tokenProvider = tokenProvider;
+            _loginAPIService = loginAPIService;
 
             _configuration = configuration;
 
-            issuer = _configuration.GetValue<string>("SetToken:Issuer");
-            audience = _configuration.GetValue<string>("SetToken:Audience");
-            secretKey = _configuration.GetValue<string>("SetToken:Secret");
+            issuer = _configuration.GetValue<string>("ApiSettings:Issuer");
+            audience = _configuration.GetValue<string>("ApiSettings:Audience");
+            secretKey = _configuration.GetValue<string>("ApiSettings:Secret");
         }
 
         [HttpPost("Login")]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult<Response>> Login([FromBody] LoginRequest model)
+        //  [ValidateAntiForgeryToken]
+        [EnableRateLimiting("RateLimitPolicy")]
+        public async Task<ActionResult<Response>> Login(LoginRequest model)
         {
             if (model is null) return _response;
 
@@ -48,7 +47,7 @@ namespace App.Services.AuthAPI.Controllers
                 try
                 {
                     // create token
-                    var token = await _authAPIService.Login(model);
+                    var token = await _loginAPIService.Login(model);
                     if (token == null || string.IsNullOrEmpty(token.AccessToken))
                     {
                         _response.Message = "Email or password is incorrect";
@@ -58,7 +57,6 @@ namespace App.Services.AuthAPI.Controllers
                     if (Validate(token.AccessToken))
                     {
                         _response.Result = token;
-                        _tokenProvider.SetToken(token);
                     }
                 }
                 catch (Exception ex)
@@ -109,6 +107,5 @@ namespace App.Services.AuthAPI.Controllers
             }
             return false;
         }
-
     }
 }

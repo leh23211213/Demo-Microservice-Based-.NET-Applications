@@ -1,6 +1,7 @@
 using App.Services.ProductAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using App.Services.ProductAPI.Extensions;
+using BenchmarkDotNet.Running;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.AddAppAuthetication();
@@ -9,7 +10,17 @@ builder.Services.AppServiceCollection(builder.Configuration);
 builder.Services.ApiVersionConfiguration();
 builder.Services.AddSwaggerDocumentation();
 
+
+
 var app = builder.Build();
+
+// Chỉ bật Swagger khi không chạy benchmark
+// var isBenchmarkMode = Environment.GetEnvironmentVariable("BENCHMARK_MODE") == "true";
+
+// if (!isBenchmarkMode)
+// {
+// }
+// BenchmarkRunner.Run<ProductControllerBenchmark>();
 
 app.UseSwaggerDocumentation(app.Environment);
 

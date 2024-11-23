@@ -3,11 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using App.Services.ProductAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using App.Services.ProductAPI.Models;
-using Microsoft.AspNetCore.Authorization;
 
 namespace App.Services.ProductAPI.Controllers.v1
 {
-    [Authorize]
+    //  [Authorize]
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/product")]
@@ -30,7 +29,7 @@ namespace App.Services.ProductAPI.Controllers.v1
         {
             try
             {
-                IEnumerable<Product> products = await _dbContext.Products.AsNoTracking()
+                IEnumerable<Product>? products = await _dbContext.Products.AsNoTracking()
                                                                         .Include(p => p.Size)
                                                                         .Include(p => p.Category)
                                                                         .Include(p => p.Color)

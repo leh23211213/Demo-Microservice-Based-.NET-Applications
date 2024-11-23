@@ -39,7 +39,7 @@ namespace App.Services.ProductAPI.Repository
 
         public async Task<IEnumerable<Product?>> GetAsync()
         {
-            return await _dbContext.Products.AsNoTracking()
+            return await _dbContext.Products?.AsNoTracking()
                                             .Include(p => p.Size)
                                             .Include(p => p.Category)
                                             .Include(p => p.Color)
@@ -56,12 +56,12 @@ namespace App.Services.ProductAPI.Repository
                                                 Category = p.Category,
                                                 Color = p.Color,
                                                 Brand = p.Brand,
-                                            }).ToListAsync();
+                                            }).ToListAsync() ?? null;
         }
 
         public async Task<Product?> GetAsync(string id)
         {
-            return await _dbContext.Products.AsNoTracking()
+            return await _dbContext.Products?.AsNoTracking()
                                             .Where(p => p.Id == id)
                                             .Include(p => p.Category)
                                             .Include(p => p.Size)
@@ -78,14 +78,14 @@ namespace App.Services.ProductAPI.Repository
                                                 Category = p.Category,
                                                 Color = p.Color,
                                                 Brand = p.Brand,
-                                            }).FirstOrDefaultAsync();
+                                            }).FirstOrDefaultAsync() ?? null;
         }
 
         public async Task<IEnumerable<Product>> PaginationAsync(int pageSize, int currentPage, string? search)
         {
             IQueryable<Product> query;
 
-            query = _dbContext.Products.AsNoTracking()
+            query = _dbContext.Products?.AsNoTracking()
                                         .Select(p => new Product
                                         {
                                             Id = p.Id,
@@ -100,7 +100,7 @@ namespace App.Services.ProductAPI.Repository
                 query = query.Where(p => p.Name.ToLower().Contains(search.ToLower()));
             }
 
-            return await query.ToListAsync();
+            return await query.ToListAsync() ?? null;
         }
     }
 }
