@@ -3,11 +3,13 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using App.Services.AuthAPI.Models;
 using App.Services.AuthAPI.Services;
+using Microsoft.AspNetCore.RateLimiting;
 namespace App.Services.AuthAPI.Controllers
 {
     [ApiController]
     [ApiVersionNeutral]
     [Route("api/v{version:apiVersion}/auth")]
+    [EnableRateLimiting("RateLimitPolicy")]
     public class TokenController : Controller
     {
         protected Response _response;

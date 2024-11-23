@@ -47,7 +47,7 @@ namespace App.Frontend.Areas.Account.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        // [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginRequest model)
         {
             try
