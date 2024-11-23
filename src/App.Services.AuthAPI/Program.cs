@@ -1,3 +1,4 @@
+using App.Services.AuthAPI;
 using App.Services.AuthAPI.Data;
 using App.Services.AuthAPI.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -8,20 +9,27 @@ builder.AddIdentityServer7(builder.Configuration);
 builder.Services.AppServiceCollection(builder.Configuration);
 builder.Services.ApiVersionConfiguration();
 builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSwaggerDocumentation();
+builder.Services.AddRateLimiter();
+builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 
-app.UseAntiforgery();
+app.UseSwaggerDocumentation(app.Environment);
+
+//app.UseAntiforgery();
+
+//app.UseIdentityServer();
+
+/* Rate limit*/
+app.UseRateLimiter();
+
+// app.MapRazorPages();
+
 app.UseStaticFiles();
-
-app.UseIdentityServer();
-
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
-
-app.MapRazorPages();
 
 if (app.Environment.IsDevelopment())
 {

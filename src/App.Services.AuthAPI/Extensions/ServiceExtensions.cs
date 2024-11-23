@@ -10,12 +10,13 @@ namespace App.Services.AuthAPI.Extensions
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             // Configure Identity
             services.AddScoped<ITokenProvider, TokenProvider>();
-            services.AddScoped<IAuthAPIService, AuthAPIService>();
+            services.AddScoped<IRegisterAPIService, RegisterAPIService>();
+            services.AddScoped<ILoginAPIService, LoginAPIService>();
             services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
             services.AddScoped<IMessageBus, MessageBus>();
-            services.AddAntiforgery();
-            services.AddRazorPages();
             services.AddScoped<IProfileService, ProfileService>();
+            services.AddAntiforgery();
+            //services.AddRazorPages();
 
             return services;
         }
