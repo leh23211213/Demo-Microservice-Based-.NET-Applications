@@ -41,7 +41,7 @@ namespace App.Frontend.Areas.Account.Controllers
         [HttpGet]
         public async Task<IActionResult> ExternalLogin(string returnUrl = null, string remoteError = null)
         {
-            returnUrl ??= Url.Content("~/Product");
+            returnUrl ??= Url.Content("~/");
             if (remoteError != null)
             {
                 _logger.LogError($"Error from external provider: {remoteError}");

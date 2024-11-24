@@ -20,17 +20,14 @@ namespace App.Frontend.Areas.Account.Controllers
     public class AuthenticationController : Controller
     {
         private readonly IAuthService _authService;
-        private readonly SignInManager<User> _signInManager;
         private readonly ITokenProvider _tokenProvider;
         public AuthenticationController(
                                 IAuthService authService,
-                                ITokenProvider tokenProvider,
-                                SignInManager<User> signInManager
+                                ITokenProvider tokenProvider
                             )
         {
             _authService = authService;
             _tokenProvider = tokenProvider;
-            _signInManager = signInManager;
         }
 
         [HttpGet]
@@ -45,13 +42,12 @@ namespace App.Frontend.Areas.Account.Controllers
                     return RedirectToAction("Index", "Home");
                 }
 
-                await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
                 await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
                 return View(new LoginRequest()
                 {
                     GeneratedCode = new Random().Next(1000, 9999).ToString(),
-                    ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync())?.ToList() ?? new List<AuthenticationScheme>()
+                    ExternalLogins = new List<AuthenticationScheme>()
                 });
             }
             catch
@@ -73,7 +69,7 @@ namespace App.Frontend.Areas.Account.Controllers
                     return View(new LoginRequest()
                     {
                         GeneratedCode = new Random().Next(1000, 9999).ToString(),
-                        ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync())?.ToList() ?? new List<AuthenticationScheme>()
+                        ExternalLogins = new List<AuthenticationScheme>()
                     });
                 }
 
@@ -104,7 +100,7 @@ namespace App.Frontend.Areas.Account.Controllers
                     return View(new LoginRequest()
                     {
                         GeneratedCode = new Random().Next(1000, 9999).ToString(),
-                        ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync())?.ToList() ?? new List<AuthenticationScheme>()
+                        ExternalLogins = new List<AuthenticationScheme>()
                     });
                 }
             }

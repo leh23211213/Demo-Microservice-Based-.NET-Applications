@@ -54,13 +54,13 @@ builder.Services.AddAuthentication(options =>
     options.AccessDeniedPath = "/Auth/AccessDenied";
     options.SlidingExpiration = true;
 })
-.AddGoogle("Google", options =>
-{
-    var googleConfig = builder.Configuration.GetSection("Authentication:Google");
-    options.ClientId = googleConfig["ClientId"];
-    options.ClientSecret = googleConfig["ClientSecret"];
-    options.CallbackPath = "/LoginWithGoogle";
-})
+// .AddGoogle("Google", options =>
+// {
+//     var googleConfig = builder.Configuration.GetSection("Authentication:Google");
+//     options.ClientId = googleConfig["ClientId"];
+//     options.ClientSecret = googleConfig["ClientSecret"];
+//     options.CallbackPath = "/LoginWithGoogle";
+// })
 .AddOpenIdConnect("oidc", options =>
 {
     options.SignInScheme = "Cookies";
