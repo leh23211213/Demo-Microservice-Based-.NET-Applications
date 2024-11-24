@@ -1,9 +1,13 @@
 
+using App.APIGateway;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
+using Ocelot.RateLimiting.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddAuthentication();
+
+builder.AddAppAuthetication();
+
 if (builder.Environment.EnvironmentName.ToString().ToLower().Equals("production"))
 {
     builder.Configuration.AddJsonFile("ocelot.Production.json", optional: false, reloadOnChange: true);
@@ -12,8 +16,17 @@ else
 {
     builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
 }
+
 builder.Services.AddOcelot(builder.Configuration);
+
 var app = builder.Build();
+
+app.UseResponseCompression(); // Giảm kích thước dữ liệu phản hồi để cải thiện hiệu suất (ocelot) 
+
+app.UseRateLimiting();
+
 app.MapGet("/", () => "Hello World!");
+
 app.UseOcelot().GetAwaiter().GetResult();
+
 app.Run();
