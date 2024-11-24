@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using App.Services.ShoppingCartAPI.Data;
 using App.Services.ShoppingCartAPI.Extensions;
+using App.Services.ShoppingCartAPI;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.AddAppAuthentication();
@@ -8,10 +9,17 @@ builder.Services.ConfigureDatabase(builder.Configuration);
 builder.Services.AppServiceCollection(builder.Configuration);
 builder.Services.ApiVersionConfiguration();
 builder.Services.AddSwaggerDocumentation();
+builder.Services.AddRateLimiter();
+// cache
+builder.Services.AddDistributedMemoryCache(); // identity
+builder.Services.AddMemoryCache(); // rate limit cate
 
 var app = builder.Build();
 
 app.UseSwaggerDocumentation(app.Environment);
+
+/* Rate limit*/
+app.UseRateLimiter();
 
 //Default;
 app.UseHttpsRedirection();
