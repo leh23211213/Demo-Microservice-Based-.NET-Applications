@@ -121,7 +121,7 @@ namespace App.Frontend.Areas.Account.Controllers
                 var token = _tokenProvider.GetToken();
                 await _authService.LogoutAsync(token);
                 _tokenProvider.ClearToken();
-                return Redirect("~/");
+                return RedirectToAction("Login", "Authentication");
             }
             catch
             {

@@ -4,7 +4,6 @@ using App.Frontend.Extensions;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,7 +52,7 @@ builder.Services.AddAuthentication(options =>
     options.LoginPath = "/Auth/Login";
     options.AccessDeniedPath = "/Auth/AccessDenied";
     options.SlidingExpiration = true;
-})
+});
 // .AddGoogle("Google", options =>
 // {
 //     var googleConfig = builder.Configuration.GetSection("Authentication:Google");
@@ -61,43 +60,44 @@ builder.Services.AddAuthentication(options =>
 //     options.ClientSecret = googleConfig["ClientSecret"];
 //     options.CallbackPath = "/LoginWithGoogle";
 // })
-.AddOpenIdConnect("oidc", options =>
-{
-    options.SignInScheme = "Cookies";
-    options.Authority = builder.Configuration["ServiceUrls:AuthAPI"];
-    //Claims wil have every detail information
-    options.GetClaimsFromUserInfoEndpoint = true;
-    //
-    options.ClientId = "user";
-    options.ClientSecret = StaticDetail.secret;
-    options.ResponseType = "code";
-    //
-    options.Scope.Add("openid");
-    options.Scope.Add("profile");
-    options.Scope.Add("email");
-    options.Scope.Add("api1_scope");
-    options.Scope.Add("api2_scope");
-    options.Scope.Add("user");
-    //
-    options.SaveTokens = true;
-    // Xử lý claims:
-    options.ClaimActions.MapJsonKey("role", "role");
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        NameClaimType = "name",
-        RoleClaimType = "role",
-    };
-    //
-    options.Events = new OpenIdConnectEvents
-    {
-        OnRemoteFailure = context =>
-            {
-                context.Response.Redirect("/");
-                context.HandleResponse();
-                return Task.CompletedTask;
-            },
-    };
-});
+
+// .AddOpenIdConnect("oidc", options =>
+// {
+//     options.SignInScheme = "Cookies";
+//     options.Authority = builder.Configuration["ServiceUrls:AuthAPI"];
+//     //Claims wil have every detail information
+//     options.GetClaimsFromUserInfoEndpoint = true;
+//     //
+//     options.ClientId = "user";
+//     options.ClientSecret = StaticDetail.secret;
+//     options.ResponseType = "code";
+//     //
+//     options.Scope.Add("openid");
+//     options.Scope.Add("profile");
+//     options.Scope.Add("email");
+//     options.Scope.Add("api1_scope");
+//     options.Scope.Add("api2_scope");
+//     options.Scope.Add("user");
+//     //
+//     options.SaveTokens = true;
+//     // Xử lý claims:
+//     options.ClaimActions.MapJsonKey("role", "role");
+//     options.TokenValidationParameters = new TokenValidationParameters
+//     {
+//         NameClaimType = "name",
+//         RoleClaimType = "role",
+//     };
+//     //
+//     options.Events = new OpenIdConnectEvents
+//     {
+//         OnRemoteFailure = context =>
+//             {
+//                 context.Response.Redirect("/");
+//                 context.HandleResponse();
+//                 return Task.CompletedTask;
+//             },
+//     };
+// });
 
 /*
 Session: Used to store user-specific data on the server (such as shopping cart information, preferences, etc.).
