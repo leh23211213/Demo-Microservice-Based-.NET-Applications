@@ -5,6 +5,7 @@ using App.Services.ShoppingCartAPI.Data;
 using App.Services.ShoppingCartAPI.Models;
 using App.Services.ShoppingCartAPI.Services.IServices;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace App.Services.ShoppingCartAPI.Controllers
 {
@@ -12,6 +13,7 @@ namespace App.Services.ShoppingCartAPI.Controllers
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/cart")]
+    [EnableRateLimiting("RateLimitPolicy")]
     public class CartAPIController : ControllerBase
     {
         private Response _response;
