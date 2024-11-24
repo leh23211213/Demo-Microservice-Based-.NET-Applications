@@ -53,6 +53,14 @@
   },
 
   "GlobalConfiguration": {
-  "BaseUrl": "https://localhost:7777"
-}
+    "BaseUrl": "https://localhost:7777",
+    "RateLimitOptions": {
+        "EnableRateLimiting": true,
+        "Period": "1m",
+        "PeriodTimespan": 60,
+        "Limit": 100, // Giới hạn chung toàn hệ thống
+        "HttpStatusCode": 429,
+        "QuotaExceededMessage": "Too many requests. Try again later."
+      }
+  }
 }
