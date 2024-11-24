@@ -5,6 +5,7 @@ using App.Services.OrderAPI.Utility;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace App.Services.OrderAPI.Controllers
 {
@@ -12,6 +13,7 @@ namespace App.Services.OrderAPI.Controllers
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/order")]
+    [EnableRateLimiting("RateLimitPolicy")]
     public class ReadOrderAPIController : ControllerBase
     {
         protected Response _response;
