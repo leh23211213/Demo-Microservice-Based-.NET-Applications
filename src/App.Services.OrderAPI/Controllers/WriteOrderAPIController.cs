@@ -40,25 +40,34 @@ namespace App.Services.OrderAPI.Controllers
         {
             if (cart == null) return _response;
 
+            using var transaction = await _dbContext.Database.BeginTransactionAsync();
             try
             {
                 OrderHeader orderHeader = _mapper.Map<OrderHeader>(cart.CartHeader);
+                // create id
+                var orderId = new SnowflakeIdGenerator(1, 1).GenerateId();
+                orderHeader.Id = orderId.ToString();
+
                 orderHeader.Status = StaticDetail.Status_Pending;
                 orderHeader.OrderTotal = Math.Round(orderHeader.OrderTotal ?? 0, 2);
                 orderHeader.OrderDetails = _mapper.Map<IEnumerable<OrderDetails>>(cart.CartDetails);
                 orderHeader.OrderTime = DateTime.Now;
                 OrderHeader orderCreated = _dbContext.OrderHeaders.Add(orderHeader).Entity;
-                await _dbContext.SaveChangesAsync();
 
+                await _dbContext.SaveChangesAsync();
                 orderHeader.Id = orderCreated.Id;
+
+                // Commit transaction
+                await transaction.CommitAsync();
+
                 _response.Result = orderHeader;
             }
             catch (Exception ex)
             {
-                _response.Message = "Internal Server Error";
                 _response.IsSuccess = false;
+                _response.Message = "Internal Server Error";
                 _response.StatusCode = HttpStatusCode.InternalServerError;
-                _logger.LogError(ex.Message);
+                // _logger.LogError(ex.Message);
             }
             return _response;
         }
@@ -67,6 +76,8 @@ namespace App.Services.OrderAPI.Controllers
         public async Task<ActionResult<Response>> CreateStripeSession([FromBody] Models.StripeRequest stripeRequest)
         {
             if (stripeRequest == null) return _response;
+
+            using var transaction = await _dbContext.Database.BeginTransactionAsync();
 
             try
             {
@@ -99,7 +110,6 @@ namespace App.Services.OrderAPI.Controllers
                         },
                         Quantity = item.Count,
                     };
-
                     options.LineItems.Add(sessionLineItemOptions);
                 }
 
@@ -110,20 +120,25 @@ namespace App.Services.OrderAPI.Controllers
 
                 var service = new SessionService();
                 Session session = service.Create(options);
+
                 stripeRequest.StripeSessionUrl = session.Url;
+
                 OrderHeader orderHeader = _dbContext.OrderHeaders.First(u => u.Id == stripeRequest.OrderHeader.Id);
+
                 orderHeader.StripeSessionId = session.Id;
 
-                _dbContext.SaveChanges();
+                await _dbContext.SaveChanges();
+                // Commit transaction
+                await transaction.CommitAsync();
 
                 _response.Result = stripeRequest;
             }
             catch (Exception ex)
             {
-                _response.Message = "Internal Server Error";
                 _response.IsSuccess = false;
+                _response.Message = "Internal Server Error";
                 _response.StatusCode = HttpStatusCode.InternalServerError;
-                _logger.LogError(ex.Message);
+                // _logger.LogError(ex.Message);
             }
 
             return _response;
@@ -152,8 +167,8 @@ namespace App.Services.OrderAPI.Controllers
             }
             catch (Exception ex)
             {
-                _response.Message = "Internal Server Error";
                 _response.IsSuccess = false;
+                _response.Message = "Internal Server Error";
                 _response.StatusCode = HttpStatusCode.InternalServerError;
             }
             return _response;
@@ -168,10 +183,10 @@ namespace App.Services.OrderAPI.Controllers
             }
             catch (Exception ex)
             {
-                _response.Message = "Internal Server Error";
                 _response.IsSuccess = false;
+                _response.Message = "Internal Server Error";
                 _response.StatusCode = HttpStatusCode.InternalServerError;
-                _logger.LogError(ex.Message);
+                //_logger.LogError(ex.Message);
             }
 
             return _response;
