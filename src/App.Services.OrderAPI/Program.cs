@@ -8,11 +8,18 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddAppAuthetication();
 builder.Services.ConfigureDatabase(builder.Configuration);
 builder.Services.AppServiceCollection(builder.Configuration);
+builder.Services.AddRateLimiter();
+// cache
+builder.Services.AddDistributedMemoryCache(); // identity
+builder.Services.AddMemoryCache(); // rate limit cate
+
 
 var app = builder.Build();
 
 StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
 
+/* Rate limit*/
+app.UseRateLimiter();
 //Default
 app.MapControllers();
 ApplyMigration();
