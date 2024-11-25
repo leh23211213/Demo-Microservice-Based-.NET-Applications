@@ -1,3 +1,4 @@
+using App.Services.EmailAPI;
 using App.Services.EmailAPI.Data;
 using App.Services.EmailAPI.Extension;
 
@@ -8,10 +9,20 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.ConfigureDatabase(builder.Configuration);
 builder.Services.AppServiceCollection(builder.Configuration);
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddRateLimiter();
+// cache
+builder.Services.AddDistributedMemoryCache(); // identity
+builder.Services.AddMemoryCache(); // rate limit cate
+
+
 var app = builder.Build();
+
+/* Rate limit*/
+app.UseRateLimiter();
 
 app.UseSwagger();
 app.UseSwaggerUI(c =>
