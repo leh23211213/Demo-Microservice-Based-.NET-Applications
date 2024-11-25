@@ -53,23 +53,25 @@ namespace App.Services.OrderAPI.Controllers
                 }
                 else
                 {
-                    orders = await _dbContext.OrderHeaders.AsNoTracking().Include(u => u.OrderDetails).Where(u => u.UserId == userId).OrderByDescending(u => u.Id).ToListAsync();
+                    orders = await _dbContext.OrderHeaders.AsNoTracking().Include(u => u.OrderDetails)
+                                                        .Where(u => u.UserId == userId).OrderByDescending(u => u.Id)
+                                                        .ToListAsync();
                 }
 
                 if (orders == null)
                 {
-                    _response.Message = "Internal Server Error";
                     _response.IsSuccess = false;
+                    _response.Message = "Internal Server Error";
                     _response.StatusCode = HttpStatusCode.InternalServerError;
                 }
                 _response.Result = orders;
             }
             catch (Exception ex)
             {
-                _response.Message = "Internal Server Error";
                 _response.IsSuccess = false;
+                _response.Message = "Internal Server Error";
                 _response.StatusCode = HttpStatusCode.InternalServerError;
-                _logger.LogError(ex.Message);
+                // _logger.LogError(ex.Message);
             }
             return _response;
         }
@@ -88,18 +90,19 @@ namespace App.Services.OrderAPI.Controllers
                 var orderHead = await _dbContext.OrderHeaders.AsNoTracking().Include(u => u.OrderDetails).FirstOrDefaultAsync(u => u.Id == orderId);
                 if (orderHead == null)
                 {
-                    _response.Message = "Internal Server Error";
                     _response.IsSuccess = false;
+                    _response.Message = "Internal Server Error";
                     _response.StatusCode = HttpStatusCode.InternalServerError;
                 }
+
                 _response.Result = orderHead;
             }
             catch (Exception ex)
             {
-                _response.Message = "Internal Server Error";
                 _response.IsSuccess = false;
+                _response.Message = "Internal Server Error";
                 _response.StatusCode = HttpStatusCode.InternalServerError;
-                _logger.LogError(ex.Message);
+                // _logger.LogError(ex.Message);
             }
             return _response;
         }

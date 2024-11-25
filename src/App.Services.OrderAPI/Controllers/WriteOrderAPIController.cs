@@ -1,3 +1,36 @@
+/*
+4. Giao dịch phân tán (Distributed Transactions)
+Khi bạn cần xử lý giao dịch trên nhiều cơ sở dữ liệu hoặc nguồn dữ liệu khác nhau, bạn có thể sử dụng TransactionScope với giao dịch phân tán.
+ Tuy nhiên, cần bật MSDTC (Microsoft Distributed Transaction Coordinator).
+using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+{
+    try
+    {
+        using (var dbContext1 = new DbContext1())
+        {
+            Thêm dữ liệu vào cơ sở dữ liệu 1
+            dbContext1.Orders.Add(new Order {  });
+            await dbContext1.SaveChangesAsync();
+        }
+
+        using (var dbContext2 = new DbContext2())
+        {
+            // Thêm dữ liệu vào cơ sở dữ liệu 2
+            dbContext2.Payments.Add(new Payment {  });
+            await dbContext2.SaveChangesAsync();
+        }
+
+        // Commit giao dịch phân tán
+        scope.Complete();
+    }
+    catch (Exception ex)
+    {
+        // Tự động rollback nếu không gọi `scope.Complete()`
+        throw new Exception("Giao dịch phân tán thất bại.", ex);
+    }
+}
+*/
+
 using Stripe;
 using System.Net;
 using AutoMapper;
@@ -52,10 +85,9 @@ namespace App.Services.OrderAPI.Controllers
                 orderHeader.OrderTotal = Math.Round(orderHeader.OrderTotal ?? 0, 2);
                 orderHeader.OrderDetails = _mapper.Map<IEnumerable<OrderDetails>>(cart.CartDetails);
                 orderHeader.OrderTime = DateTime.Now;
-                OrderHeader orderCreated = _dbContext.OrderHeaders.Add(orderHeader).Entity;
 
+                OrderHeader orderCreated = _dbContext.OrderHeaders.Add(orderHeader).Entity;
                 await _dbContext.SaveChangesAsync();
-                orderHeader.Id = orderCreated.Id;
 
                 // Commit transaction
                 await transaction.CommitAsync();
@@ -120,14 +152,11 @@ namespace App.Services.OrderAPI.Controllers
 
                 var service = new SessionService();
                 Session session = service.Create(options);
-
                 stripeRequest.StripeSessionUrl = session.Url;
-
                 OrderHeader orderHeader = _dbContext.OrderHeaders.First(u => u.Id == stripeRequest.OrderHeader.Id);
-
                 orderHeader.StripeSessionId = session.Id;
 
-                await _dbContext.SaveChanges();
+                _dbContext.SaveChanges();
                 // Commit transaction
                 await transaction.CommitAsync();
 
