@@ -22,7 +22,7 @@ public class OrderController : Controller
         }
         else
         {
-            return RedirectToAction("Login", "Authentication", new { area = "Account" });
+            return RedirectToAction("Login", "Authentication");
         }
     }
 
@@ -47,7 +47,7 @@ public class OrderController : Controller
         }
         else
         {
-            return RedirectToAction("Login", "Authentication", new { area = "Account" });
+            return RedirectToAction("Login", "Authentication");
         }
     }
 
@@ -103,7 +103,7 @@ public class OrderController : Controller
         }
         else
         {
-            return RedirectToAction("Login", "Authentication", new { area = "Account" });
+            return RedirectToAction("Login", "Authentication");
         }
     }
 }

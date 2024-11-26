@@ -5,6 +5,7 @@ using App.Services.ShoppingCartAPI.Data;
 using App.Services.ShoppingCartAPI.Models;
 using App.Services.ShoppingCartAPI.Services.IServices;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace App.Services.ShoppingCartAPI.Controllers
 {
@@ -12,6 +13,7 @@ namespace App.Services.ShoppingCartAPI.Controllers
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/cart")]
+    [EnableRateLimiting("RateLimitPolicy")]
     public class CartAPIController : ControllerBase
     {
         private Response _response;
@@ -87,8 +89,10 @@ namespace App.Services.ShoppingCartAPI.Controllers
                 var cartHeader = await _dbContext.CartHeaders.FirstOrDefaultAsync(u => u.UserId == cart.CartHeader.UserId);
                 if (cartHeader == null)
                 {
+                    // generate id
+                    var cartId = new SnowflakeIdGenerator(1, 1).GenerateId();
                     //create header and details
-                    cart.CartHeader.Id = Guid.NewGuid().ToString();
+                    cart.CartHeader.Id = cartId.ToString();
                     _dbContext.Add(cart.CartHeader);
                     await _dbContext.SaveChangesAsync();
 

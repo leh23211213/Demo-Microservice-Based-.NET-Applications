@@ -1,7 +1,6 @@
 
 using App.Services.OrderAPI.Models;
 using App.Services.OrderAPI.Services;
-using App.Services.OrderAPI.Services.IServices;
 
 namespace App.Services.OrderAPI.Extensions
 {
@@ -14,16 +13,19 @@ namespace App.Services.OrderAPI.Extensions
             AutoMapper.IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
             services.AddSingleton(mapper);
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             services.AddHttpContextAccessor();
+
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<Bus.IMessageBus, Bus.MessageBus>();
-            services.AddScoped<Response>();
+            services.AddTransient<Response>();
+
             services.AddHttpClient("Product", u => u.BaseAddress =
                                                     new Uri(configuration["ServiceUrls:ProductAPI"]))
                                                     .AddHttpMessageHandler<Utility.ApiAuthenticationHttpClientHandler>();
 
-
             services.AddResponseCaching();
+
             services.AddControllers(options =>
             {
                 options.CacheProfiles.Add("Default10", new Microsoft.AspNetCore.Mvc.CacheProfile

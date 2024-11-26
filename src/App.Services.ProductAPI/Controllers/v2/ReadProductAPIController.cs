@@ -3,13 +3,16 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using App.Services.ProductAPI.Models;
 using App.Services.ProductAPI.Repository;
-
+using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.AspNetCore.Authorization;
 
 namespace App.Services.ProductAPI.Controllers.v2
 {
     [ApiController]
     [ApiVersion("2.0")]
+    [Authorize]
     [Route("api/v{version:apiVersion}/product")]
+    [EnableRateLimiting("RateLimitPolicy")]
     public class ReadProductAPIController : Controller
     {
         private Response _response;

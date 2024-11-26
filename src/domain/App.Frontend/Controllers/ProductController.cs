@@ -17,10 +17,10 @@ namespace App.Domain.Admin.Controllers
         }
 
         public async Task<IActionResult> Index(
-                                                      [FromQuery] int pageSize = 10,
-                                                      [FromQuery] int currentPage = 1,
-                                                      [FromQuery] string? search = ""
-                                                      )
+                                                [FromQuery] int pageSize = 10,
+                                                [FromQuery] int currentPage = 1,
+                                                [FromQuery] string? search = ""
+                                                )
         {
             if (User.Identity.IsAuthenticated)
             {
@@ -38,7 +38,7 @@ namespace App.Domain.Admin.Controllers
             }
             else
             {
-                return RedirectToAction("Login", "Authentication", new { area = "Account" });
+                return RedirectToAction("Login", "Authentication");
             }
         }
 
@@ -67,7 +67,7 @@ namespace App.Domain.Admin.Controllers
             }
             else
             {
-                return RedirectToAction("Login", "Authentication", new { area = "Account" });
+                return RedirectToAction("Login", "Authentication");
             }
         }
 
@@ -150,7 +150,7 @@ namespace App.Domain.Admin.Controllers
             }
             else
             {
-                return RedirectToAction("Login", "Authentication", new { area = "Account" });
+                return RedirectToAction("Login", "Authentication");
             }
         }
 
@@ -214,7 +214,7 @@ namespace App.Domain.Admin.Controllers
             }
             else
             {
-                return RedirectToAction("Login", "Authentication", new { area = "Account" });
+                return RedirectToAction("Login", "Authentication");
             }
         }
 

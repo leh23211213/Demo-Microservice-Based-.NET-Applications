@@ -38,7 +38,7 @@ namespace App.Frontend.Controllers
             }
             else
             {
-                return RedirectToAction("Login", "Authentication", new { area = "Account" });
+                return RedirectToAction("Login", "Authentication");
             }
         }
 
@@ -62,7 +62,7 @@ namespace App.Frontend.Controllers
             }
             else
             {
-                return RedirectToAction("Login", "Authentication", new { area = "Account" });
+                return RedirectToAction("Login", "Authentication");
             }
         }
 

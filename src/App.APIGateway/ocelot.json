@@ -1,69 +1,73 @@
 {
     "Routes":[
-      // {
-      //   "DownstreamPathTemplate": "/api/product",
-      //   "DownstreamScheme": "https",
-      //   "DownstreamHostAndPorts": [
-      //     {
-      //       "Host": "localhost",
-      //       "Port": 7001
-      //     }
-      //   ],
-      //   "UpstreamPathTemplate": "/api/product",
-      //   "UpstreamHttpMethod": [ "Get" ],
-      //   "AuthenticationOptions": {
-      //   "AuthenticationProviderKey": "Bearer"
-      //   }
-      // },  
-      // {
-      //   "DownstreamPathTemplate": "/api/product",
-      //   "DownstreamScheme": "https",
-      //   "DownstreamHostAndPorts": [
-      //     {
-      //       "Host": "localhost",
-      //       "Port": 7001
-      //     }
-      //   ],
-      //   "UpstreamPathTemplate": "/api/product",
-      //   "UpstreamHttpMethod": [ "Get" ]
-      // "AuthenticationOptions": {
-      //   "AuthenticationProviderKey": "Bearer"
-      // }
-      // },
-    
-      
       {
-        "DownstreamPathTemplate": "/api/v1/auth/Register",
+        "DownstreamPathTemplate": "/api/product",
         "DownstreamScheme": "https",
         "DownstreamHostAndPorts": [
           {
             "Host": "localhost",
-            "Port": 7000
+            "Port": 7002
           }
         ],
-        "UpstreamPathTemplate": "/api/v1/auth/Register",
-        "UpstreamHttpMethod": [ "POST" ]
+        "UpstreamPathTemplate": "/api/product",
+        "UpstreamHttpMethod": [ "Get" ],
+        "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+        }
       },
-
       {
-        "DownstreamPathTemplate": "/api/v1/auth/Login",
-        "DownstreamScheme": "https",
-        "DownstreamHostAndPorts": [
-          {
-            "Host": "localhost",
-            "Port": 7000
-          }
-        ],
-        "UpstreamPathTemplate": "/api/v1/auth/Login",
-        "UpstreamHttpMethod": [ "POST" ]
+          "DownstreamPathTemplate": "/api/product/{id}",
+          "DownstreamScheme": "https",
+          "DownstreamHostAndPorts": [
+            {
+              "Host": "localhost",
+              "Port": 7002
+            }
+          ],
+          "UpstreamPathTemplate": "/api/product/{id}",
+          "UpstreamHttpMethod": [ "Get" ],
+
+        "AuthenticationOptions": {
+          "AuthenticationProviderKey": "Bearer"
+        }
+      },
+      {
+          "DownstreamPathTemplate": "/api/product/Pagination/?pageSize={pageSize}&search={search}&currentPage={currentPage}",
+          "DownstreamScheme": "https",
+          "DownstreamHostAndPorts": [
+            {
+              "Host": "localhost",
+              "Port": 7002
+            }
+          ],
+          "UpstreamPathTemplate": "/api/product/Pagination/?pageSize={pageSize}&search={search}&currentPage={currentPage}",
+          "UpstreamHttpMethod": [ "Get" ],
+
+        "AuthenticationOptions": {
+          "AuthenticationProviderKey": "Bearer"
+        }
       }
     ],
 
+  "ApiSettings": {
+      "Secret": "CLoOW0XcEjECZXOrUHLlMAzXyd8FqZjH6AIbkGAF6oe4TZBfls9I61b4p2K9hccQ",
+      "Issuer": "https://localhost:7001",
+      "Audience": "https://localhost:7000/Account/Login"
+    },
 
-
-
+    "LoadBalancerOptions": {
+      "Type": "RoundRobin" // Hoặc LeastConnection, CookieStickySessions
+    },
 
     "GlobalConfiguration": {
-    "BaseUrl": "https://localhost:7777"
-  }
+      "BaseUrl": "https://localhost:7777",
+      "RateLimitOptions": {
+          "EnableRateLimiting": true,
+          "Period": "1m",
+          "PeriodTimespan": 60,
+          "Limit": 100, // Giới hạn chung toàn hệ thống
+          "HttpStatusCode": 429,
+          "QuotaExceededMessage": "Too many requests. Try again later."
+        }
+    }
 }
