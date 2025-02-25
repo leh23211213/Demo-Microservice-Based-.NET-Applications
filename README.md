@@ -10,11 +10,7 @@
 
 ![Cloud Architecture](https://github.com/leh23211213/Demo-Microservice-Based-.NET-Applications/blob/main/docs/CloudArchitecture.drawio.png)
 
-# Service Layer
-
-![Product Service Layer](https://github.com/leh23211213/Demo-Microservice-Based-.NET-Applications/blob/main/docs/ServiceLayer.drawio.png)
-
- ## API Endpoint
+# API Endpoint
 
 [**Authentication Service API**](https://409159authenticationapi-dmh2bcbddcb9c9ag.eastasia-01.azurewebsites.net)
 
